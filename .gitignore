@@ -1,0 +1,8 @@
+.checkstyle
+.classpath
+.project
+.settings
+.springBeans
+output.log
+log.roo
+target
