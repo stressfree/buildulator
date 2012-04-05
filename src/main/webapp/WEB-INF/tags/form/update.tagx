@@ -1,4 +1,4 @@
-<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" xmlns:form="http://www.springframework.org/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:form="http://www.springframework.org/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
   <jsp:output omit-xml-declaration="yes" />
 
   <jsp:directive.attribute name="id" type="java.lang.String" required="true" rtexprvalue="true" description="The identifier for this tag (do not change!)" />
@@ -11,6 +11,7 @@
   <jsp:directive.attribute name="render" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicate if the contents of this tag and all enclosed tags should be rendered (default 'true')" />
   <jsp:directive.attribute name="openPane" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Control if the title pane is opened or closed by default (default: true)" />
   <jsp:directive.attribute name="z" type="java.lang.String" required="false" description="Used for checking if element has been modified (to recalculate simply provide empty string value)" />
+  <jsp:directive.attribute name="title" type="java.lang.String" required="false" description="The title code for the panel"/>
 
   <c:if test="${empty render or render}">
     <c:if test="${empty label}">
@@ -27,14 +28,18 @@
       <c:set var="enctype" value="multipart/form-data"/>
     </c:if>
     <spring:message arguments="${label}" code="entity_update" var="title_msg" htmlEscape="false" />
-    <util:panel id="${id}" title="${title_msg}" openPane="${openPane}">
+    <c:if test="${not empty title}">
+      <spring:message code="${title}" var="title_msg" htmlEscape="false" />
+    </c:if>
+
+    <div class="panel">
+      <h1><c:out value="${title_msg}" /></h1>
       <spring:url value="${path}" var="form_url" />
       <form:form action="${form_url}" method="PUT" modelAttribute="${modelAttribute}" enctype="${enctype}">
         <form:errors cssClass="errors" delimiter="&lt;p/&gt;" />
         <jsp:doBody />
         <div class="submit" id="${fn:escapeXml(id)}_submit">
           <spring:message code="button_save" var="save_button" htmlEscape="false" />
-          <script type="text/javascript">Spring.addDecoration(new Spring.ValidateAllDecoration({elementId:'proceed', event:'onclick'}));</script>
           <input id="proceed" type="submit" value="${fn:escapeXml(save_button)}" />
         </div>
         <form:hidden id="_${fn:escapeXml(idField)}_id" path="${fn:escapeXml(idField)}" />
@@ -42,6 +47,6 @@
           <form:hidden id="_${fn:escapeXml(versionField)}_id" path="${fn:escapeXml(versionField)}" />
         </c:if>
       </form:form>
-    </util:panel>
+    </div>
   </c:if>
 </jsp:root>

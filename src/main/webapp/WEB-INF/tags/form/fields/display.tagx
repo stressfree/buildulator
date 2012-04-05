@@ -19,14 +19,13 @@
     <c:if test="${empty dateTimePattern}">
       <c:set value="MM/dd/yyyy" var="dateTimePattern" />
     </c:if>
-    
+
     <c:set var="sec_object" value="${fn:escapeXml(object)}" />
     <c:set var="sec_field" value="${fn:escapeXml(field)}" />
 
     <div id="_${fn:escapeXml(id)}_id">
       <label for="_${fn:escapeXml(field)}_id">
-        <c:out value="${label}" />
-        :
+        <c:out value="${label}" />:
       </label>
       <div class="box" id="_${fn:escapeXml(id)}_${fn:escapeXml(field)}_id">
         <c:choose>

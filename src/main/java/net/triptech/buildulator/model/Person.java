@@ -15,7 +15,6 @@ import flexjson.JSON;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,7 +33,6 @@ import java.util.List;
  * The Class Person.
  */
 @RooJavaBean
-@RooToString
 @RooJpaActiveRecord(
         identifierColumn = "id",
         table = "person",

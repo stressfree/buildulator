@@ -24,7 +24,13 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     
     public Project ProjectDataOnDemand.getNewTransientProject(int index) {
         Project obj = new Project();
+        setName(obj, index);
         return obj;
+    }
+    
+    public void ProjectDataOnDemand.setName(Project obj, int index) {
+        String name = "name_" + index;
+        obj.setName(name);
     }
     
     public Project ProjectDataOnDemand.getSpecificProject(int index) {

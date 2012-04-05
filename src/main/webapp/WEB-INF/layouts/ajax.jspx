@@ -1,0 +1,6 @@
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:tiles="http://tiles.apache.org/tags-tiles">
+  <jsp:directive.page contentType="text/html;charset=UTF-8" />
+  <jsp:directive.page pageEncoding="UTF-8" />
+  <jsp:output omit-xml-declaration="yes"/>
+  <tiles:insertAttribute name="body"/>
+</div>

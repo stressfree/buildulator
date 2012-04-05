@@ -18,6 +18,7 @@ import net.triptech.buildulator.model.UserRole;
 public enum UserRole {
 
     ROLE_ADMIN("label_net_triptech_buildulator_model_userrole_admin"),
+    ROLE_EDITOR("label_net_triptech_buildulator_model_userrole_editor"),
     ROLE_USER("label_net_triptech_buildulator_model_userrole_user"),
     ANONYMOUS("label_net_triptech_buildulator_model_userrole_anonymous");
 

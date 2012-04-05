@@ -25,33 +25,16 @@
     <c:if test="${empty required}">
       <c:set value="false" var="required" />
     </c:if>
-    
+
     <c:set var="sec_field">
       <spring:escapeBody javaScriptEscape="true" >${field}</spring:escapeBody>
     </c:set>
 
-    <script type="text/javascript">dojo.require("dijit.Editor");</script>
     <div id="_${fn:escapeXml(id)}_id">
       <label for="_${sec_field}_id">
-        <c:out value="${fn:escapeXml(label)}" />
-        :
+        <c:out value="${fn:escapeXml(label)}" />:
       </label>
-      <form:hidden id="_${sec_field}_id" path="${sec_field}" />
-      <div>
-        <div id="_${sec_field}_id_"></div>
-        <script type="text/javascript">
-           Spring.addDecoration(new Spring.ElementDecoration({elementId : '_${sec_field}_id_', widgetType : 'dijit.Editor', widgetAttrs : {disabled: ${disabled}}}));
-           dojo.addOnLoad(function () {
-              var src = dojo.byId('_${sec_field}_id');
-              var rte = dijit.byId('_${sec_field}_id_');
-              rte.disabled = ${disabled};
-              rte.onLoadDeferred.addCallback(function(){
-                rte.setValue(src.value);
-                dojo.connect(rte, 'onBlur', function(){src.value = rte.getValue();});
-              });
-            });
-        </script>
-      </div>
+       <form:textarea id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" />
       <br />
       <form:errors cssClass="errors" id="_${sec_field}_error_id" path="${sec_field}" />
     </div>
