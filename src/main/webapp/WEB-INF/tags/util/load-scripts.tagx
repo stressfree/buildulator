@@ -10,10 +10,12 @@
 
   <link rel="stylesheet" type="text/css" href="${reset_url}" />
   <link rel="stylesheet" type="text/css" href="{buildulator_url}" />
+  <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.8.2/css/jquery.dataTables.css" />
   <link rel="SHORTCUT ICON" href="${favicon}" />
   <c:set var="userLocale">
     <c:out value="${pageContext.response.locale}" default="en" />
   </c:set>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"><!-- required for FF3 and Opera --></script>
-  <script src="${buildulator_js_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"><!-- required for FF3 and Opera --></script>
+  <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.8.2/jquery.dataTables.min.js"><!-- required for FF3 and Opera --></script>
+  <script type="text/javascript" charset="utf8" src="${buildulator_js_url}"><!-- required for FF3 and Opera --></script>
 </jsp:root>
