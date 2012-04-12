@@ -12,7 +12,209 @@ h1{font-size:138.5%}h2{font-size:123.1%}h3{font-size:108%}h1,h2,h3{margin:1em 0}
 /*
  * Buildulator CSS
 */
+html, body {
+	background: #535353;
+}
+body {
+    font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 400;
+    font-size: 1em;
+    line-height: 1.3em;
+    color: #333;
+}
+#header {
+	height: 93px;
+	margin: 2px;
+    border: 1px solid #d4d4d3;
+    background: url('../images/header.jpg') top left no-repeat #8d8574;
+    text-align: left;
+}
+#header a {
+	color: #fff;
+	font-size: 28px;
+    font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
+    text-decoration: none;
+    margin: 0 0 0 23px;
+    position: absolute;
+    top: 89px;
+}
+
+#menu {
+	height: 44px;
+	margin: 2px;
+    border: 1px solid #d4d4d3;
+    background: url('../images/menu.png') top left repeat-x #8d8574;
+}
+#menu li {
+    list-style: none;
+}
+#mainmenu {
+	position: absolute;
+	top: 132px;
+    margin: 0 0 0 23px;
+}
+#mainmenu li {
+	float: left;
+	padding: 0;
+	margin: 0 7px 0 0;
+}
+#mainmenu li a {
+    font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
+    display: block;
+    width: 110px;
+    height: 20px;
+    font-size: 16px;
+    line-height: 20px;
+    padding: 6px 0;
+    background: #9b9485;
+    color: #efefef;
+    text-decoration: none;
+}
+#mainmenu li a:hover {
+    background-color: #fbe8aa;
+    color: #666;
+}
+#mainmenu li#h_home a {
+    width: 40px;
+    text-indent: -3000px;
+    background: url('../images/home.png') 0px 0px #9b9485;
+}
+#mainmenu li#h_home a:hover {
+    background-position: -80px 0px;
+    background-color: #fbe8aa;
+}
+#mainmenu li a.activeLink {
+    background-color: #fed448;
+    color: #2d3442;
+}
+#mainmenu li#h_home a.activeLink {
+    background-position: -40px 0px;
+    background-color: #fed448;
+}
+
+#usermenu {
+    position: absolute;
+    top: 135px;
+	margin: 0 0 0 530px;
+	width: 440px;
+	font-size: 13px;
+	list-style: none;
+	text-align: right;
+}
+#usermenu li {
+	display: inline;
+	color: #ccc;
+	padding: 0 0.6em;
+    border-left: 1px solid #9b9485;
+}
+#usermenu li:first-child {
+    border-left: none;
+}
+#usermenu li a {
+    color: #efefef;
+    text-decoration: none;
+}
+#usermenu li a:hover {
+	color: #fed448;
+    text-decoration: underline;
+}
+
+#footer {
+	text-align: right;
+    font-size: 0.9em;
+    margin: 10px 5px 20px 0;
+}
+#footer ul {
+	margin: 0;
+    list-style: none;
+}
+#footer li {
+	display: inline;
+	padding: 0 0.6em;
+	border-left: 1px solid #ccc;
+}
+#footer li:first-child {
+    border-left: none;
+}
+#footer li a {
+	color: #666;
+	text-decoration: none;
+}
+#footer li a:hover {
+    text-decoration: underline;
+    color: #ff3333;
+}
+
+#container {
+	width: 980px;
+	border: 1px solid #d4d4d3;
+	background: #f0f2f2;
+	margin: 25px auto 10px auto;
+}
+#body {
+	margin: 2px;
+	border: 1px solid #d4d4d3;
+	background: #fff;
+	text-align: left;
+}
+#body h1, #body h2, #body h3, #body h4, #body h5, #body h6 {
+    font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: normal;
+    margin-bottom: 0.6em;
+}
+#body h1 {
+    font-size: 2em;
+}
+#body td {
+	border: 1px solid #ccc;
+}
+#body div.panel {
+	margin: 5px 10px 35px 10px;
+}
+
+
+.materialsOptions {
+	margin: 0 0 5px 0;
+}
+#materialsList_wrapper thead th {
+	font-size: 0.9em;
+}
+#materialsList_wrapper td.column-3,
+#materialsList_wrapper td.column-4,
+#materialsList_wrapper td.column-5,
+#materialsList_wrapper td.column-6 {
+    text-align: center;
+}
+
+#body table.dataTable {
+    font-size: 0.9em;
+}
+#body table.dataTable tr.even {
+    background: #fff;
+}
+#body table.dataTable tr.even td.sorting_1 {
+    background: #f7f7f7;
+}
+#body table.dataTable tr.odd {
+    background: #f7f7f7;
+}
+#body table.dataTable tr.odd td.sorting_1 {
+    background: #efefef;
+}
+#body table.dataTable tr.row_selected {
+	background: #fbe8aa;
+}
+#body table.dataTable tr.row_selected td.sorting_1 {
+    background: #fed448;
+}
 
 .materialName {
-	width: 50%;
+	width: 30%;
+}
+
+.ui-button {
+	font-size: 0.8em!important;
+}
+.ui-dialog {
+	width: 600px!important;
 }

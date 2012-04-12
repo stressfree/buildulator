@@ -17,10 +17,14 @@
     <c:if test="${not empty messageCode}">
       <spring:message code="${messageCode}" var="label" arguments="${label}" htmlEscape="false" />
     </c:if>
+    <c:if test="${url eq controllerUrl}">
+        <c:set var="activeItem" value="activeItem" />
+        <c:set var="activeLink" value="activeLink" />
+    </c:if>
 
-    <li id="${fn:escapeXml(id)}">
+    <li id="${fn:escapeXml(id)}" class="menuItem ${activeItem}">
       <spring:url value="${url}" var="menu_item_url"/>
-      <a href="${menu_item_url}" title="${fn:escapeXml(label)}">
+      <a href="${menu_item_url}" class="menuLink ${activeLink}" title="${fn:escapeXml(label)}">
         <c:out value="${label}"/>
       </a>
     </li>

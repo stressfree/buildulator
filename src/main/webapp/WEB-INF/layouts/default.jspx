@@ -23,7 +23,7 @@
   </head>
     <body>
       <div id="container">
-      <div id="header" role="banner">
+      <div id="banner" role="banner">
          <tiles:insertAttribute name="header" ignore="true" />
          <tiles:insertAttribute name="menu" ignore="true" />
          <c:if test="${not empty requestScope.flash_message}">

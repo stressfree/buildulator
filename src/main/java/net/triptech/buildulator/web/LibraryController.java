@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.triptech.buildulator.model.Material;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -160,6 +161,11 @@ public class LibraryController extends BaseController {
     @RequestMapping(value = "/materials/list.json", method = RequestMethod.GET)
     public @ResponseBody String list() {
         return Material.toJson(Material.findAllMaterials());
+    }
+
+    @ModelAttribute("controllerUrl")
+    public final String getControllerUrl() {
+    	return "/library";
     }
 
 }

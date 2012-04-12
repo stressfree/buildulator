@@ -18,6 +18,7 @@ $(document).ready(function() {
         sAddURL: "./library/materials",
         sDeleteURL: "./library/materials/delete",
         sUpdateURL: "./library/materials/update",
+        oDeleteRowButtonOptions: {},
         aoColumns: [
                       { cssclass: "required" },
                       { cssclass: "required" },
@@ -34,3 +35,6 @@ $(document).ready(function() {
     });
 });
 
+$(document).ready(function() {
+	$('button, input:submit').button();
+});

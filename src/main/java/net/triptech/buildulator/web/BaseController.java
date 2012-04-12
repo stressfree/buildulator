@@ -102,6 +102,11 @@ public abstract class BaseController {
     }
 
 
+    @ModelAttribute("user")
+    public Person loadCurrentUser(final HttpServletRequest request) {
+        return loadUser(request);
+    }
+
     @ModelAttribute("preferences")
     public Preferences loadPreferences() {
         return Preferences.load();
