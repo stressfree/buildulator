@@ -173,6 +173,35 @@ body {
 }
 
 
+p.field {
+    clear: left;
+}
+p.field label {
+    width: 200px;
+    float: left;
+    text-align: right;
+    padding: 0 1em 0 0;
+    color: #8d8574;
+    padding-top: 0.1em;
+}
+p.field label.error {
+    font-weight: normal;
+    color: #ff3333;
+    float: none;
+    text-align: left;
+    margin-left: 10px;
+    width: auto;
+}
+p.field .ui-dialog label.error {
+    float: left;
+    margin-left: 216px;
+    margin-bottom: 0.5em;
+}
+p.field label {
+    clear: left;
+}
+
+
 .materialsOptions {
 	margin: 0 0 5px 0;
 }
@@ -207,14 +236,32 @@ body {
 #body table.dataTable tr.row_selected td.sorting_1 {
     background: #fed448;
 }
+#body div.dataTables_info {
+	font-size: 0.8em;
+}
 
 .materialName {
 	width: 30%;
 }
 
-.ui-button {
+input.error {
+    border: 2px solid #ff3333;
+}
+
+body div.actionButtons {
+	width: 500px;
+	text-align: right;
+	border-width: 1px 0 0 0;
+	border-style: solid;
+	border-color: #948462;
+    margin: .5em 0 0 0;
+    padding: .3em 1em .5em .4em;
+}
+body .ui-button {
 	font-size: 0.8em!important;
 }
-.ui-dialog {
+body .ui-dialog {
 	width: 600px!important;
+	text-align: left;
+	font-size: 0.9em;
 }

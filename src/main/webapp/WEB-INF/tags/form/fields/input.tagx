@@ -7,13 +7,9 @@
   <jsp:directive.attribute name="labelCode" type="java.lang.String" required="false" rtexprvalue="true" description="Key for label message bundle if label is not supplied" />
   <jsp:directive.attribute name="required" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicates if this field is required (default false)" />
   <jsp:directive.attribute name="disabled" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Specify if this field should be enabled" />
-  <jsp:directive.attribute name="validationRegex" type="java.lang.String" required="false" rtexprvalue="true" description="Specify regular expression to be used for the validation of the input contents" />
-  <jsp:directive.attribute name="validationMessageCode" type="java.lang.String" required="false" rtexprvalue="true" description="Specify the message (message property code) to be displayed if the regular expression validation fails" />
-  <jsp:directive.attribute name="validationMessage" type="java.lang.String" required="false" rtexprvalue="true" description="Specify the message to be displayed if the regular expression validation fails" />
-  <jsp:directive.attribute name="min" type="java.lang.String" required="false" rtexprvalue="true" description="Specify the minimum length of the input contents" />
-  <jsp:directive.attribute name="max" type="java.lang.String" required="false" rtexprvalue="true" description="Specify the maximum length of the input contents" />
-  <jsp:directive.attribute name="decimalMin" type="java.lang.String" required="false" rtexprvalue="true" description="Specify the minimum size of the input contents" />
-  <jsp:directive.attribute name="decimalMax" type="java.lang.String" required="false" rtexprvalue="true" description="Specify the maximum size of the input contents" />
+  <jsp:directive.attribute name="validationType" type="java.lang.String" required="false" rtexprvalue="true" description="The type of validation that should be applied (based on JQuery-validate types)" />
+  <jsp:directive.attribute name="min" type="java.lang.Integer" required="false" rtexprvalue="true" description="Specify the minimum length of the input contents" />
+  <jsp:directive.attribute name="max" type="java.lang.Integer" required="false" rtexprvalue="true" description="Specify the maximum length of the input contents" />
   <jsp:directive.attribute name="disableFormBinding" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Set to true to disable Spring form binding" />
   <jsp:directive.attribute name="type" type="java.lang.String" required="false" rtexprvalue="true" description="Set field type (default 'text', or 'password')" />
   <jsp:directive.attribute name="render" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicate if the contents of this tag and all enclosed tags should be rendered (default 'true')" />
@@ -36,69 +32,46 @@
       <spring:message code="label_${fn:toLowerCase(labelCode)}" var="label" htmlEscape="false" />
     </c:if>
 
-    <c:if test="${empty validationMessage}">
-      <c:choose>
-        <c:when test="${empty validationMessageCode}">
-          <spring:message arguments="${fn:escapeXml(label)}" code="field_invalid" var="field_invalid" htmlEscape="false" />
-        </c:when>
-        <c:otherwise>
-          <spring:message arguments="${fn:escapeXml(label)}" code="${validationMessageCode}" var="field_invalid" htmlEscape="false" />
-        </c:otherwise>
-      </c:choose>
+    <c:if test="${required}">
+        <c:set var="requiredCss" value="required" />
     </c:if>
 
-    <c:if test="${empty required}">
-      <c:set value="false" var="required" />
+    <c:if test="${not empty validationType}">
+        <c:set var="validationTypeCss" value="${fn:escapeXml(validationType)}" />
+    </c:if>
+
+    <c:if test="${min gt 0}">
+        <c:set var="validationMin" value="${min}" />
+    </c:if>
+
+    <c:if test="${max gt 0}">
+        <c:set var="validationMax" value="${max}" />
     </c:if>
 
     <c:set var="sec_field">
       <spring:escapeBody javaScriptEscape="true" >${field}</spring:escapeBody>
     </c:set>
 
-    <div id="_${fn:escapeXml(id)}_id">
+    <p class="field" id="_${fn:escapeXml(id)}_id">
       <label for="_${sec_field}_id">
-        <c:out value="${fn:escapeXml(label)}" />:
+        <c:out value="${fn:escapeXml(label)}" />
       </label>
       <c:choose>
         <c:when test="${disableFormBinding}">
-          <input id="_${sec_field}_id" name="${sec_field}" type="${fn:escapeXml(type)}" />
+          <input id="_${sec_field}_id" name="${sec_field}" type="${fn:escapeXml(type)}" class="${requiredCss} ${validationTypeCss}" minlength="${validationMin}" maxlength="${validationMax}" />
         </c:when>
         <c:otherwise>
           <c:choose>
             <c:when test="${type eq 'password'}">
-              <form:password id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" />
+              <form:password id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" cssClass="${requiredCss} ${validationTypeCss}" minlength="${validationMin}" maxlength="${validationMax}" />
             </c:when>
             <c:otherwise>
-              <form:input id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" />
+              <form:input id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" cssClass="${requiredCss} ${validationTypeCss}" minlength="${validationMin}" maxlength="${validationMax}" />
             </c:otherwise>
           </c:choose>
-          <br />
           <form:errors cssClass="errors" id="_${sec_field}_error_id" path="${sec_field}" />
         </c:otherwise>
       </c:choose>
-      <c:choose>
-        <c:when test="${required}">
-          <spring:message code="field_required" var="field_required" htmlEscape="false" />
-          <spring:message argumentSeparator="," arguments="${label},(${field_required})" code="field_simple_validation" var="field_validation" htmlEscape="false" />
-        </c:when>
-        <c:otherwise>
-          <spring:message argumentSeparator="," arguments="${label}, " code="field_simple_validation" var="field_validation" htmlEscape="false" />
-        </c:otherwise>
-      </c:choose>
-      <c:set var="sec_field_validation">
-        <spring:escapeBody javaScriptEscape="true">${field_validation}</spring:escapeBody>
-      </c:set>
-      <c:set var="sec_field_invalid">
-        <spring:escapeBody javaScriptEscape="true" htmlEscape="true">${field_invalid}</spring:escapeBody>
-      </c:set>
-      <c:set var="sec_field_required">
-        <spring:escapeBody javaScriptEscape="true">${field_required}</spring:escapeBody>
-      </c:set>
-      <c:set var="sec_validation_regex" value="" />
-      <c:if test="${!empty validationRegex}">
-        <c:set var="sec_validation_regex" value="regExp : '${validationRegex}', " />
-      </c:if>
-    </div>
-    <br />
+    </p>
   </c:if>
 </jsp:root>

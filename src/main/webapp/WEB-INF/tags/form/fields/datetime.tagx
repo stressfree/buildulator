@@ -32,9 +32,9 @@
       <c:set value="false" var="required" />
     </c:if>
 
-    <div id="_${sec_id}_id">
+    <p class="field" id="_${sec_id}_id">
       <label for="_${sec_field}_id">
-        <c:out value="${label}" />:
+        <c:out value="${label}" />
       </label>
       <c:choose>
         <c:when test="${disableFormBinding}">
@@ -42,7 +42,6 @@
         </c:when>
         <c:otherwise>
           <form:input id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" />
-          <br />
           <form:errors cssClass="errors" id="_${sec_field}_error_id" path="${sec_field}" />
         </c:otherwise>
       </c:choose>
@@ -56,7 +55,6 @@
           <spring:message argumentSeparator="," arguments="${label}, " code="field_simple_validation" var="field_validation" htmlEscape="false" />
         </c:otherwise>
       </c:choose>
-    </div>
-    <br />
+    </p>
   </c:if>
 </jsp:root>

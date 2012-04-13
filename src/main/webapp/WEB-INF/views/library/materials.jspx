@@ -25,27 +25,27 @@
 	</div>
 
 	<form id="formAddNewRow" action="#">
-	   <p>
+	   <p class="field">
 	       <label for="name"><spring:message code="label_net_triptech_buildulator_model_material_name" /></label>
 	       <input type="text" name="name" id="name" class="required" rel="0" />
 	   </p>
-	   <p>
+	   <p class="field">
 	       <label for="unitOfMeasure"><spring:message code="label_net_triptech_buildulator_model_material_unitofmeasure" /></label>
 	       <input type="text" name="unitOfMeasure" id="unitOfMeasure" class="required" rel="1" />
 	   </p>
-	   <p>
+	   <p class="field">
 	       <label for="name"><spring:message code="label_net_triptech_buildulator_model_material_lifeyears" /></label>
 	       <input type="text" name="lifeYears" id="lifeYears" class="required number" rel="2" />
 	   </p>
-	   <p>
+	   <p class="field">
 	       <label for="name"><spring:message code="label_net_triptech_buildulator_model_material_carbonperunit" /></label>
 	       <input type="text" name="carbonPerUnit" id="carbonPerUnit" class="required number" rel="3" />
 	   </p>
-       <p>
+       <p class="field">
            <label for="name"><spring:message code="label_net_triptech_buildulator_model_material_energyperunit" /></label>
            <input type="text" name="energyPerUnit" id="energyPerUnit" class="required number" rel="4" />
        </p>
-       <p>
+       <p class="field">
            <label for="name"><spring:message code="label_net_triptech_buildulator_model_material_wastagepercent" /></label>
            <input type="text" name="wastagePercent" id="wastagePercent" class="required number" rel="5" />
        </p>
@@ -59,6 +59,8 @@
        <p>
            <textarea name="data" id="data"><!-- --></textarea>
        </p>
-       <button type="submit"><spring:message code="materials_library_bulkadd_submit" /></button>
+       <div class="actionButtons">
+           <button type="submit"><spring:message code="materials_library_bulkadd_submit" /></button>
+       </div>
     </form>
 </div>

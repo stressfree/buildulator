@@ -5,8 +5,8 @@
 
     <form:update id="fu_net_triptech_buildulator_model_Person" title="buildulator_user" modelAttribute="person" path="/user" versionField="Version" z="user-managed">
         <field:input field="firstName" id="c_net_triptech_buildulator_model_Person_firstName" required="true" z="user-managed"/>
-        <field:input field="lastName" id="c_net_triptech_buildulator_model_Person_lastName" required="true" z="user-managed"/>
-        <field:input field="emailAddress" id="c_net_triptech_buildulator_model_Person_emailAddress" required="true" z="user-managed" validationRegex="\\b[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b" validationMessageCode="field_invalid_email"/>
+        <field:input field="lastName" id="c_net_triptech_buildulator_model_Person_lastName" required="true" z="user-managed" />
+        <field:input field="emailAddress" id="c_net_triptech_buildulator_model_Person_emailAddress" required="true" z="user-managed" validationType="email"/>
 
         <input id="userRole" name="userRole" type="hidden" value="ROLE_USER"/>
         <input id="userStatus" name="userStatus" type="hidden" value="ACTIVE"/>

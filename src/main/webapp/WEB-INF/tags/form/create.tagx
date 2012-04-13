@@ -29,7 +29,7 @@
           <form:hidden id="_${fn:escapeXml(compositePkField)}_id" path="${fn:escapeXml(compositePkField)}" />
         </c:if>
         <jsp:doBody />
-        <div class="submit" id="${fn:escapeXml(id)}_submit">
+        <div class="actionButtons" id="${fn:escapeXml(id)}_submit">
           <spring:message code="button_save" var="save_button" htmlEscape="false" />
           <input id="proceed" type="submit" value="${fn:escapeXml(save_button)}"/>
         </div>

@@ -29,7 +29,7 @@ $(document).ready(function() {
                   ]
     });
 
-    $('#formBulkAddRows').dialog({ autoOpen: false });
+    $('#formBulkAddRows').dialog({ autoOpen: false, modal: true });
     $('#btnBulkAddRows').removeAttr("disabled").click(function() {
     	$('#formBulkAddRows').dialog('open')
     });
@@ -37,4 +37,8 @@ $(document).ready(function() {
 
 $(document).ready(function() {
 	$('button, input:submit').button();
+});
+
+$(document).ready(function(){
+    $("#person").validate();
 });
