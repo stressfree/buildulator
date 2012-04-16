@@ -30,14 +30,13 @@
       <spring:escapeBody javaScriptEscape="true" >${field}</spring:escapeBody>
     </c:set>
 
-    <div id="_${fn:escapeXml(id)}_id">
+    <p class="field" id="_${fn:escapeXml(id)}_id">
       <label for="_${sec_field}_id">
-        <c:out value="${fn:escapeXml(label)}" />:
+        <c:out value="${fn:escapeXml(label)}" />
       </label>
-       <form:textarea id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" />
+       <form:textarea id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" class="rteditor" />
       <br />
       <form:errors cssClass="errors" id="_${sec_field}_error_id" path="${sec_field}" />
-    </div>
-    <br />
+    </p>
   </c:if>
 </jsp:root>

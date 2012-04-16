@@ -50,11 +50,17 @@ privileged aspect MaterialDataOnDemand_Roo_DataOnDemand {
     
     public void MaterialDataOnDemand.setName(Material obj, int index) {
         String name = "name_" + index;
+        if (name.length() > 100) {
+            name = new Random().nextInt(10) + name.substring(1, 100);
+        }
         obj.setName(name);
     }
     
     public void MaterialDataOnDemand.setUnitOfMeasure(Material obj, int index) {
         String unitOfMeasure = "unitOfMeasure_" + index;
+        if (unitOfMeasure.length() > 50) {
+            unitOfMeasure = unitOfMeasure.substring(0, 50);
+        }
         obj.setUnitOfMeasure(unitOfMeasure);
     }
     

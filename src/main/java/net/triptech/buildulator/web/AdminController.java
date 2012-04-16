@@ -13,11 +13,16 @@ package net.triptech.buildulator.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
+import net.triptech.buildulator.FlashScope;
 import net.triptech.buildulator.model.Material;
+import net.triptech.buildulator.model.Preferences;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,68 +30,47 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
-@RequestMapping("/library")
+@RequestMapping("/admin")
 @Controller
-public class LibraryController extends BaseController {
+public class AdminController extends BaseController {
 
-    /**
-     * Show the index page.
-     *
-     * @return the string
-     */
+	@RequestMapping(method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String update(@Valid Preferences preferences,
+            BindingResult bindingResult, Model uiModel, HttpServletRequest request) {
+
+        if (bindingResult.hasErrors()) {
+            uiModel.addAttribute("preferences", preferences);
+
+            FlashScope.appendMessage(getMessage("buildulator_object_validation",
+                    Preferences.class), request);
+
+            return "preferences/update";
+        }
+
+        uiModel.asMap().clear();
+        if (preferences.getId() != null) {
+            // Updating existing preferences
+        	preferences.merge();
+        } else {
+            // No preferences exist yet
+        	preferences.persist();
+        	preferences.flush();
+        }
+        FlashScope.appendMessage(getMessage("preferences_edited"), request);
+
+        return "redirect:/admin";
+    }
+
     @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')")
-    public String index() {
-        return "library/materials";
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String updateForm(Model uiModel) {
+        uiModel.addAttribute("preferences", this.loadPreferences());
+        return "admin/update";
     }
 
     /**
-     * Create a new material.
-     *
-     * @param name the name
-     * @param unitOfMeasure the unit of measure
-     * @param lifeYears the life years
-     * @param carbonPerUnit the carbon per unit
-     * @param energyPerUnit the energy per unit
-     * @param wastagePercent the wastage percent
-     * @param request the request
-     * @param response the response
-     * @return the string
-     */
-    @RequestMapping(value = "/materials", method = RequestMethod.POST)
-    @PreAuthorize("hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')")
-    public @ResponseBody String newMaterial(
-    		@RequestParam(value = "name", required = true) final String name,
-    		@RequestParam(value = "unitOfMeasure") final String unitOfMeasure,
-    		@RequestParam(value = "lifeYears") final Integer lifeYears,
-    		@RequestParam(value = "carbonPerUnit") final Double carbonPerUnit,
-    		@RequestParam(value = "energyPerUnit") final Double energyPerUnit,
-    		@RequestParam(value = "wastagePercent") final Double wastagePercent,
-    		final HttpServletRequest request,
-    		final HttpServletResponse response) {
-
-    	String returnMessage = "";
-
-    	Material material = new Material();
-    	material.setName(name);
-    	material.setUnitOfMeasure(unitOfMeasure);
-    	material.setLifeYears(lifeYears);
-    	material.setCarbonPerUnit(carbonPerUnit);
-    	material.setEnergyPerUnit(energyPerUnit);
-    	material.setWastagePercent(wastagePercent);
-
-    	try {
-    		material.persist();
-    		returnMessage = String.valueOf(material.getId());
-    	} catch (Exception e) {
-    		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    		returnMessage = this.getMessage("materials_library_add_error");
-    	}
-        return returnMessage;
-    }
-
-    /**
-     * Update the material.
+     * Update the user.
      *
      * @param id the id
      * @param colId the col id
@@ -95,9 +79,9 @@ public class LibraryController extends BaseController {
      * @param response the response
      * @return the string
      */
-    @RequestMapping(value = "/materials/update", method = RequestMethod.POST)
-    @PreAuthorize("hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')")
-    public @ResponseBody String updateMaterial(
+    @RequestMapping(value = "/users/update", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public @ResponseBody String updateUser(
     		@RequestParam(value = "id", required = true) final String id,
     		@RequestParam(value = "columnPosition", required = true) final Integer colId,
     		@RequestParam(value = "value", required = true) final String value,
@@ -125,16 +109,16 @@ public class LibraryController extends BaseController {
     }
 
     /**
-     * Delete the material.
+     * Delete the user.
      *
      * @param id the id
      * @param request the request
      * @param response the response
      * @return the string
      */
-    @RequestMapping(value = "/materials/delete", method = RequestMethod.POST)
-    @PreAuthorize("hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')")
-    public @ResponseBody String deleteMaterial(
+    @RequestMapping(value = "/users/delete", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public @ResponseBody String deleteUser(
     		@RequestParam(value = "id", required = true) final String id,
     		final HttpServletRequest request,
     		final HttpServletResponse response) {
@@ -159,18 +143,19 @@ public class LibraryController extends BaseController {
     }
 
     /**
-     * List the materials.
+     * List the users.
      *
      * @return the string
      */
-    @RequestMapping(value = "/materials/list.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/users/list.json", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public @ResponseBody String list() {
         return Material.toJson(Material.findAllMaterials());
     }
 
     @ModelAttribute("controllerUrl")
     public final String getControllerUrl() {
-    	return "/library";
+    	return "/admin";
     }
 
 }

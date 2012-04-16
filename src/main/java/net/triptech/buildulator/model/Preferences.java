@@ -15,6 +15,11 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 @RooJpaActiveRecord
 public class Preferences {
 
+    /** The application url. */
+    @NotNull
+    @Size(min = 10, max = 200)
+    private String url;
+
     /** The homepage title. */
     @NotNull
     @Size(min = 2, max = 200)

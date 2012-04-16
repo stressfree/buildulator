@@ -7,6 +7,14 @@ import net.triptech.buildulator.model.Preferences;
 
 privileged aspect Preferences_Roo_JavaBean {
     
+    public String Preferences.getUrl() {
+        return this.url;
+    }
+    
+    public void Preferences.setUrl(String url) {
+        this.url = url;
+    }
+    
     public String Preferences.getHomepageTitle() {
         return this.homepageTitle;
     }
