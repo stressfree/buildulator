@@ -10,8 +10,6 @@
  ******************************************************************************/
 package net.triptech.buildulator.service;
 
-import java.util.List;
-
 import net.triptech.buildulator.model.Person;
 
 import org.springframework.security.authentication.DisabledException;
@@ -32,9 +30,7 @@ public class OpenIdUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String id)
             throws UsernameNotFoundException {
 
-        List<Person> people = Person.findPeopleByOpenIdIdentifier(id).getResultList();
-
-        Person person = people.size() == 0 ? null : people.get(0);
+        Person person = Person.findByOpenIdIdentifier(id);
 
         if (person == null) {
             throw new UsernameNotFoundException(id);

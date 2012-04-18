@@ -198,7 +198,7 @@ p.field {
   font-size: 1em;
   line-height: 1.5em;
   padding: 0.7em 0 0.3em 25px;
-  color: #9b9485;
+  color: #535353;
 }
 
 p.field label {
@@ -207,7 +207,7 @@ p.field label {
   float: left;
   text-align: right;
   padding: 0 1em 0 0;
-  color: #535353;
+  color: #9b9485;
   padding-top: 0.1em;
 }
 
@@ -227,11 +227,27 @@ p.field .ui-dialog label.error {
   margin-bottom: 0.5em;
 }
 
-.materialsOptions {
+#adminTabs {
+  font-size: 0.9em;
+  background: #fff url('../images/tabs-bg.png') repeat-x;
+  margin: 5px 5px 20px 5px;
+  border-color: #ccc;
+}
+#adminTabs .ui-tabs-nav li {
+  font-weight: normal;
+}
+#adminTabs .ui-tabs-nav li.ui-tabs-selected a {
+    color: #2D3442;
+}
+#adminTabs div.panel {
+  margin: 10px 0 0 0;
+}
+
+.materialsOptions, .usersOptions {
   margin: 0 0 5px 0;
 }
 
-#materialsList_wrapper thead th {
+#materialsList_wrapper thead th, #usersList_wrapper thead th {
   font-size: 0.9em;
 }
 

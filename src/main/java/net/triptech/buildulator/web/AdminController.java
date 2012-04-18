@@ -10,14 +10,19 @@
  ******************************************************************************/
 package net.triptech.buildulator.web;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import net.sf.json.JSONObject;
 import net.triptech.buildulator.FlashScope;
-import net.triptech.buildulator.model.Material;
+import net.triptech.buildulator.model.Person;
 import net.triptech.buildulator.model.Preferences;
+import net.triptech.buildulator.model.UserRole;
+import net.triptech.buildulator.model.UserStatus;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -34,7 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class AdminController extends BaseController {
 
-	@RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String update(@Valid Preferences preferences,
             BindingResult bindingResult, Model uiModel, HttpServletRequest request) {
@@ -51,11 +56,11 @@ public class AdminController extends BaseController {
         uiModel.asMap().clear();
         if (preferences.getId() != null) {
             // Updating existing preferences
-        	preferences.merge();
+            preferences.merge();
         } else {
             // No preferences exist yet
-        	preferences.persist();
-        	preferences.flush();
+            preferences.persist();
+            preferences.flush();
         }
         FlashScope.appendMessage(getMessage("preferences_edited"), request);
 
@@ -82,29 +87,29 @@ public class AdminController extends BaseController {
     @RequestMapping(value = "/users/update", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public @ResponseBody String updateUser(
-    		@RequestParam(value = "id", required = true) final String id,
-    		@RequestParam(value = "columnPosition", required = true) final Integer colId,
-    		@RequestParam(value = "value", required = true) final String value,
-    		final HttpServletRequest request,
-    		final HttpServletResponse response) {
+            @RequestParam(value = "id", required = true) final String id,
+            @RequestParam(value = "columnPosition", required = true) final Integer colId,
+            @RequestParam(value = "value", required = true) final String value,
+            final HttpServletRequest request,
+            final HttpServletResponse response) {
 
-    	String returnMessage = "";
+        String returnMessage = "";
 
-    	Material material = Material.findByName(id);
+        Person person = Person.findByEmailAddress(id);
 
-    	if (material != null) {
-    		try {
-    			returnMessage = material.set(colId, value);
-    			material.merge();
-    			material.flush();
-    		} catch (Exception e) {
-        		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        		returnMessage = this.getMessage("materials_library_update_error");
-    		}
-    	} else {
-    		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    		returnMessage = this.getMessage("materials_library_update_notfounderror");
-    	}
+        if (person != null) {
+            try {
+                returnMessage = person.set(colId, value, this.getContext());
+                person.merge();
+                person.flush();
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                returnMessage = this.getMessage("users_update_error");
+            }
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            returnMessage = this.getMessage("users_update_notfounderror");
+        }
         return returnMessage;
     }
 
@@ -119,27 +124,59 @@ public class AdminController extends BaseController {
     @RequestMapping(value = "/users/delete", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public @ResponseBody String deleteUser(
-    		@RequestParam(value = "id", required = true) final String id,
-    		final HttpServletRequest request,
-    		final HttpServletResponse response) {
+            @RequestParam(value = "id", required = true) final String id,
+            final HttpServletRequest request,
+            final HttpServletResponse response) {
 
-    	String returnMessage = "";
+        String returnMessage = "";
 
-    	Material material = Material.findByName(id);
+        Person person = Person.findByEmailAddress(id);
 
-    	if (material != null) {
-    		try {
-    			material.remove();
-    			returnMessage = "ok";
-    		} catch (Exception e) {
-        		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        		returnMessage = this.getMessage("materials_library_delete_error");
-    		}
-    	} else {
-    		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    		returnMessage = this.getMessage("materials_library_delete_notfounderror");
-    	}
+        if (person != null) {
+            try {
+                person.remove();
+                returnMessage = "ok";
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                returnMessage = this.getMessage("users_delete_error");
+            }
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            returnMessage = this.getMessage("users_delete_notfounderror");
+        }
         return returnMessage;
+    }
+
+    @RequestMapping(value = "/users/roles.json", method = RequestMethod.GET)
+    public @ResponseBody String roles(
+            final HttpServletRequest request,
+            final HttpServletResponse response) {
+
+        Map<String, String> jsonMap = new LinkedHashMap<String, String>();
+
+        for (UserRole role : UserRole.values()) {
+            String name = getMessage(role.getMessageKey());
+            jsonMap.put(name, name);
+        }
+        JSONObject jsonObject = JSONObject.fromObject(jsonMap);
+
+        return jsonObject.toString();
+    }
+
+    @RequestMapping(value = "/users/statuses.json", method = RequestMethod.GET)
+    public @ResponseBody String statuses(
+            final HttpServletRequest request,
+            final HttpServletResponse response) {
+
+        Map<String, String> jsonMap = new LinkedHashMap<String, String>();
+
+        for (UserStatus status : UserStatus.values()) {
+            String name = getMessage(status.getMessageKey());
+            jsonMap.put(name, name);
+        }
+        JSONObject jsonObject = JSONObject.fromObject(jsonMap);
+
+        return jsonObject.toString();
     }
 
     /**
@@ -150,12 +187,12 @@ public class AdminController extends BaseController {
     @RequestMapping(value = "/users/list.json", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public @ResponseBody String list() {
-        return Material.toJson(Material.findAllMaterials());
+        return Person.toJson(Person.findAllPeople(), this.getContext());
     }
 
     @ModelAttribute("controllerUrl")
     public final String getControllerUrl() {
-    	return "/admin";
+        return "/admin";
     }
 
 }

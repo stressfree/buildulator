@@ -55,6 +55,60 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+    $('#adminTabs').tabs();
+
+    $('#usersList').dataTable({
+        "bProcessing" : true,
+        "bJQueryUI" : true,
+        "sPaginationType" : "full_numbers",
+        "bLengthChange" : false,
+        "iDisplayLength" : 50,
+        "sAjaxSource" : './admin/users/list.json',
+        "aoColumnDefs" : [ {
+            "sClass" : "column-1",
+            "aTargets" : [ 0 ]
+        }, {
+            "sClass" : "column-2",
+            "aTargets" : [ 1 ]
+        }, {
+            "sClass" : "column-3",
+            "aTargets" : [ 2 ]
+        }, {
+            "sClass" : "column-4",
+            "aTargets" : [ 3 ]
+        }, {
+            "sClass" : "column-5",
+            "aTargets" : [ 4 ]
+        }]
+    }).makeEditable({
+        sDeleteURL : "./admin/users/delete",
+        sUpdateURL : "./admin/users/update",
+        oDeleteRowButtonOptions : {},
+        aoColumns : [ {
+            cssclass : "required"
+        }, {
+            cssclass : "required"
+        }, {
+            cssclass : "required"
+        }, {
+            cssclass : "required",
+            type: "select",
+            onblur: "submit",
+            loadurl: "./users/roles.json",
+            loadtype: "GET",
+            event: "click"
+        }, {
+            cssclass : "required",
+            type: "select",
+            onblur: "submit",
+            loadurl: "./users/statuses.json",
+            loadtype: "GET",
+            event: "click"
+        } ]
+    });
+});
+
+$(document).ready(function() {
     $('button, input:submit').button();
 });
 

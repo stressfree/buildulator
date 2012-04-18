@@ -27,13 +27,11 @@
     <c:if test="${multipart}">
       <c:set var="enctype" value="multipart/form-data"/>
     </c:if>
-    <spring:message arguments="${label}" code="entity_update" var="title_msg" htmlEscape="false" />
-    <c:if test="${not empty title}">
-      <spring:message code="${title}" var="title_msg" htmlEscape="false" />
-    </c:if>
 
     <div class="panel">
-      <h1><c:out value="${title_msg}" /></h1>
+      <c:if test="${not empty title}">
+        <h1><spring:message code="${title}" htmlEscape="false" /></h1>
+      </c:if>
       <spring:url value="${path}" var="form_url" />
       <form:form action="${form_url}" method="PUT" modelAttribute="${modelAttribute}" enctype="${enctype}">
         <form:errors cssClass="errors" delimiter="&lt;p/&gt;" />

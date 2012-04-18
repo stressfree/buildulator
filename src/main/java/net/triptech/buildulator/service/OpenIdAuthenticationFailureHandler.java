@@ -69,11 +69,7 @@ public class OpenIdAuthenticationFailureHandler implements
             OpenIDAuthenticationToken token	= (OpenIDAuthenticationToken)
                     authenticationException.getAuthentication();
 
-            String id = token.getIdentityUrl();
-
-            List<Person> people = Person.findPeopleByOpenIdIdentifier(id).getResultList();
-
-            Person person = people.size() == 0 ? null : people.get(0);
+            Person person = Person.findByOpenIdIdentifier(token.getIdentityUrl());
 
             if (person == null) {
 

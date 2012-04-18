@@ -11,7 +11,6 @@
 package net.triptech.buildulator.web;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -92,11 +91,7 @@ public abstract class BaseController {
 
         if (request.getUserPrincipal() != null
                 && StringUtils.isNotBlank(request.getUserPrincipal().getName())) {
-
-            List<Person> people = Person.findPeopleByOpenIdIdentifier(
-                    request.getUserPrincipal().getName()).getResultList();
-
-            user = people.size() == 0 ? null : people.get(0);
+            user = Person.findByOpenIdIdentifier(request.getUserPrincipal().getName());
         }
         return user;
     }
