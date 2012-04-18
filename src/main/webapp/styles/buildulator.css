@@ -247,6 +247,11 @@ p.field .ui-dialog label.error {
   margin: 0 0 5px 0;
 }
 
+#formBulkAddRows textarea {
+    width: 570px;
+    height: 300px;
+}
+
 #materialsList_wrapper thead th, #usersList_wrapper thead th {
   font-size: 0.9em;
 }
