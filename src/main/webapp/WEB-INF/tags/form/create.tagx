@@ -21,9 +21,9 @@
       <c:set var="enctype" value="multipart/form-data"/>
     </c:if>
 
-    <div class="panel">
       <c:if test="${not empty title}">
         <h1><spring:message code="${title}" htmlEscape="false" /></h1>
+        <![CDATA[ <div class="panel"><div class="panelContent"> ]]>
       </c:if>
       <spring:url value="${path}" var="form_url"/>
       <form:form action="${form_url}" method="POST" modelAttribute="${modelAttribute}" enctype="${enctype}">
@@ -37,6 +37,8 @@
           <input id="proceed" type="submit" value="${fn:escapeXml(save_button)}"/>
         </div>
       </form:form>
-    </div>
+      <c:if test="${not empty title}">
+        <![CDATA[ </div></div> ]]>
+      </c:if>
   </c:if>
 </jsp:root>

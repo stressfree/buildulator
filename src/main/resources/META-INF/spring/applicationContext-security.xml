@@ -37,7 +37,7 @@
   <beans:bean id="openIdAuthenticationFailureHandler" class="net.triptech.buildulator.service.OpenIdAuthenticationFailureHandler" />
 
   <beans:bean id="accessDeniedHandler" class="net.triptech.buildulator.RedirectAccessDeniedHandler">
-      <beans:property name="accessDeniedUrl" value="accessDenied" />
+      <beans:property name="accessDeniedUrl" value="error/accessDenied" />
   </beans:bean>
 
 </beans:beans>

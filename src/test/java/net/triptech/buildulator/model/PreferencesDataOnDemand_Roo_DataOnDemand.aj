@@ -27,6 +27,7 @@ privileged aspect PreferencesDataOnDemand_Roo_DataOnDemand {
         setGoogleTrackingId(obj, index);
         setHomepageContent(obj, index);
         setHomepageTitle(obj, index);
+        setName(obj, index);
         setUrl(obj, index);
         return obj;
     }
@@ -47,6 +48,14 @@ privileged aspect PreferencesDataOnDemand_Roo_DataOnDemand {
             homepageTitle = homepageTitle.substring(0, 200);
         }
         obj.setHomepageTitle(homepageTitle);
+    }
+    
+    public void PreferencesDataOnDemand.setName(Preferences obj, int index) {
+        String name = "name_" + index;
+        if (name.length() > 100) {
+            name = name.substring(0, 100);
+        }
+        obj.setName(name);
     }
     
     public void PreferencesDataOnDemand.setUrl(Preferences obj, int index) {

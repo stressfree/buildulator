@@ -1,4 +1,13 @@
 $(document).ready(function() {
+    if ($('#flashMessage p.flashMessageContent').html() != null) {
+        $.gritter.add({
+            title: $('#flashMessage p.flashMessageTitle').html(),
+            text: $('#flashMessage p.flashMessageContent').html()
+        });
+    }
+});
+
+$(document).ready(function() {
     $('#materialsList').dataTable({
         "bProcessing" : true,
         "bJQueryUI" : true,
@@ -56,6 +65,7 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     $('#adminTabs').tabs();
+    $('#adminAccordion').accordion({ autoHeight: false });
 
     $('#usersList').dataTable({
         "bProcessing" : true,
@@ -94,14 +104,14 @@ $(document).ready(function() {
             cssclass : "required",
             type: "select",
             onblur: "submit",
-            loadurl: "./users/roles.json",
+            loadurl: "./admin/users/roles.json",
             loadtype: "GET",
             event: "click"
         }, {
             cssclass : "required",
             type: "select",
             onblur: "submit",
-            loadurl: "./users/statuses.json",
+            loadurl: "./admin/users/statuses.json",
             loadtype: "GET",
             event: "click"
         } ]

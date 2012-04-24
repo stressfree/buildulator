@@ -15,22 +15,22 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@RequestMapping("/")
+@RequestMapping("/projects")
 @Controller
-public class HomepageController extends BaseController {
+public class ProjectController extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String index() {
-        return "homepage";
+        return "projects/show";
     }
 
     @ModelAttribute("controllerUrl")
     public final String getControllerUrl() {
-        return "/";
+        return "/projects";
     }
 
     @ModelAttribute("controllerName")
     public final String getControllerName() {
-        return getMessage("controller_homepage");
+        return getMessage("controller_projects");
     }
 }

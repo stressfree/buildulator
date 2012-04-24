@@ -195,4 +195,9 @@ public class AdminController extends BaseController {
         return "/admin";
     }
 
+    @ModelAttribute("controllerName")
+    public final String getControllerName() {
+        return getMessage("controller_admin");
+    }
+
 }

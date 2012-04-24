@@ -8,6 +8,8 @@
   <spring:url value="/js/jquery.datatables.editable-min.js" var="datatables_editable_js_url" />
   <spring:url value="/js/buildulator.js" var="buildulator_js_url" />
   <spring:url value="/js/jquery.wysiwyg.js" var="wysiwyg_js_url" />
+  <spring:url value="/js/jquery.gritter.min.js" var="gritter_js_url" />
+
   <spring:url value="/images/favicon.ico" var="favicon" />
 
   <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/reset-fonts-grids/reset-fonts-grids.css" />
@@ -29,4 +31,5 @@
   <script type="text/javascript" charset="utf8" src="${datatables_editable_js_url}"><!-- required for FF3 and Opera --></script>
   <script type="text/javascript" charset="utf8" src="${buildulator_js_url}"><!-- required for FF3 and Opera --></script>
   <script type="text/javascript" charset="utf8" src="${wysiwyg_js_url}"><!-- required for FF3 and Opera --></script>
+  <script type="text/javascript" charset="utf8" src="${gritter_js_url}"><!-- required for FF3 and Opera --></script>
 </jsp:root>

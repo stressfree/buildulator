@@ -2,30 +2,29 @@
   <jsp:directive.page contentType="text/html;charset=UTF-8" />
   <jsp:output omit-xml-declaration="yes" />
   <spring:message var="title" code="error_uncaughtexception_title" htmlEscape="false" />
+
+  <h1><c:out value="${title}" /></h1>
   <div class="panel">
-    <h1><c:out value="${title}" /></h1>
-    <p>
-      <spring:message code="error_uncaughtexception_problemdescription" />
-    </p>
-    <c:if test="${not empty exception}">
+    <div class="panelContent">
       <p>
-        <h4>
-          <spring:message code="exception_details" />
-        </h4>
-        <spring:message var="message" code="exception_message" />
-        <div class="panel">
-          <h3><c:out value="${message}" /></h3>
-          <c:out value="${exception.localizedMessage}" />
-        </div>
-        <spring:message var="stacktrace" code="exception_stacktrace" />
-        <div class="panel">
-          <h3><c:out value="${stacktrace}" /></h3>
-          <c:forEach items="${exception.stackTrace}" var="trace">
-            <c:out value="${trace}" />
-            <br />
-          </c:forEach>
-        </div>
+        <spring:message code="error_uncaughtexception_problemdescription" />
       </p>
-    </c:if>
+      <c:if test="${not empty exception}">
+        <p>
+          <h4>
+            <spring:message code="exception_details" />
+          </h4>
+          <spring:message var="message" code="exception_message" />
+            <h3><c:out value="${message}" /></h3>
+            <c:out value="${exception.localizedMessage}" />
+          <spring:message var="stacktrace" code="exception_stacktrace" />
+            <h3><c:out value="${stacktrace}" /></h3>
+            <c:forEach items="${exception.stackTrace}" var="trace">
+              <c:out value="${trace}" />
+              <br />
+            </c:forEach>
+        </p>
+      </c:if>
+    </div>
   </div>
 </div>

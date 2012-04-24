@@ -7,16 +7,19 @@
 
   <spring:message var="login_title" code="security_login_title" />
   <spring:message var="login_button" code="google_login_button" />
+
+  <h1><c:out value="${login_title}" /></h1>
   <div class="panel">
-    <h1><c:out value="${login_title}" /></h1>
-    <div class="googlelogon">
-      <form action="${fn:escapeXml(form_url_openid)}" method="post">
-          <p><spring:message code="google_login_description" /></p>
-          <input name="openid_identifier" type="hidden" value="http://www.google.com/accounts/o8/id" />
-          <div class="submit">
-             <button id="proceed" type="submit"><c:out value="${login_button}" /></button>
-          </div>
-      </form>
+    <div class="panelContent">
+      <div class="googlelogon">
+        <form action="${fn:escapeXml(form_url_openid)}" method="post">
+            <p><spring:message code="google_login_description" htmlEscape="false"/></p>
+            <input name="openid_identifier" type="hidden" value="http://www.google.com/accounts/o8/id" />
+            <div class="submit">
+               <button id="proceed" type="submit"><c:out value="${login_button}" /></button>
+            </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

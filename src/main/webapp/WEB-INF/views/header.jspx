@@ -3,8 +3,11 @@
   <jsp:output omit-xml-declaration="yes" />
 
   <spring:url var="home" value="/" />
-  <spring:message code="application_name" var="home_label" />
-  <a href="${home}" name="${fn:escapeXml(home_label)}" title="${fn:escapeXml(home_label)}">
-    <c:out value="${home_label}" />
+  <spring:message code="application_name" htmlEscape="true" var="applicationName" />
+  <c:if test="${not empty preferences.name}">
+    <c:set var="applicationName" value="${preferences.name}" />
+  </c:if>
+  <a href="${home}" name="${fn:escapeXml(applicationName)}" title="${fn:escapeXml(applicationName)}">
+    <c:out value="${applicationName}" />
   </a>
 </div>

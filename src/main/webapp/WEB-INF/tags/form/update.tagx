@@ -28,23 +28,25 @@
       <c:set var="enctype" value="multipart/form-data"/>
     </c:if>
 
-    <div class="panel">
-      <c:if test="${not empty title}">
-        <h1><spring:message code="${title}" htmlEscape="false" /></h1>
-      </c:if>
-      <spring:url value="${path}" var="form_url" />
-      <form:form action="${form_url}" method="PUT" modelAttribute="${modelAttribute}" enctype="${enctype}">
-        <form:errors cssClass="errors" delimiter="&lt;p/&gt;" />
-        <jsp:doBody />
-        <div class="actionButtons" id="${fn:escapeXml(id)}_submit">
-          <spring:message code="button_save" var="save_button" htmlEscape="false" />
-          <input id="proceed" type="submit" value="${fn:escapeXml(save_button)}" />
-        </div>
-        <form:hidden id="_${fn:escapeXml(idField)}_id" path="${fn:escapeXml(idField)}" />
-        <c:if test="${versionField ne 'none'}">
-          <form:hidden id="_${fn:escapeXml(versionField)}_id" path="${fn:escapeXml(versionField)}" />
-        </c:if>
-      </form:form>
-    </div>
+     <c:if test="${not empty title}">
+       <h1><spring:message code="${title}" htmlEscape="false" /></h1>
+       <![CDATA[ <div class="panel"><div class="panelContent"> ]]>
+     </c:if>
+     <spring:url value="${path}" var="form_url" />
+     <form:form action="${form_url}" method="PUT" modelAttribute="${modelAttribute}" enctype="${enctype}">
+       <form:errors cssClass="errors" delimiter="&lt;p/&gt;" />
+       <jsp:doBody />
+       <div class="actionButtons" id="${fn:escapeXml(id)}_submit">
+         <spring:message code="button_save" var="save_button" htmlEscape="false" />
+         <input id="proceed" type="submit" value="${fn:escapeXml(save_button)}" />
+       </div>
+       <form:hidden id="_${fn:escapeXml(idField)}_id" path="${fn:escapeXml(idField)}" />
+       <c:if test="${versionField ne 'none'}">
+         <form:hidden id="_${fn:escapeXml(versionField)}_id" path="${fn:escapeXml(versionField)}" />
+       </c:if>
+     </form:form>
+     <c:if test="${not empty title}">
+       <![CDATA[ </div></div> ]]>
+     </c:if>
   </c:if>
 </jsp:root>

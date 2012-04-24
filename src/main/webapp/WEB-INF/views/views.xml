@@ -2,32 +2,34 @@
 <!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 <tiles-definitions>
 
-	<definition extends="default" name="dataAccessFailure">
-		<put-attribute name="body"
-			value="/WEB-INF/views/dataAccessFailure.jspx" />
-	</definition>
+  <definition extends="default" name="homepage">
+    <put-attribute name="body" value="/WEB-INF/views/homepage.jspx" />
+  </definition>
 
-	<definition extends="default" name="resourceNotFound">
-		<put-attribute name="body"
-			value="/WEB-INF/views/resourceNotFound.jspx" />
-	</definition>
+  <definition extends="default" name="dataAccessFailure">
+    <put-attribute name="body" value="/WEB-INF/views/dataAccessFailure.jspx" />
+  </definition>
 
-	<definition extends="default" name="uncaughtException">
-		<put-attribute name="body"
-			value="/WEB-INF/views/uncaughtException.jspx" />
-	</definition>
+  <definition extends="default" name="resourceNotFound">
+    <put-attribute name="body" value="/WEB-INF/views/resourceNotFound.jspx" />
+  </definition>
 
-	<definition extends="default" name="accessDenied">
-		<put-attribute name="body" value="/WEB-INF/views/accessDenied.jspx" />
-	</definition>
+  <definition extends="default" name="uncaughtException">
+    <put-attribute name="body"
+      value="/WEB-INF/views/uncaughtException.jspx" />
+  </definition>
 
-	<definition extends="default" name="accountDisabled">
-		<put-attribute name="body"
-			value="/WEB-INF/views/accountDisabled.jspx" />
-	</definition>
+  <definition extends="default" name="accessDenied">
+    <put-attribute name="body" value="/WEB-INF/views/accessDenied.jspx" />
+  </definition>
 
-	<definition extends="default" name="login">
-		<put-attribute name="body" value="/WEB-INF/views/login.jspx" />
-	</definition>
+  <definition extends="default" name="accountDisabled">
+    <put-attribute name="body"
+      value="/WEB-INF/views/accountDisabled.jspx" />
+  </definition>
+
+  <definition extends="default" name="login">
+    <put-attribute name="body" value="/WEB-INF/views/login.jspx" />
+  </definition>
 
 </tiles-definitions>

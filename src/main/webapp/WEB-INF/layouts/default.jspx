@@ -6,7 +6,19 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=8" />
     <util:load-scripts />
-    <title><spring:message code="application_name" /></title>
+    <title>
+        <c:if test="${not empty controllerName}">
+            <c:out value="${controllerName}" escapeXml="true" /> |
+        </c:if>
+        <c:choose>
+            <c:when test="${not empty preferences.name}">
+                <c:out value="${preferences.name}" />
+            </c:when>
+            <c:otherwise>
+                <spring:message code="application_name" htmlEscape="true" />
+            </c:otherwise>
+        </c:choose>
+    </title>
     <c:if test="${not empty preferences.googleTrackingId}">
         <c:set var="trackingId" value="${fn:escapeXml(preferences.googleTrackingId)}" />
         <script type="text/javascript">
@@ -28,9 +40,8 @@
          <tiles:insertAttribute name="menu" ignore="true" />
          <c:if test="${not empty requestScope.flash_message}">
            <div id="flashMessage" style="display: none;">
-              <div class="flashMessageContent">
-                 <p><c:out value="${requestScope.flash_message}" escapeXml="false" /></p>
-              </div>
+              <p class="flashMessageTitle"><c:out value="${preferences.name}" escapeXml="true" /></p>
+              <p class="flashMessageContent"><c:out value="${requestScope.flash_message}" escapeXml="false" /></p>
            </div>
          </c:if>
       </div>

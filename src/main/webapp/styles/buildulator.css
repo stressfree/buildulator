@@ -19,11 +19,19 @@ body {
   border: 1px solid #d4d4d3;
   background: url('../images/header.jpg') top left no-repeat #8d8574;
   text-align: left;
+  -moz-border-radius-topright: 8px;
+  -webkit-border-top-right-radius: 8px;
+  -khtml-border-top-right-radius: 8px;
+  border-top-right-radius: 8px;
+  -moz-border-radius-topleft: 8px;
+  -webkit-border-top-left-radius: 8px;
+  -khtml-border-top-left-radius: 8px;
+  border-top-left-radius: 8px;
 }
 
 #header a {
   color: #fff;
-  font-size: 28px;
+  font-size: 24px;
   font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
   text-decoration: none;
   margin: 0 0 0 23px;
@@ -65,6 +73,14 @@ body {
   background: #9b9485;
   color: #efefef;
   text-decoration: none;
+  -moz-border-radius-topright: 8px;
+  -webkit-border-top-right-radius: 8px;
+  -khtml-border-top-right-radius: 8px;
+  border-top-right-radius: 8px;
+  -moz-border-radius-topleft: 8px;
+  -webkit-border-top-left-radius: 8px;
+  -khtml-border-top-left-radius: 8px;
+  border-top-left-radius: 8px;
 }
 
 #mainmenu li a:hover {
@@ -160,20 +176,23 @@ body {
   border: 1px solid #d4d4d3;
   background: #f0f2f2;
   margin: 25px auto 10px auto;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -khtml-border-radius: 8px;
+  border-radius: 8px;
 }
 
 #body {
   margin: 2px;
-  border: 1px solid #d4d4d3;
-  background: #fff;
   text-align: left;
+  line-height: 1.5em;
 }
 
 #body h1,#body h2,#body h3,#body h4,#body h5,#body h6 {
   font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: normal;
 }
-#body h2,#body h3,#body h4,#body h5,#body h6 {
+#body h1, #body h2,#body h3,#body h4,#body h5,#body h6 {
   margin-bottom: 0.6em;
 }
 
@@ -186,19 +205,16 @@ body {
 }
 
 #body div.panel {
-  margin: 5px 20px 35px 20px;
+  margin: 2px;
+  border: 1px solid #d4d4d3;
+  background: #fff;
+}
+#body div.panelContent {
+  margin: 15px 15px 35px 15px;
 }
 
 p.field {
   clear: left;
-}
-
-
-#body fieldset legend {
-  font-size: 1em;
-  line-height: 1.5em;
-  padding: 0.7em 0 0.3em 25px;
-  color: #535353;
 }
 
 p.field label {
@@ -229,7 +245,7 @@ p.field .ui-dialog label.error {
 
 #adminTabs {
   font-size: 0.9em;
-  background: #fff url('../images/tabs-bg.png') repeat-x;
+  background: #fff;
   margin: 5px 5px 20px 5px;
   border-color: #ccc;
 }
@@ -238,9 +254,6 @@ p.field .ui-dialog label.error {
 }
 #adminTabs .ui-tabs-nav li.ui-tabs-selected a {
     color: #2D3442;
-}
-#adminTabs div.panel {
-  margin: 10px 0 0 0;
 }
 
 .materialsOptions, .usersOptions {
@@ -338,12 +351,37 @@ p.field div.wysiwyg iframe.wysiwyg-input {
 }
 
 /** Input field styles */
-input#_url_id,input#_homepageTitle_id {
+#preferences input#_name_id,
+#preferences input#_url_id,
+#preferences input#_homepageTitle_id {
   width: 320px;
 }
 
+#_c_net_triptech_buildulator_model_Preferences_homepageTitle_id label {
+  width: auto;
+  margin-left: 30px;
+}
 #_c_net_triptech_buildulator_model_Preferences_homepageContent_id label {
   display: none;
+}
+
+
+#body h3.ui-accordion-header {
+  margin-bottom: 0;
+}
+#body h3.ui-state-active {
+  border-bottom: none;
+}
+#body h3.ui-state-active a {
+  color: #2D3442;
+}
+#body div.ui-widget-content {
+  background: #fff;
+}
+
+div.googlelogon div.submit {
+  font-size: 2em;
+  text-align: center;
 }
 
 /** JQuery WYSIWYG CSS **/
@@ -722,4 +760,105 @@ div.wysiwyg iframe {
   {
   padding: 2px 7px;
   width: auto;
+}
+
+/** Gritter CSS */
+#gritter-notice-wrapper {
+    position:fixed;
+    top:20px;
+    right:20px;
+    width:301px;
+    z-index:9999;
+}
+#gritter-notice-wrapper.top-left {
+    left: 20px;
+    right: auto;
+}
+#gritter-notice-wrapper.bottom-right {
+    top: auto;
+    left: auto;
+    bottom: 20px;
+    right: 20px;
+}
+#gritter-notice-wrapper.bottom-left {
+    top: auto;
+    right: auto;
+    bottom: 20px;
+    left: 20px;
+}
+.gritter-item-wrapper {
+    position:relative;
+    margin:0 0 10px 0;
+    background:url('../images/ie-spacer.gif'); /* ie7/8 fix */
+}
+.gritter-top {
+    background:url(../images/gritter.png) no-repeat left -30px;
+    height:10px;
+}
+.hover .gritter-top {
+    background-position:right -30px;
+}
+.gritter-bottom {
+    background:url(../images/gritter.png) no-repeat left bottom;
+    height:8px;
+    margin:0;
+}
+.hover .gritter-bottom {
+    background-position: bottom right;
+}
+.gritter-item {
+    display:block;
+    background:url(../images/gritter.png) no-repeat left -40px;
+    color:#eee;
+    padding:2px 11px 8px 11px;
+    font-size: 11px;
+    font-family:verdana;
+}
+.hover .gritter-item {
+    background-position:right -40px;
+}
+.gritter-item p {
+    padding:0;
+    margin:0;
+}
+.gritter-close {
+    display:none;
+    position:absolute;
+    top:5px;
+    left:3px;
+    background:url(../images/gritter.png) no-repeat left top;
+    cursor:pointer;
+    width:30px;
+    height:30px;
+}
+.gritter-title {
+    font-size:14px;
+    font-weight:bold;
+    padding:0 0 7px 0;
+    display:block;
+    text-shadow:1px 1px 0 #000; /* Not supported by IE :( */
+}
+.gritter-image {
+    width:48px;
+    height:48px;
+    float:left;
+}
+.gritter-with-image,
+.gritter-without-image {
+    padding:0 0 5px 0;
+}
+.gritter-with-image {
+    width:220px;
+    float:right;
+}
+/* for the light (white) version of the gritter notice */
+.gritter-light .gritter-item,
+.gritter-light .gritter-bottom,
+.gritter-light .gritter-top,
+.gritter-light .gritter-close {
+    background-image: url(../images/gritter-light.png);
+    color: #222;
+}
+.gritter-light .gritter-title {
+    text-shadow: none;
 }

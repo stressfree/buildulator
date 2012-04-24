@@ -78,6 +78,11 @@ public class UserController extends BaseController {
 
     @ModelAttribute("controllerUrl")
     public final String getControllerUrl() {
-    	return "/user";
+        return "/user";
+    }
+
+    @ModelAttribute("controllerName")
+    public final String getControllerName() {
+        return getMessage("controller_user");
     }
 }

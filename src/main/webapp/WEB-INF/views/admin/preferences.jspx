@@ -5,26 +5,29 @@
 
   <div id="adminTabs">
     <ul>
-      <li><a href="#preferencesTab">Preferences</a></li>
-      <li><a href="#usersTab">Users</a></li>
+      <li><a href="#preferencesTab"><spring:message code="preferences_title" /></a></li>
+      <li><a href="#usersTab"><spring:message code="users_title" /></a></li>
     </ul>
 
     <div id="preferencesTab">
       <form:update id="fu_net_triptech_buildulator_model_Preferences" modelAttribute="preferences" path="/admin" versionField="Version" z="user-managed">
-        <field:input field="url" id="c_net_triptech_buildulator_model_Preferences_url" required="true" validationType="url" min="10" max="200" />
-        <field:input field="googleTrackingId" id="c_net_triptech_buildulator_model_Preferences_googleTrackingId" z="user-managed" />
-        <fieldset>
-          <legend>
-            <spring:message code="label_net_triptech_buildulator_model_preferences_homepage" />
-          </legend>
-          <field:input field="homepageTitle" id="c_net_triptech_buildulator_model_Preferences_homepageTitle" z="user-managed" required="true" min="10" max="200" />
-          <field:editor field="homepageContent" id="c_net_triptech_buildulator_model_Preferences_homepageContent" z="user-managed" />
-        </fieldset>
+        <div id="adminAccordion">
+            <h3><a href="#"><spring:message code="label_net_triptech_buildulator_model_preferences_details" /></a></h3>
+            <div>
+                <field:input field="name" id="c_net_triptech_buildulator_model_Preferences_name" required="true" min="10" max="100" />
+                <field:input field="url" id="c_net_triptech_buildulator_model_Preferences_url" required="true" validationType="url" min="10" max="200" />
+                <field:input field="googleTrackingId" id="c_net_triptech_buildulator_model_Preferences_googleTrackingId" z="user-managed" />
+            </div>
+            <h3><a href="#"><spring:message code="label_net_triptech_buildulator_model_preferences_homepage" /></a></h3>
+            <div style="height: 400px;">
+                <field:input field="homepageTitle" id="c_net_triptech_buildulator_model_Preferences_homepageTitle" z="user-managed" required="true" min="10" max="200" />
+                <field:editor field="homepageContent" id="c_net_triptech_buildulator_model_Preferences_homepageContent" z="user-managed" />
+            </div>
+        </div>
       </form:update>
     </div>
 
     <div id="usersTab">
-      <div class="panel">
         <p>
           <spring:message code="users_introduction" htmlEscape="false" />
         </p>
@@ -49,7 +52,6 @@
           </tbody>
         </table>
       </div>
-    </div>
   </div>
 
 </div>

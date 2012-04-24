@@ -10,14 +10,20 @@
  ******************************************************************************/
 package net.triptech.buildulator.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.triptech.buildulator.FlashScope;
 import net.triptech.buildulator.model.Material;
 import net.triptech.buildulator.model.DataGrid;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,6 +35,9 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/library")
 @Controller
 public class LibraryController extends BaseController {
+
+
+    private static Logger logger = Logger.getLogger(LibraryController.class);
 
     /**
      * Show the index page.
@@ -159,6 +168,102 @@ public class LibraryController extends BaseController {
         return returnMessage;
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')")
+    @RequestMapping(value = "/materials/bulk", method = RequestMethod.POST)
+    public String complete(
+            @RequestParam(value = "materialsData", required = true) String data,
+            Model uiModel, HttpServletRequest request) throws Exception {
+
+        StringBuilder message = new StringBuilder();
+
+        if (StringUtils.isNotBlank(data)) {
+            DataGrid parsedData = new DataGrid(data);
+
+            int materialCount = 0, nameId = 0, unitOfMeasureId = 0, lifeYearsId = 0,
+                carbonPerUnitId = 0, energyPerUnitId = 0, wastagePercentId = 0;
+
+            int headerCount = 0;
+            for (String header : parsedData.getHeaderFields()) {
+                if (StringUtils.equalsIgnoreCase(header, this.getMessage(
+                        "label_net_triptech_buildulator_model_material_name"))) {
+                    nameId = headerCount;
+                }
+                if (StringUtils.equalsIgnoreCase(header, this.getMessage(
+                        "label_net_triptech_buildulator_model_material_unitofmeasure"))) {
+                    unitOfMeasureId = headerCount;
+                }
+                if (StringUtils.equalsIgnoreCase(header, this.getMessage(
+                        "label_net_triptech_buildulator_model_material_lifeyears"))) {
+                    lifeYearsId = headerCount;
+                }
+                if (StringUtils.equalsIgnoreCase(header, this.getMessage(
+                        "label_net_triptech_buildulator_model_material_carbonperunit"))) {
+                    carbonPerUnitId = headerCount;
+                }
+                if (StringUtils.equalsIgnoreCase(header, this.getMessage(
+                        "label_net_triptech_buildulator_model_material_energyperunit"))) {
+                    energyPerUnitId = headerCount;
+                }
+                if (StringUtils.equalsIgnoreCase(header, this.getMessage(
+                        "label_net_triptech_buildulator_model_material_wastagepercent")))
+                {
+                    wastagePercentId = headerCount;
+                }
+                headerCount++;
+            }
+
+            for (List<String> row : parsedData.getRows()) {
+
+                Material material = new Material();
+
+                material.setName(row.get(nameId));
+                material.setUnitOfMeasure(row.get(unitOfMeasureId));
+                try {
+                    material.setLifeYears(Integer.parseInt(row.get(lifeYearsId)));
+                } catch (Exception e) {
+                    logger.error("Error parsing lifeYears value: " + e.getMessage());
+                }
+                try {
+                    material.setCarbonPerUnit(Double.parseDouble(
+                            row.get(carbonPerUnitId)));
+                } catch (Exception e) {
+                    logger.error("Error parsing carbonPerUnit value: " + e.getMessage());
+                }
+                try {
+                    material.setEnergyPerUnit(Double.parseDouble(
+                            row.get(energyPerUnitId)));
+                } catch (Exception e) {
+                    logger.error("Error parsing energyPerUnit value: " + e.getMessage());
+                }
+                try {
+                    material.setWastagePercent(Double.parseDouble(
+                            row.get(wastagePercentId)));
+                } catch (Exception e) {
+                    logger.error("Error parsing wastagePercent value: " + e.getMessage());
+                }
+
+                try {
+                    material.persist();
+                    material.flush();
+                    materialCount++;
+                } catch (Exception e) {
+                    logger.error("Error persisting material: " + e.getMessage());
+                }
+            }
+
+            message.append(materialCount);
+            message.append(" ");
+            message.append(getMessage("materials_library_bulkadd_complete"));
+
+        } else {
+            message.append(getMessage("materials_library_bulkadd_nodata"));
+        }
+
+        FlashScope.appendMessage(message.toString(), request);
+
+        return "redirect:/library";
+    }
+
     @RequestMapping(value = "/template.xls", method = RequestMethod.GET)
     public ModelAndView buildTemplate(HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -195,6 +300,11 @@ public class LibraryController extends BaseController {
     @ModelAttribute("controllerUrl")
     public final String getControllerUrl() {
         return "/library";
+    }
+
+    @ModelAttribute("controllerName")
+    public final String getControllerName() {
+        return getMessage("controller_library");
     }
 
 }
