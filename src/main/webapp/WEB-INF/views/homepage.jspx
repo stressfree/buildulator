@@ -1,10 +1,15 @@
-<div class="yui-g" xmlns:spring="http://www.springframework.org/tags" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+<div class="homepageContent" xmlns:spring="http://www.springframework.org/tags" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
   <jsp:directive.page contentType="text/html;charset=UTF-8" />
   <jsp:output omit-xml-declaration="yes" />
 
   <c:if test="${not empty preferences.homepageTitle}">
     <h1><c:out value="${preferences.homepageTitle}" /></h1>
   </c:if>
+  <div class="sidePanel">
+    <div class="newProject">
+      <button id="newProject">Create a new project</button>
+    </div>
+  </div>
   <div class="panel">
     <div class="panelContent">
         <c:out value="${preferences.homepageContent}" escapeXml="false" />

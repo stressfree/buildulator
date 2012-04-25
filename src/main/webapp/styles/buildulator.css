@@ -41,7 +41,7 @@ body {
 
 #menu {
   height: 44px;
-  margin: 2px;
+  margin: 2px 2px 1px 2px;
   border: 1px solid #d4d4d3;
   background: url('../images/menu.png') top left repeat-x #8d8574;
 }
@@ -183,14 +183,14 @@ body {
 }
 
 #body {
-  margin: 2px;
+  margin: 0px 2px 35px 2px;
   text-align: left;
   line-height: 1.5em;
 }
 
 #body h1,#body h2,#body h3,#body h4,#body h5,#body h6 {
   font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
-  font-weight: normal;
+  font-weight: bold;
 }
 #body h1, #body h2,#body h3,#body h4,#body h5,#body h6 {
   margin-bottom: 0.6em;
@@ -198,6 +198,10 @@ body {
 
 #body h1 {
   font-size: 2em;
+  margin: 0 0 0 15px;
+  padding: 30px 0 15px 0;
+  color: #666;
+  font-weight: normal;
 }
 
 #body td {
@@ -211,6 +215,11 @@ body {
 }
 #body div.panelContent {
   margin: 15px 15px 35px 15px;
+}
+#body div.sidePanel {
+  float: right;
+  width: 249px;
+  margin: 152px 10px 0 10px;
 }
 
 p.field {
@@ -260,9 +269,12 @@ p.field .ui-dialog label.error {
   margin: 0 0 5px 0;
 }
 
+#formAddNewRow input#name {
+  width: 320px;
+}
 #formBulkAddRows textarea {
-    width: 570px;
-    height: 300px;
+  width: 570px;
+  height: 300px;
 }
 
 #materialsList_wrapper thead th, #usersList_wrapper thead th {
@@ -337,7 +349,7 @@ body .ui-dialog {
 
 p.field div.wysiwyg {
   margin-left: 20px;
-  width: 490px;
+  width: 550px;
   background: none;
 }
 
@@ -379,10 +391,21 @@ p.field div.wysiwyg iframe.wysiwyg-input {
   background: #fff;
 }
 
-div.googlelogon div.submit {
+div.homepageContent, div.dataEntry, div.errorDetails, div.googleLogon {
+  background: url('../images/content-bg.gif') top right no-repeat;
+  min-height: 300px;
+}
+div.homepageContent div.panel, div.dataEntry div.panel,
+div.errorDetails div.panel, div.googleLogon div.panel {
+  margin-right: 280px!important;
+}
+
+
+div.homepageContent div.newProject, div.googleLogon div.submit {
   font-size: 2em;
   text-align: center;
 }
+
 
 /** JQuery WYSIWYG CSS **/
 div.wysiwyg {
