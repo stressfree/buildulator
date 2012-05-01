@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:buildulator="urn:jsptagdir:/WEB-INF/tags/buildulator" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+
+  <div id="libraryTabs">
+    <ul>
+      <li><a href="#materialsTab"><spring:message code="materials_library_title" /></a></li>
+      <li><a href="#energySourcesTab"><spring:message code="energysources_library_title" /></a></li>
+    </ul>
+    <div id="materialsTab">
+        <buildulator:materials />
+    </div>
+    <div id="energySourcesTab">
+        <buildulator:energysources />
+    </div>
+  </div>
+
+</div>

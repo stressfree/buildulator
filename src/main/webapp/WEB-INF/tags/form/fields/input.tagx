@@ -5,6 +5,7 @@
   <jsp:directive.attribute name="field" type="java.lang.String" required="true" rtexprvalue="true" description="The field exposed from the form backing object" />
   <jsp:directive.attribute name="label" type="java.lang.String" required="false" rtexprvalue="true" description="The label used for this field, will default to a message bundle if not supplied" />
   <jsp:directive.attribute name="labelCode" type="java.lang.String" required="false" rtexprvalue="true" description="Key for label message bundle if label is not supplied" />
+  <jsp:directive.attribute name="extraClasses" type="java.lang.String" required="false" rtexprvalue="true" description="Optional classes to be assigned to the field" />
   <jsp:directive.attribute name="required" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicates if this field is required (default false)" />
   <jsp:directive.attribute name="disabled" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Specify if this field should be enabled" />
   <jsp:directive.attribute name="validationType" type="java.lang.String" required="false" rtexprvalue="true" description="The type of validation that should be applied (based on JQuery-validate types)" />
@@ -40,6 +41,10 @@
         <c:set var="validationTypeCss" value="${fn:escapeXml(validationType)}" />
     </c:if>
 
+    <c:if test="${not empty extraClasses}">
+        <c:set var="extraCss" value="${fn:escapeXml(extraClasses)}" />
+    </c:if>
+
     <c:if test="${min gt 0}">
         <c:set var="validationMin" value="${min}" />
     </c:if>
@@ -58,15 +63,15 @@
       </label>
       <c:choose>
         <c:when test="${disableFormBinding}">
-          <input id="_${sec_field}_id" name="${sec_field}" type="${fn:escapeXml(type)}" class="${requiredCss} ${validationTypeCss}" minlength="${validationMin}" maxlength="${validationMax}" />
+          <input id="_${sec_field}_id" name="${sec_field}" type="${fn:escapeXml(type)}" class="${requiredCss} ${validationTypeCss} ${extraCss}" minlength="${validationMin}" maxlength="${validationMax}" />
         </c:when>
         <c:otherwise>
           <c:choose>
             <c:when test="${type eq 'password'}">
-              <form:password id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" cssClass="${requiredCss} ${validationTypeCss}" minlength="${validationMin}" maxlength="${validationMax}" />
+              <form:password id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" cssClass="${requiredCss} ${validationTypeCss} ${extraCss}" minlength="${validationMin}" maxlength="${validationMax}" />
             </c:when>
             <c:otherwise>
-              <form:input id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" cssClass="${requiredCss} ${validationTypeCss}" minlength="${validationMin}" maxlength="${validationMax}" />
+              <form:input id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" cssClass="${requiredCss} ${validationTypeCss} ${extraCss}" minlength="${validationMin}" maxlength="${validationMax}" />
             </c:otherwise>
           </c:choose>
           <form:errors cssClass="errors" id="_${sec_field}_error_id" path="${sec_field}" />

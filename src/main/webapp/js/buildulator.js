@@ -8,6 +8,8 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+    $('#libraryTabs').tabs();
+
     $('#materialsList').dataTable({
         "bProcessing" : true,
         "bJQueryUI" : true,
@@ -38,6 +40,9 @@ $(document).ready(function() {
         sAddURL : "./library/materials",
         sDeleteURL : "./library/materials/delete",
         sUpdateURL : "./library/materials/update",
+        sAddNewRowButtonId: "btnAddMaterial",
+        sAddNewRowFormId: "formAddMaterial",
+        sDeleteRowButtonId: "btnDeleteMaterial",
         oDeleteRowButtonOptions : {},
         aoColumns : [ {
             cssclass : "required"
@@ -54,12 +59,47 @@ $(document).ready(function() {
         } ]
     });
 
-    $('#formBulkAddRows').dialog({
+    $('#formBulkAddMaterials').dialog({
         autoOpen : false,
         modal : true
     });
-    $('#btnBulkAddRows').removeAttr("disabled").click(function() {
-        $('#formBulkAddRows').dialog('open')
+    $('#btnBulkAddMaterials').removeAttr("disabled").click(function() {
+        $('#formBulkAddMaterials').dialog('open')
+    });
+
+
+    $('#energySourcesList').dataTable({
+        "bProcessing" : true,
+        "bJQueryUI" : true,
+        "sPaginationType" : "full_numbers",
+        "bLengthChange" : false,
+        "iDisplayLength" : 50,
+        "sAjaxSource" : './library/energysources/list.json',
+        "aoColumnDefs" : [ {
+            "sClass" : "column-1",
+            "aTargets" : [ 0 ]
+        }, {
+            "sClass" : "column-2",
+            "aTargets" : [ 1 ]
+        }, {
+            "sClass" : "column-3",
+            "aTargets" : [ 2 ]
+        } ]
+    }).makeEditable({
+        sAddURL : "./library/energysources",
+        sDeleteURL : "./library/energysources/delete",
+        sUpdateURL : "./library/energysources/update",
+        sAddNewRowButtonId: "btnAddEnergySource",
+        sAddNewRowFormId: "formAddEnergySource",
+        sDeleteRowButtonId: "btnDeleteEnergySource",
+        oDeleteRowButtonOptions : {},
+        aoColumns : [ {
+            cssclass : "required"
+        }, {
+            cssclass : "required number"
+        }, {
+            cssclass : "required number"
+        } ]
     });
 });
 

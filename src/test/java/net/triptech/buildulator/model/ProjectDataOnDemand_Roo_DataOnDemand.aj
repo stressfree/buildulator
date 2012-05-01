@@ -24,13 +24,37 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     
     public Project ProjectDataOnDemand.getNewTransientProject(int index) {
         Project obj = new Project();
+        setDescription(obj, index);
+        setEnergyConsumption(obj, index);
+        setLocation(obj, index);
         setName(obj, index);
+        setOccupants(obj, index);
         return obj;
+    }
+    
+    public void ProjectDataOnDemand.setDescription(Project obj, int index) {
+        String description = "description_" + index;
+        obj.setDescription(description);
+    }
+    
+    public void ProjectDataOnDemand.setEnergyConsumption(Project obj, int index) {
+        double energyConsumption = new Integer(index).doubleValue();
+        obj.setEnergyConsumption(energyConsumption);
+    }
+    
+    public void ProjectDataOnDemand.setLocation(Project obj, int index) {
+        String location = "location_" + index;
+        obj.setLocation(location);
     }
     
     public void ProjectDataOnDemand.setName(Project obj, int index) {
         String name = "name_" + index;
         obj.setName(name);
+    }
+    
+    public void ProjectDataOnDemand.setOccupants(Project obj, int index) {
+        int occupants = index;
+        obj.setOccupants(occupants);
     }
     
     public Project ProjectDataOnDemand.getSpecificProject(int index) {

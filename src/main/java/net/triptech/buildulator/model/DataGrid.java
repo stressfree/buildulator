@@ -18,8 +18,6 @@ import net.triptech.buildulator.DataParser;
 
 import org.apache.commons.lang.StringUtils;
 
-
-
 /**
  * The Class DataGrid.
  */

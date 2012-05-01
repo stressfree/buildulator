@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.triptech.buildulator.FlashScope;
+import net.triptech.buildulator.model.EnergySource;
 import net.triptech.buildulator.model.Material;
 import net.triptech.buildulator.model.DataGrid;
 
@@ -47,7 +48,7 @@ public class LibraryController extends BaseController {
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')")
     public String index() {
-        return "library/materials";
+        return "library/list";
     }
 
     /**
@@ -287,14 +288,135 @@ public class LibraryController extends BaseController {
         return new ModelAndView("ExcelTemplateView", "dataGrid", dataGrid);
     }
 
+
+    /**
+     * Create a new energy source.
+     *
+     * @param name the name
+     * @param carbonPerUnit the carbon per unit
+     * @param energyPerUnit the energy per unit
+     * @param request the request
+     * @param response the response
+     * @return the string
+     */
+    @RequestMapping(value = "/energysources", method = RequestMethod.POST)
+    @PreAuthorize("hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')")
+    public @ResponseBody String newEnergySource(
+            @RequestParam(value = "name", required = true) final String name,
+            @RequestParam(value = "carbonPerUnit") final Double carbonPerUnit,
+            @RequestParam(value = "energyPerUnit") final Double energyPerUnit,
+            final HttpServletRequest request,
+            final HttpServletResponse response) {
+
+        String returnMessage = "";
+
+        EnergySource energySource = new EnergySource();
+        energySource.setName(name);
+        energySource.setCarbonPerUnit(carbonPerUnit);
+        energySource.setEnergyPerUnit(energyPerUnit);
+
+        try {
+            energySource.persist();
+            returnMessage = String.valueOf(energySource.getId());
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            returnMessage = this.getMessage("energysources_library_add_error");
+        }
+        return returnMessage;
+    }
+
+    /**
+     * Update the energy source.
+     *
+     * @param id the id
+     * @param colId the col id
+     * @param value the value
+     * @param request the request
+     * @param response the response
+     * @return the string
+     */
+    @RequestMapping(value = "/energysources/update", method = RequestMethod.POST)
+    @PreAuthorize("hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')")
+    public @ResponseBody String updateEnergySource(
+            @RequestParam(value = "id", required = true) final String id,
+            @RequestParam(value = "columnPosition", required = true) final Integer colId,
+            @RequestParam(value = "value", required = true) final String value,
+            final HttpServletRequest request,
+            final HttpServletResponse response) {
+
+        String returnMessage = "";
+
+        EnergySource energySource = EnergySource.findByName(id);
+
+        if (energySource != null) {
+            try {
+                returnMessage = energySource.set(colId, value);
+                energySource.merge();
+                energySource.flush();
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                returnMessage = this.getMessage("energysources_library_update_error");
+            }
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            returnMessage = this.getMessage("energysources_library_update_notfounderror");
+        }
+        return returnMessage;
+    }
+
+    /**
+     * Delete the energy source.
+     *
+     * @param id the id
+     * @param request the request
+     * @param response the response
+     * @return the string
+     */
+    @RequestMapping(value = "/energysources/delete", method = RequestMethod.POST)
+    @PreAuthorize("hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')")
+    public @ResponseBody String deleteEnergySource(
+            @RequestParam(value = "id", required = true) final String id,
+            final HttpServletRequest request,
+            final HttpServletResponse response) {
+
+        String returnMessage = "";
+
+        EnergySource energySource = EnergySource.findByName(id);
+
+        if (energySource != null) {
+            try {
+                energySource.remove();
+                returnMessage = "ok";
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                returnMessage = this.getMessage("energysources_library_delete_error");
+            }
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            returnMessage = this.getMessage("energysources_library_delete_notfounderror");
+        }
+        return returnMessage;
+    }
+
+
     /**
      * List the materials.
      *
      * @return the string
      */
     @RequestMapping(value = "/materials/list.json", method = RequestMethod.GET)
-    public @ResponseBody String list() {
+    public @ResponseBody String listMaterials() {
         return Material.toJson(Material.findAllMaterials());
+    }
+
+    /**
+     * List the energy sources.
+     *
+     * @return the string
+     */
+    @RequestMapping(value = "/energysources/list.json", method = RequestMethod.GET)
+    public @ResponseBody String listEnergySources() {
+        return EnergySource.toJson(EnergySource.findAllEnergySources());
     }
 
     @ModelAttribute("controllerUrl")

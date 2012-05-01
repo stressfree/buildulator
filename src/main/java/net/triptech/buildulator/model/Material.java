@@ -157,4 +157,17 @@ public class Material {
         return material;
     }
 
+    /**
+     * Find all of the materials in alphabetical order.
+     *
+     * @return the list
+     */
+    public static List<Material> findAllMaterials() {
+
+        TypedQuery<Material> q = entityManager().createQuery(
+                "SELECT m FROM Material AS m ORDER BY m.name",
+                Material.class);
+
+        return q.getResultList();
+    }
 }

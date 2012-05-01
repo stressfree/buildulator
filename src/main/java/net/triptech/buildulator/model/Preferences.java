@@ -11,10 +11,14 @@ import net.triptech.buildulator.model.Preferences;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 
+/**
+ * The Class Preferences.
+ */
 @RooJavaBean
 @RooJpaActiveRecord
 public class Preferences {
 
+    /** The name. */
     @NotNull
     @Size(min = 1, max = 100)
     private String name;

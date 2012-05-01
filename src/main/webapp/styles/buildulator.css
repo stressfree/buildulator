@@ -252,42 +252,45 @@ p.field .ui-dialog label.error {
   margin-bottom: 0.5em;
 }
 
-#adminTabs {
+#adminTabs, #libraryTabs {
   font-size: 0.9em;
   background: #fff;
   margin: 5px 5px 20px 5px;
   border-color: #ccc;
 }
-#adminTabs .ui-tabs-nav li {
+#adminTabs .ui-tabs-nav li,
+#libraryTabs .ui-tabs-nav li {
   font-weight: normal;
 }
-#adminTabs .ui-tabs-nav li.ui-tabs-selected a {
+#adminTabs .ui-tabs-nav li.ui-tabs-selected a,
+#libraryTabs .ui-tabs-nav li.ui-tabs-selected a {
     color: #2D3442;
 }
 
-.materialsOptions, .usersOptions {
+.libraryOptions, .usersOptions {
   margin: 0 0 5px 0;
 }
 
-#formAddNewRow input#name {
-  width: 320px;
-}
-#formBulkAddRows textarea {
+#formBulkAddMaterials textarea {
   width: 570px;
   height: 300px;
 }
 
-#materialsList_wrapper thead th, #usersList_wrapper thead th {
-  font-size: 0.9em;
-}
 
 #materialsList_wrapper td.column-3,
 #materialsList_wrapper td.column-4,
-#materialsList_wrapper td.column-5,#materialsList_wrapper td.column-6 {
+#materialsList_wrapper td.column-5,
+#materialsList_wrapper td.column-6,
+#energySourcesList_wrapper td.column-2,
+#energySourcesList_wrapper td.column-3 {
   text-align: center;
 }
 
 #body table.dataTable {
+  font-size: 0.9em;
+}
+
+#body table.dataTable thead th {
   font-size: 0.9em;
 }
 
@@ -319,12 +322,19 @@ p.field .ui-dialog label.error {
   font-size: 0.8em;
 }
 
-.materialName {
-  width: 30%;
+th.materialName {
+  width: 30%!important;
+}
+th.energySourceName {
+  width: 50%!important;
 }
 
 input.error {
   border: 2px solid #ff3333;
+}
+
+input.longfield {
+  width: 320px;
 }
 
 body div.actionButtons {
@@ -360,13 +370,6 @@ p.field div.wysiwyg iframe.wysiwyg-input {
   box-shadow: none;
   margin-top: 5px;
   border: 1px solid #ccc;
-}
-
-/** Input field styles */
-#preferences input#_name_id,
-#preferences input#_url_id,
-#preferences input#_homepageTitle_id {
-  width: 320px;
 }
 
 #_c_net_triptech_buildulator_model_Preferences_homepageTitle_id label {
