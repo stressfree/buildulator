@@ -70,7 +70,7 @@ public class AdminController extends BaseController {
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String updateForm(Model uiModel) {
-        uiModel.addAttribute("preferences", this.loadPreferences());
+        uiModel.addAttribute("preferences", this.getPreferences());
         return "admin/update";
     }
 

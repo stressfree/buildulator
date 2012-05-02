@@ -3,7 +3,9 @@
 
 package net.triptech.buildulator.model;
 
+import java.util.List;
 import net.triptech.buildulator.model.EnergySource;
+import net.triptech.buildulator.model.Project;
 
 privileged aspect EnergySource_Roo_JavaBean {
     
@@ -29,6 +31,14 @@ privileged aspect EnergySource_Roo_JavaBean {
     
     public void EnergySource.setCarbonPerUnit(double carbonPerUnit) {
         this.carbonPerUnit = carbonPerUnit;
+    }
+    
+    public List<Project> EnergySource.getProjects() {
+        return this.projects;
+    }
+    
+    public void EnergySource.setProjects(List<Project> projects) {
+        this.projects = projects;
     }
     
 }

@@ -8,7 +8,10 @@
 
   <!-- HTTP security configurations -->
     <http auto-config="true" use-expressions="true">
-      <form-login login-processing-url="/resources/j_spring_security_check" login-page="/login" authentication-failure-url="/login?login_error=t"/>
+      <form-login login-processing-url="/resources/j_spring_security_check"
+            login-page="/login"
+            authentication-failure-url="/login?login_error=t"/>
+
         <logout logout-url="/resources/j_spring_security_logout"/>
 
         <!-- Configure these elements to secure URIs in your application -->
@@ -18,7 +21,10 @@
         <intercept-url pattern="/resources/**" access="permitAll" />
         <intercept-url pattern="/**" access="permitAll" />
 
-        <openid-login authentication-failure-url="/login?login_error=t" user-service-ref="openIdUserService" authentication-failure-handler-ref="openIdAuthenticationFailureHandler">
+        <openid-login authentication-failure-url="/login?login_error=t"
+                user-service-ref="openIdUserService"
+                authentication-success-handler-ref="openIdAuthenticationSuccessHandler"
+                authentication-failure-handler-ref="openIdAuthenticationFailureHandler" >
           <attribute-exchange>
                 <openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true" />
                 <openid-attribute name="firstName" type="http://axschema.org/namePerson/first" required="true" />
@@ -33,6 +39,8 @@
   <authentication-manager alias="authenticationManager" />
 
   <beans:bean id="openIdUserService" class="net.triptech.buildulator.service.OpenIdUserDetailsService" />
+
+  <beans:bean id="openIdAuthenticationSuccessHandler" class="net.triptech.buildulator.service.OpenIdAuthenticationSuccessHandler" />
 
   <beans:bean id="openIdAuthenticationFailureHandler" class="net.triptech.buildulator.service.OpenIdAuthenticationFailureHandler" />
 

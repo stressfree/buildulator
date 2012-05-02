@@ -3,18 +3,20 @@
   <c:set var="userLocale">
     <c:out value="${pageContext.response.locale}" default="en" />
   </c:set>
-  <spring:url value="/styles/buildulator.css" var="buildulator_url" />
+  <spring:url value="/styles/buildulator.css" var="buildulator_css_url" />
+  <spring:url value="/styles/editor.css" var="wysiwyg_css_url" />
   <spring:url value="/js/jquery.jeditable-min.js" var="jeditable_js_url" />
   <spring:url value="/js/jquery.datatables.editable-min.js" var="datatables_editable_js_url" />
   <spring:url value="/js/buildulator.js" var="buildulator_js_url" />
   <spring:url value="/js/jquery.wysiwyg.js" var="wysiwyg_js_url" />
+  <spring:url value="/js/jquery.ui.selectmenu.js" var="selectmenu_js_url" />
   <spring:url value="/js/jquery.gritter.min.js" var="gritter_js_url" />
 
   <spring:url value="/images/favicon.ico" var="favicon" />
 
   <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/reset-fonts-grids/reset-fonts-grids.css" />
   <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/base/base-min.css" />
-  <link rel="stylesheet" type="text/css" href="${buildulator_url}" />
+  <link rel="stylesheet" type="text/css" href="${buildulator_css_url}" />
   <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/sunny/jquery-ui.css" />
   <link rel="stylesheet" type="text/css" href="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables.css" />
   <link rel="stylesheet" type="text/css" href="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables_themeroller.css" />
@@ -31,5 +33,7 @@
   <script type="text/javascript" charset="utf8" src="${datatables_editable_js_url}"><!-- required for FF3 and Opera --></script>
   <script type="text/javascript" charset="utf8" src="${buildulator_js_url}"><!-- required for FF3 and Opera --></script>
   <script type="text/javascript" charset="utf8" src="${wysiwyg_js_url}"><!-- required for FF3 and Opera --></script>
+  <script type="text/javascript" charset="utf8" src="${selectmenu_js_url}"><!-- required for FF3 and Opera --></script>
   <script type="text/javascript" charset="utf8" src="${gritter_js_url}"><!-- required for FF3 and Opera --></script>
+  <script type="text/javascript" charset="utf8">var wysiwygCss = '<c:out value="${wysiwyg_css_url}" />';</script>
 </jsp:root>

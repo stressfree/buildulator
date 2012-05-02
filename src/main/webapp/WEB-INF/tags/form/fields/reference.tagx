@@ -15,7 +15,7 @@
       <spring:message code="label_${fn:toLowerCase(fn:substringAfter(id,'_'))}" var="label" htmlEscape="false" />
     </c:if>
 
-    <div id="_${fn:escapeXml(id)}_id">
+    <p id="_${fn:escapeXml(id)}_id" class="field">
       <label for="_${fn:escapeXml(field)}_id">
         <c:out value="${fn:escapeXml(label)}" />:
       </label>
@@ -30,7 +30,6 @@
       <c:if test="${not empty required and required eq 'true'}">
         (<spring:message code="field_required" />)
       </c:if>
-    </div>
-    <br />
+    </p>
   </c:if>
 </jsp:root>

@@ -1,29 +1,29 @@
 <div id="menu" xmlns:menu="urn:jsptagdir:/WEB-INF/tags/menu" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:sec="http://www.springframework.org/security/tags" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
-	<jsp:directive.page contentType="text/html;charset=UTF-8" />
-	<jsp:output omit-xml-declaration="yes" />
+  <jsp:directive.page contentType="text/html;charset=UTF-8" />
+  <jsp:output omit-xml-declaration="yes" />
 
-	<menu:menu id="mainmenu" z="user-managed">
-		<menu:item id="h_home" url="/" z="user-managed" />
-		<menu:item id="h_projects" url="/projects" z="user-managed" />
-		<sec:authorize ifAnyGranted="ROLE_EDITOR,ROLE_ADMIN">
-			<menu:item id="h_library" url="/library" z="user-managed" />
-		</sec:authorize>
-		<sec:authorize ifAllGranted="ROLE_ADMIN">
-			<menu:item id="h_administration" url="/admin" z="user-managed" />
-		</sec:authorize>
-	</menu:menu>
+  <menu:menu id="mainmenu" z="user-managed">
+    <menu:item id="h_home" url="/" z="user-managed" />
+    <menu:item id="h_projects" url="/projects" z="user-managed" />
+    <sec:authorize ifAnyGranted="ROLE_EDITOR,ROLE_ADMIN">
+      <menu:item id="h_library" url="/library" z="user-managed" />
+    </sec:authorize>
+    <sec:authorize ifAllGranted="ROLE_ADMIN">
+      <menu:item id="h_administration" url="/admin" z="user-managed" />
+    </sec:authorize>
+  </menu:menu>
 
-	<menu:menu id="usermenu" z="user-managed">
-		<c:choose>
-			<c:when test="${pageContext['request'].userPrincipal != null}">
-			    <li><c:out value="${user.emailAddress}" /></li>
-				<menu:item id="h_userdetails" url="/user" z="user-managed" />
-				<menu:item id="h_logout" url="/resources/j_spring_security_logout" z="user-managed" />
-			</c:when>
-			<c:otherwise>
-				<menu:item id="h_login" url="/login" z="user-managed" />
-			</c:otherwise>
-		</c:choose>
-	</menu:menu>
+  <menu:menu id="usermenu" z="user-managed">
+    <c:choose>
+      <c:when test="${pageContext['request'].userPrincipal != null}">
+          <li><c:out value="${user.emailAddress}" /></li>
+        <menu:item id="h_userdetails" url="/user" z="user-managed" />
+        <menu:item id="h_logout" url="/resources/j_spring_security_logout" z="user-managed" />
+      </c:when>
+      <c:otherwise>
+        <menu:item id="h_login" url="/login" z="user-managed" />
+      </c:otherwise>
+    </c:choose>
+  </menu:menu>
 
 </div>

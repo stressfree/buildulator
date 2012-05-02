@@ -10,6 +10,7 @@
   <jsp:directive.attribute name="render" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicate if the contents of this tag and all enclosed tags should be rendered (default 'true')" />
   <jsp:directive.attribute name="openPane" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Control if the title pane is opened or closed by default (default: true)"/>
   <jsp:directive.attribute name="z" type="java.lang.String" required="false" description="Used for checking if element has been modified (to recalculate simply provide empty string value)"/>
+  <jsp:directive.attribute name="cancelAction" type="java.lang.String" rtexprvalue="true" required="false" description="The URL for the cancel action if provided"/>
   <jsp:directive.attribute name="title" type="java.lang.String" required="false" description="The title code for the panel"/>
 
   <c:if test="${empty render or render}">
@@ -33,6 +34,10 @@
         </c:if>
         <jsp:doBody />
         <div class="actionButtons" id="${fn:escapeXml(id)}_submit">
+          <c:if test="${not empty cancelAction}">
+            <spring:url value="${cancelAction}" var="cancelActionUrl" />
+            <span class="cancelAction"><a href="${cancelActionUrl}"><spring:message code="button_cancel" /></a></span>
+          </c:if>
           <spring:message code="button_save" var="save_button" htmlEscape="false" />
           <input id="proceed" type="submit" value="${fn:escapeXml(save_button)}"/>
         </div>

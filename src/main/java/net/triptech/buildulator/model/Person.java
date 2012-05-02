@@ -10,8 +10,6 @@
  ******************************************************************************/
 package net.triptech.buildulator.model;
 
-import flexjson.JSON;
-
 import net.sf.json.JSONObject;
 import net.triptech.buildulator.BuildulatorException;
 
@@ -20,16 +18,17 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.json.RooJson;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.NotNull;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
+import javax.persistence.OneToMany;
 import javax.persistence.TypedQuery;
 
 import java.util.ArrayList;
@@ -46,7 +45,6 @@ import java.util.Map;
 @RooJpaActiveRecord(
         identifierColumn = "id",
         table = "person")
-@RooJson
 public class Person implements UserDetails {
 
     /** The Constant serialVersionUID. */
@@ -82,6 +80,10 @@ public class Person implements UserDetails {
     @Column(name = "email_address", unique = true)
     private String emailAddress;
 
+    /** The projects. */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
+    private List<Project> projects = new ArrayList<Project>();
+
 
     /**
      * Returns the username used to authenticate the user. Cannot return null.
@@ -89,7 +91,6 @@ public class Person implements UserDetails {
      * @return the username (never null)
      */
     @Override
-    @JSON(include=false)
     public final String getUsername() {
         return this.openIdIdentifier;
     }
@@ -100,7 +101,6 @@ public class Person implements UserDetails {
      * @return the password (never null)
      */
     @Override
-    @JSON(include=false)
     public final String getPassword() {
         return "";
     }
@@ -113,7 +113,6 @@ public class Person implements UserDetails {
      *         false if no longer valid (ie expired)
      */
     @Override
-    @JSON(include=false)
     public final boolean isAccountNonExpired() {
         return true;
     }
@@ -125,7 +124,6 @@ public class Person implements UserDetails {
      * @return true if the user is not locked, false otherwise
      */
     @Override
-    @JSON(include=false)
     public final boolean isAccountNonLocked() {
         return true;
     }
@@ -138,7 +136,6 @@ public class Person implements UserDetails {
      *         false if no longer valid (ie expired)
      */
     @Override
-    @JSON(include=false)
     public final boolean isCredentialsNonExpired() {
         return true;
     }
@@ -150,7 +147,6 @@ public class Person implements UserDetails {
      * @return true if the user is enabled, false otherwise
      */
     @Override
-    @JSON(include=false)
     public final boolean isEnabled() {
         return this.userStatus == UserStatus.ACTIVE;
     }

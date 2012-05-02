@@ -8,6 +8,10 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+    $('select').selectmenu();
+});
+
+$(document).ready(function() {
     $('#libraryTabs').tabs();
 
     $('#materialsList').dataTable({
@@ -104,6 +108,38 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+    $('#projectsList').dataTable({
+        "bProcessing" : true,
+        "bJQueryUI" : true,
+        "sPaginationType" : "full_numbers",
+        "bLengthChange" : false,
+        "iDisplayLength" : 50,
+        "sAjaxSource" : './projects/list.json',
+        "aoColumns": [ {
+            "bSortable": true
+        }, {
+            "bSortable": true
+        }, {
+            "bSortable": true
+        }, {
+            "iDataSort": 4
+        }, {
+            "bVisible": false
+        } ],
+        "aoColumnDefs" : [ {
+            "sClass" : "column-1",
+            "aTargets" : [ 0 ]
+        }, {
+            "sClass" : "column-2",
+            "aTargets" : [ 1 ]
+        }, {
+            "sClass" : "column-3",
+            "aTargets" : [ 2 ]
+        } ]
+    });
+});
+
+$(document).ready(function() {
     $('#adminTabs').tabs();
     $('#adminAccordion').accordion({ autoHeight: false });
 
@@ -168,7 +204,7 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     $('textarea.rteditor').wysiwyg({
-        css: "styles/editor.css",
+        css: wysiwygCss,
         iFrameClass : "wysiwyg-input",
         controls : {
             paragraph : {

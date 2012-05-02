@@ -41,7 +41,7 @@
       <spring:escapeBody htmlEscape="true" >${itemLabel}</spring:escapeBody>
     </c:set>
 
-    <div id="_${fn:escapeXml(id)}_id">
+    <p id="_${fn:escapeXml(id)}_id" class="field">
       <c:choose>
         <c:when test="${not empty items}">
           <label for="_${sec_field}_id">
@@ -175,7 +175,6 @@
                       </c:choose>
                     </c:otherwise>
                   </c:choose>
-                  <br />
                   <form:errors cssClass="errors" id="_${sec_field}_error_id" path="${sec_field}" />
                 </c:otherwise>
               </c:choose>
@@ -186,7 +185,6 @@
           <field:reference field="${label}" id="${id}" path="${path}" required="${required}" />
         </c:otherwise>
       </c:choose>
-    </div>
-    <br />
+    </p>
   </c:if>
 </jsp:root>

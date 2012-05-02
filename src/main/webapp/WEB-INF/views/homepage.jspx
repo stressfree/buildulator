@@ -7,7 +7,7 @@
   </c:if>
   <div class="sidePanel">
     <div class="newProject">
-      <spring:url value="projects/new" var="newProjectUrl" />
+      <spring:url value="/projects/new" var="newProjectUrl" />
       <form action="${newProjectUrl}" method="get">
           <button id="newProject"><spring:message code="projects_new" /></button>
       </form>

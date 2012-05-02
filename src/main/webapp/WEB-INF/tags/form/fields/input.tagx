@@ -6,6 +6,7 @@
   <jsp:directive.attribute name="label" type="java.lang.String" required="false" rtexprvalue="true" description="The label used for this field, will default to a message bundle if not supplied" />
   <jsp:directive.attribute name="labelCode" type="java.lang.String" required="false" rtexprvalue="true" description="Key for label message bundle if label is not supplied" />
   <jsp:directive.attribute name="extraClasses" type="java.lang.String" required="false" rtexprvalue="true" description="Optional classes to be assigned to the field" />
+  <jsp:directive.attribute name="units" type="java.lang.String" required="false" rtexprvalue="true" description="The units to be appended after the text field" />
   <jsp:directive.attribute name="required" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicates if this field is required (default false)" />
   <jsp:directive.attribute name="disabled" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Specify if this field should be enabled" />
   <jsp:directive.attribute name="validationType" type="java.lang.String" required="false" rtexprvalue="true" description="The type of validation that should be applied (based on JQuery-validate types)" />
@@ -57,26 +58,30 @@
       <spring:escapeBody javaScriptEscape="true" >${field}</spring:escapeBody>
     </c:set>
 
-    <p class="field" id="_${fn:escapeXml(id)}_id">
+    <p class="field ${extraCss}" id="_${fn:escapeXml(id)}_id">
       <label for="_${sec_field}_id">
         <c:out value="${fn:escapeXml(label)}" />
       </label>
       <c:choose>
         <c:when test="${disableFormBinding}">
-          <input id="_${sec_field}_id" name="${sec_field}" type="${fn:escapeXml(type)}" class="${requiredCss} ${validationTypeCss} ${extraCss}" minlength="${validationMin}" maxlength="${validationMax}" />
+          <input id="_${sec_field}_id" name="${sec_field}" type="${fn:escapeXml(type)}" class="${requiredCss} ${validationTypeCss}" minlength="${validationMin}" maxlength="${validationMax}" />
         </c:when>
         <c:otherwise>
           <c:choose>
             <c:when test="${type eq 'password'}">
-              <form:password id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" cssClass="${requiredCss} ${validationTypeCss} ${extraCss}" minlength="${validationMin}" maxlength="${validationMax}" />
+              <form:password id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" cssClass="${requiredCss} ${validationTypeCss}" minlength="${validationMin}" maxlength="${validationMax}" />
             </c:when>
             <c:otherwise>
-              <form:input id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" cssClass="${requiredCss} ${validationTypeCss} ${extraCss}" minlength="${validationMin}" maxlength="${validationMax}" />
+              <form:input id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" cssClass="${requiredCss} ${validationTypeCss}" minlength="${validationMin}" maxlength="${validationMax}" />
             </c:otherwise>
           </c:choose>
           <form:errors cssClass="errors" id="_${sec_field}_error_id" path="${sec_field}" />
         </c:otherwise>
       </c:choose>
+
+      <c:if test="${not empty units}">
+        <span class="units"><c:out value="${fn:escapeXml(units)}" /></span>
+      </c:if>
     </p>
   </c:if>
 </jsp:root>

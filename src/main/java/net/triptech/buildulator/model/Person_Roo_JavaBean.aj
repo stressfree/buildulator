@@ -3,7 +3,9 @@
 
 package net.triptech.buildulator.model;
 
+import java.util.List;
 import net.triptech.buildulator.model.Person;
+import net.triptech.buildulator.model.Project;
 import net.triptech.buildulator.model.UserRole;
 import net.triptech.buildulator.model.UserStatus;
 
@@ -55,6 +57,14 @@ privileged aspect Person_Roo_JavaBean {
     
     public void Person.setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+    }
+    
+    public List<Project> Person.getProjects() {
+        return this.projects;
+    }
+    
+    public void Person.setProjects(List<Project> projects) {
+        this.projects = projects;
     }
     
 }

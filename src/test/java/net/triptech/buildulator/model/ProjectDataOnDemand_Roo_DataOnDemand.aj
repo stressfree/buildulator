@@ -5,13 +5,21 @@ package net.triptech.buildulator.model;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import net.triptech.buildulator.model.EnergySource;
+import net.triptech.buildulator.model.EnergySourceDataOnDemand;
+import net.triptech.buildulator.model.Person;
+import net.triptech.buildulator.model.PersonDataOnDemand;
 import net.triptech.buildulator.model.Project;
 import net.triptech.buildulator.model.ProjectDataOnDemand;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
@@ -22,14 +30,29 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     
     private List<Project> ProjectDataOnDemand.data;
     
+    @Autowired
+    private EnergySourceDataOnDemand ProjectDataOnDemand.energySourceDataOnDemand;
+    
+    @Autowired
+    private PersonDataOnDemand ProjectDataOnDemand.personDataOnDemand;
+    
     public Project ProjectDataOnDemand.getNewTransientProject(int index) {
         Project obj = new Project();
+        setCreated(obj, index);
         setDescription(obj, index);
         setEnergyConsumption(obj, index);
+        setEnergySource(obj, index);
         setLocation(obj, index);
         setName(obj, index);
         setOccupants(obj, index);
+        setPerson(obj, index);
+        setSession(obj, index);
         return obj;
+    }
+    
+    public void ProjectDataOnDemand.setCreated(Project obj, int index) {
+        Date created = new GregorianCalendar(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH), Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), Calendar.getInstance().get(Calendar.SECOND) + new Double(Math.random() * 1000).intValue()).getTime();
+        obj.setCreated(created);
     }
     
     public void ProjectDataOnDemand.setDescription(Project obj, int index) {
@@ -40,6 +63,11 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     public void ProjectDataOnDemand.setEnergyConsumption(Project obj, int index) {
         double energyConsumption = new Integer(index).doubleValue();
         obj.setEnergyConsumption(energyConsumption);
+    }
+    
+    public void ProjectDataOnDemand.setEnergySource(Project obj, int index) {
+        EnergySource energySource = energySourceDataOnDemand.getRandomEnergySource();
+        obj.setEnergySource(energySource);
     }
     
     public void ProjectDataOnDemand.setLocation(Project obj, int index) {
@@ -53,8 +81,18 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     }
     
     public void ProjectDataOnDemand.setOccupants(Project obj, int index) {
-        int occupants = index;
+        int occupants = 4;
         obj.setOccupants(occupants);
+    }
+    
+    public void ProjectDataOnDemand.setPerson(Project obj, int index) {
+        Person person = personDataOnDemand.getRandomPerson();
+        obj.setPerson(person);
+    }
+    
+    public void ProjectDataOnDemand.setSession(Project obj, int index) {
+        String session = "session_" + index;
+        obj.setSession(session);
     }
     
     public Project ProjectDataOnDemand.getSpecificProject(int index) {

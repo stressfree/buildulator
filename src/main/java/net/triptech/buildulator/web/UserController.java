@@ -42,7 +42,7 @@ public class UserController extends BaseController {
             return "user/update";
         }
 
-        Person user = loadUser(request);
+        Person user = getUser(request);
 
         if (user != null && StringUtils.equalsIgnoreCase(
                 user.getOpenIdIdentifier(), person.getOpenIdIdentifier())) {
@@ -66,7 +66,7 @@ public class UserController extends BaseController {
 
         String page = "redirect:/";
 
-        Person person = loadUser(request);
+        Person person = getUser(request);
 
         if (person != null) {
             page = "user/update";

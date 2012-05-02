@@ -3,6 +3,9 @@
 
 package net.triptech.buildulator.model;
 
+import java.util.Date;
+import net.triptech.buildulator.model.EnergySource;
+import net.triptech.buildulator.model.Person;
 import net.triptech.buildulator.model.Project;
 
 privileged aspect Project_Roo_JavaBean {
@@ -39,12 +42,44 @@ privileged aspect Project_Roo_JavaBean {
         this.energyConsumption = energyConsumption;
     }
     
+    public EnergySource Project.getEnergySource() {
+        return this.energySource;
+    }
+    
+    public void Project.setEnergySource(EnergySource energySource) {
+        this.energySource = energySource;
+    }
+    
     public String Project.getDescription() {
         return this.description;
     }
     
     public void Project.setDescription(String description) {
         this.description = description;
+    }
+    
+    public Person Project.getPerson() {
+        return this.person;
+    }
+    
+    public void Project.setPerson(Person person) {
+        this.person = person;
+    }
+    
+    public String Project.getSession() {
+        return this.session;
+    }
+    
+    public void Project.setSession(String session) {
+        this.session = session;
+    }
+    
+    public Date Project.getCreated() {
+        return this.created;
+    }
+    
+    public void Project.setCreated(Date created) {
+        this.created = created;
     }
     
 }

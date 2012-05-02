@@ -219,7 +219,24 @@ body {
 #body div.sidePanel {
   float: right;
   width: 249px;
-  margin: 152px 10px 0 10px;
+  margin: 0 10px 0 10px;
+}
+
+#body div.userWarning {
+  background: #535353;
+  border: 1px solid #000;
+  color: #fff;
+  padding: 0.6em 0;
+  margin: 5px 280px 5px 2px;
+}
+#body div.userWarning p {
+  margin: 0 1em;
+}
+#body div.userWarning a {
+  color: #EFEFEF;
+}
+#body div.userWarning a:hover {
+  color: #fed448;
 }
 
 p.field {
@@ -234,6 +251,25 @@ p.field label {
   padding: 0 1em 0 0;
   color: #9b9485;
   padding-top: 0.1em;
+  font-size: 0.9em;
+}
+
+p.field label.rteditorLabel {
+  position: absolute;
+  text-align: left;
+  margin: 0 0 0 30px;
+  overflow: hidden;
+  width: 117px;
+  padding: 0;
+  line-height: 30px;
+}
+
+p.rteditor ul.toolbar {
+  margin-left: 126px;
+}
+
+p.longfield input {
+  width: 320px;
 }
 
 p.field label.error {
@@ -244,7 +280,10 @@ p.field label.error {
   margin-left: 10px;
   width: auto;
 }
-
+p.longfield label.error {
+  display: block;
+  margin-left: 195px;
+}
 
 p.field .ui-dialog label.error {
   float: left;
@@ -253,7 +292,7 @@ p.field .ui-dialog label.error {
 }
 
 #adminTabs, #libraryTabs {
-  font-size: 0.9em;
+  font-size: 1em;
   background: #fff;
   margin: 5px 5px 20px 5px;
   border-color: #ccc;
@@ -277,6 +316,7 @@ p.field .ui-dialog label.error {
 }
 
 
+#projectsList_wrapper td.column-3,
 #materialsList_wrapper td.column-3,
 #materialsList_wrapper td.column-4,
 #materialsList_wrapper td.column-5,
@@ -284,6 +324,10 @@ p.field .ui-dialog label.error {
 #energySourcesList_wrapper td.column-2,
 #energySourcesList_wrapper td.column-3 {
   text-align: center;
+}
+
+#body a {
+  color: #8D8574;
 }
 
 #body table.dataTable {
@@ -322,6 +366,12 @@ p.field .ui-dialog label.error {
   font-size: 0.8em;
 }
 
+th.projectName {
+  width: 35%!important;
+}
+th.projectOccupants {
+  width: 90px!important;
+}
 th.materialName {
   width: 30%!important;
 }
@@ -333,9 +383,6 @@ input.error {
   border: 2px solid #ff3333;
 }
 
-input.longfield {
-  width: 320px;
-}
 
 body div.actionButtons {
   width: 500px;
@@ -346,6 +393,13 @@ body div.actionButtons {
   margin: .5em 0 0 0;
   padding: .3em 1em .5em .4em;
 }
+body div.actionButtons span.cancelAction a {
+  margin: 0 1em 0 0;
+}
+body div.actionButtons span.cancelAction a:hover {
+  color: #ff3333;
+}
+
 
 body .ui-button {
   font-size: 0.8em !important;
@@ -357,6 +411,11 @@ body .ui-dialog {
   font-size: 0.9em;
 }
 
+p.field span.units {
+  padding: 0 0 0 0.5em;
+  color: #666;
+  font-size: 0.9em;
+}
 p.field div.wysiwyg {
   margin-left: 20px;
   width: 550px;
@@ -376,8 +435,8 @@ p.field div.wysiwyg iframe.wysiwyg-input {
   width: auto;
   margin-left: 30px;
 }
-#_c_net_triptech_buildulator_model_Preferences_homepageContent_id label {
-  display: none;
+#_c_net_triptech_buildulator_model_Project_occupants_id input {
+  width: 4em;
 }
 
 
@@ -407,6 +466,11 @@ div.errorDetails div.panel, div.googleLogon div.panel {
 div.homepageContent div.newProject, div.googleLogon div.submit {
   font-size: 2em;
   text-align: center;
+}
+div.homepageContent div.newProject {
+  margin: 152px 0 0 0;
+  width: 248px;
+  position: absolute;
 }
 
 
@@ -731,10 +795,8 @@ div.wysiwyg iframe {
   height: 100%;
   background-color: rgb(255, 255, 255);
   background-color: rgba(0, 0, 0, 0.5);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,
-    endColorstr=#99000000 );
-  -ms-filter:
-    "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000 );
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
 }
 
 .wysiwyg-dialog-content form.wysiwyg fieldset {
@@ -888,3 +950,45 @@ div.wysiwyg iframe {
 .gritter-light .gritter-title {
     text-shadow: none;
 }
+
+/** JQuery SelectMenu customisations CSS **/
+a.ui-selectmenu {
+  font-size: 0.8em;
+  color: #4C3000!important;
+}
+.ui-selectmenu-menu {
+  font-size: 0.8em;
+  line-height: 1em;
+  text-align: left;
+}
+
+/** JQuery SelectMenu CSS **/
+.ui-selectmenu { display: block; display: inline-block; position: relative; height: 2.2em; vertical-align: middle; text-decoration: none; overflow: hidden; zoom: 1; }
+.ui-selectmenu-icon { position:absolute; right:6px; margin-top:-8px; top: 50%; }
+.ui-selectmenu-menu { padding:0; margin:0; position:absolute; top: 0; display: none; z-index: 1005;} /* z-index: 1005 to make selectmenu work with dialog */
+.ui-selectmenu-menu  ul { padding:0; margin:0; list-style:none; position: relative; overflow: auto; overflow-y: auto ; overflow-x: hidden; }
+.ui-selectmenu-open { display: block; }
+.ui-selectmenu-menu-popup { margin-top: -1px; }
+.ui-selectmenu-menu-dropdown { }
+.ui-selectmenu-menu li { padding:0; margin:0; display: block; border-top: 1px dotted transparent; border-bottom: 1px dotted transparent; border-right-width: 0 !important; border-left-width: 0 !important; font-weight: normal !important; }
+.ui-selectmenu-menu li a,.ui-selectmenu-status { line-height: 1.4em; display: block; padding: .405em 2.1em .405em 1em; outline:none; text-decoration:none; }
+.ui-selectmenu-menu li.ui-state-disabled a, .ui-state-disabled { cursor: default; }
+.ui-selectmenu-menu li.ui-selectmenu-hasIcon a,
+.ui-selectmenu-hasIcon .ui-selectmenu-status { padding-left: 20px; position: relative; margin-left: 5px; }
+.ui-selectmenu-menu li .ui-icon, .ui-selectmenu-status .ui-icon { position: absolute; top: 1em; margin-top: -8px; left: 0; }
+.ui-selectmenu-status { line-height: 1.4em; }
+.ui-selectmenu-open li.ui-selectmenu-item-focus a { }
+.ui-selectmenu-open li.ui-selectmenu-item-selected { }
+.ui-selectmenu-menu li span,.ui-selectmenu-status span { display:block; margin-bottom: .2em; }
+.ui-selectmenu-menu li .ui-selectmenu-item-header { font-weight: bold; }
+.ui-selectmenu-menu li .ui-selectmenu-item-content { }
+.ui-selectmenu-menu li .ui-selectmenu-item-footer { opacity: .8; }
+/* for optgroups */
+.ui-selectmenu-menu .ui-selectmenu-group { font-size: 1em; }
+.ui-selectmenu-menu .ui-selectmenu-group .ui-selectmenu-group-label { line-height: 1.4em; display:block; padding: .6em .5em 0; font-weight: bold; }
+.ui-selectmenu-menu .ui-selectmenu-group ul { margin: 0; padding: 0; }
+/* IE6 workaround (dotted transparent borders) */
+* html .ui-selectmenu-menu li { border-color: pink; filter:chroma(color=pink); width:100%; }
+* html .ui-selectmenu-menu li a { position: relative }
+/* IE7 workaround (opacity disabled) */
+*+html .ui-state-disabled, *+html .ui-state-disabled a { color: silver; }

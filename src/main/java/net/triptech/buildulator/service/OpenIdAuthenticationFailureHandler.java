@@ -39,8 +39,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 /**
  * The Class OpenIdAuthenticationFailureHandler.
  */
-public class OpenIdAuthenticationFailureHandler implements
-        AuthenticationFailureHandler {
+public class OpenIdAuthenticationFailureHandler extends OpenIdAuthenticationBase
+        implements AuthenticationFailureHandler {
 
 
     /**
@@ -87,6 +87,9 @@ public class OpenIdAuthenticationFailureHandler implements
 
                 token.setDetails(person);
                 SecurityContextHolder.getContext().setAuthentication(newToken);
+
+                // Transfer any previous projects to the new user
+                transferProjects(request, person);
 
                 RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
                 redirectStrategy.sendRedirect(request, response, "/user");

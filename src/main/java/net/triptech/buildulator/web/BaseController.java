@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.triptech.buildulator.model.Preferences;
 import net.triptech.buildulator.model.Person;
+import net.triptech.buildulator.model.Project;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +86,7 @@ public abstract class BaseController implements BuildulatorController {
      * @param request the request
      * @return the person
      */
-    protected final Person loadUser(final HttpServletRequest request) {
+    protected final Person getUser(final HttpServletRequest request) {
 
         Person user = null;
 
@@ -96,14 +97,27 @@ public abstract class BaseController implements BuildulatorController {
         return user;
     }
 
+    public long getProjectCount(final HttpServletRequest request) {
+
+        long count = 0;
+
+        Person user = getUser(request);
+
+        if (user == null) {
+            count = Project.countProjects(request.getSession().getId());
+        } else {
+            count = Project.countProjects(user);
+        }
+        return count;
+    }
 
     @ModelAttribute("user")
-    public Person loadCurrentUser(final HttpServletRequest request) {
-        return loadUser(request);
+    public Person getCurrentUser(final HttpServletRequest request) {
+        return getUser(request);
     }
 
     @ModelAttribute("preferences")
-    public Preferences loadPreferences() {
+    public Preferences getPreferences() {
         return Preferences.load();
     }
 

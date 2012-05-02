@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
 import javax.persistence.TypedQuery;
 
 import net.sf.json.JSONObject;
@@ -32,6 +34,10 @@ public class EnergySource {
 
     /** The carbon per unit. */
     private double carbonPerUnit;
+
+    /** The projects. */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "energySource")
+    private List<Project> projects = new ArrayList<Project>();
 
 
     /**
