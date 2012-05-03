@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import net.triptech.buildulator.FlashScope;
@@ -21,12 +22,15 @@ import net.triptech.buildulator.model.EnergySource;
 import net.triptech.buildulator.model.Project;
 import net.triptech.buildulator.model.Person;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -53,7 +57,60 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * Creates the definition.
+     * Display the edit project form.
+     *
+     * @param id the id
+     * @param uiModel the ui model
+     * @param request the request
+     * @param response the response
+     * @return the string
+     */
+    @RequestMapping(value = "/{id}", params = "edit", method = RequestMethod.GET)
+    public String editForm(@PathVariable("id") Long id, Model uiModel,
+            final HttpServletRequest request, final HttpServletResponse response) {
+
+        String page = "projects/edit";
+
+        Project project = Project.findProject(id);
+
+        if (checkProjectPermission(project, request)) {
+            uiModel.addAttribute("project", project);
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            page = "resourceNotFound";
+        }
+        return page;
+    }
+
+    /**
+     * Returns the project if the user has the rights to view it.
+     * Otherwise a 404 error is returned.
+     *
+     * @param id the id
+     * @param uiModel the ui model
+     * @param request the request
+     * @param response the response
+     * @return the string
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public String show(@PathVariable("id") Long id, Model uiModel,
+            HttpServletRequest request, final HttpServletResponse response) {
+
+        String page = "projects/show";
+
+        Project project = Project.findProject(id);
+
+        if (checkProjectPermission(project, request)) {
+            uiModel.addAttribute("project", project);
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            page = "resourceNotFound";
+        }
+        return page;
+    }
+
+    /**
+     * Creates the project.
      *
      * @param definitionForm the definition form
      * @param bindingResult the binding result
@@ -97,6 +154,128 @@ public class ProjectController extends BaseController {
 
         return "redirect:/projects/"
                 + encodeUrlPathSegment(project.getId().toString(), request);
+    }
+
+    /**
+     * Update the project.
+     *
+     * @param project the project
+     * @param bindingResult the binding result
+     * @param uiModel the ui model
+     * @param request the http servlet request
+     * @param response the response
+     * @return the string
+     */
+    @RequestMapping(method = RequestMethod.PUT)
+    public String update(@Valid Project project,
+            BindingResult bindingResult, Model uiModel,
+            HttpServletRequest request, final HttpServletResponse response) {
+
+        String page = "resourceNotFound";
+
+        Project existingProject = Project.findProject(project.getId());
+
+        if (checkProjectPermission(existingProject, request)) {
+
+            if (bindingResult.hasErrors()) {
+                uiModel.addAttribute("project", project);
+                FlashScope.appendMessage(
+                        getMessage("metahive_object_validation", Project.class), request);
+                page = "projects/edit";
+            } else {
+                existingProject.update(project);
+
+                existingProject.persist();
+                existingProject.flush();
+                uiModel.asMap().clear();
+
+                FlashScope.appendMessage(
+                        getMessage("buildulator_edit_complete", Project.class), request);
+
+                page = "redirect:/projects/" + encodeUrlPathSegment(
+                        existingProject.getId().toString(), request);
+            }
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        return page;
+    }
+
+    /**
+     * Clones the project.
+     *
+     * @param id the id
+     * @param name the name
+     * @param request the http servlet request
+     * @param response the response
+     * @return the string
+     */
+    @RequestMapping(value = "/clone", method = RequestMethod.POST)
+    public String clone(
+            @RequestParam(value = "projectId", required = false) Long id,
+            @RequestParam(value = "projectName", required = false) String name,
+            final HttpServletRequest request, final HttpServletResponse response) {
+
+        String page = "resourceNotFound";
+
+        Project existingProject = null;
+
+        if (id != null) {
+            existingProject = Project.findProject(id);
+        }
+
+        if (checkProjectPermission(existingProject, request)) {
+
+            Project clonedProject = existingProject.clone();
+
+            if (StringUtils.isNotBlank(name)) {
+                clonedProject.setName(name);
+            }
+            clonedProject.persist();
+            clonedProject.flush();
+
+            FlashScope.appendMessage(
+                    getMessage("buildulator_clone_complete", Project.class), request);
+
+            page = "redirect:/projects/" + encodeUrlPathSegment(
+                        clonedProject.getId().toString(), request);
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        return page;
+    }
+
+    /**
+     * Delete the project.
+     *
+     * @param id the id
+     * @param request the http servlet request
+     * @param response the http servlet response
+     * @return the string
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public String delete(@PathVariable("id") Long id,
+            final HttpServletRequest request, final HttpServletResponse response) {
+
+        String page = "resourceNotFound";
+
+        Project project = Project.findProject(id);
+
+        if (checkProjectPermission(project, request)) {
+            project.remove();
+
+            FlashScope.appendMessage(
+                    getMessage("buildulator_delete_complete", Project.class), request);
+
+            page = "redirect:/projects";
+
+            if (getProjectCount(request) == 0) {
+                page = "redirect:/projects/new";
+            }
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        return page;
     }
 
     /**
@@ -155,5 +334,35 @@ public class ProjectController extends BaseController {
             projects = Project.findAllProjects(user);
         }
         return projects;
+    }
+
+    /**
+     * Check the project permissions.
+     *
+     * @param project the project
+     * @param request the request
+     * @return true, if successful
+     */
+    private boolean checkProjectPermission(final Project project,
+            final HttpServletRequest request) {
+
+        boolean showProject = false;
+
+        // Check that the user owns the project
+        if (project != null) {
+            Person user = getUser(request);
+
+            if (user != null && project.getPerson() != null) {
+                if (user.getId() == project.getPerson().getId()) {
+                    showProject = true;
+                }
+            } else {
+                if (StringUtils.equalsIgnoreCase(
+                        request.getSession().getId(), project.getSession())) {
+                    showProject = true;
+                }
+            }
+        }
+        return showProject;
     }
 }

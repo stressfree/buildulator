@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div class="dataEntry" xmlns:buildulator="urn:jsptagdir:/WEB-INF/tags/buildulator" xmlns:springform="http://www.springframework.org/tags/form" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+
+    <spring:message code="label_net_triptech_buildulator_model_project_energyconsumption_units" var="energyConsumptionUnits" />
+
+    <h1><spring:message code="buildulator_edit" arguments="${project.name}" /></h1>
+
+    <buildulator:userwarning />
+
+    <div class="panel">
+        <div class="panelContent">
+        <form:update id="fu_net_triptech_buildulator_model_Project" modelAttribute="project" path="/projects" cancelAction="/projects/${project.id}" z="user-managed">
+            <field:input field="name" id="c_net_triptech_buildulator_model_Project_name" required="true" z="user-managed" extraClasses="longfield" />
+            <field:input field="location" id="c_net_triptech_buildulator_model_Project_location" required="false" z="user-managed" extraClasses="longfield" />
+            <field:input field="occupants" id="c_net_triptech_buildulator_model_Project_occupants" required="true" validationType="number" z="user-managed" />
+            <field:input field="energyConsumption" id="c_net_triptech_buildulator_model_Project_energyConsumption" validationType="number" z="user-managed" units="${energyConsumptionUnits}" />
+            <field:select field="energySource" id="c_net_triptech_buildulator_model_Project_energySource" path="/energySource" items="${energySources}" itemLabel="name" itemValue="id" required="true" z="user-managed"/>
+            <field:editor field="description" id="c_net_triptech_buildulator_model_Project_description" z="user-managed" />
+        </form:update>
+        </div>
+    </div>
+</div>

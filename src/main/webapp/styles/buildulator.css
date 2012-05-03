@@ -208,14 +208,20 @@ body {
   border: 1px solid #ccc;
 }
 
+#body p {
+    margin-bottom: 0.6em;
+}
+
 #body div.panel {
   margin: 2px;
   border: 1px solid #d4d4d3;
   background: #fff;
 }
+
 #body div.panelContent {
   margin: 15px 15px 35px 15px;
 }
+
 #body div.sidePanel {
   float: right;
   width: 249px;
@@ -238,6 +244,16 @@ body {
 #body div.userWarning a:hover {
   color: #fed448;
 }
+
+#body div.exceptionMessage {
+  background: #535353;
+  border: 1px solid #000;
+  color: #fff;
+  padding: 0.6em;
+  font-size: 0.8em;
+  overflow: scroll;
+}
+
 
 p.field {
   clear: left;
@@ -316,7 +332,7 @@ p.field .ui-dialog label.error {
 }
 
 
-#projectsList_wrapper td.column-3,
+#projectsList_wrapper td.column-2,
 #materialsList_wrapper td.column-3,
 #materialsList_wrapper td.column-4,
 #materialsList_wrapper td.column-5,
@@ -324,6 +340,10 @@ p.field .ui-dialog label.error {
 #energySourcesList_wrapper td.column-2,
 #energySourcesList_wrapper td.column-3 {
   text-align: center;
+}
+
+#projectsList_wrapper tr.row_selected {
+  cursor: pointer;
 }
 
 #body a {
@@ -367,7 +387,7 @@ p.field .ui-dialog label.error {
 }
 
 th.projectName {
-  width: 35%!important;
+  width: 60%!important;
 }
 th.projectOccupants {
   width: 90px!important;
@@ -383,6 +403,51 @@ input.error {
   border: 2px solid #ff3333;
 }
 
+.projectInfo div#sustainabilitySummary {
+  width: 245px;
+  background: #8D8574;
+  margin: 10px 0;
+  padding: 10px 0;
+  border: 1px solid #D4D4D3;
+}
+.projectInfo div#sustainabilitySummary h3 {
+    margin: 0 5px 0 10px;
+    padding: 0;
+    font-size: 18px;
+    font-weight: normal;
+    color: #fff;
+}
+.projectInfo ul.metadata {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.projectInfo ul.metadata li {
+  float: left;
+  margin: 0 10px 0.3em 0;
+  padding: 0;
+  width: 320px;
+}
+.projectInfo p.projectLocation {
+    margin: 0 280px 0 15px;
+    position: relative;
+    top: -5px;
+    color: #666;
+    font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+.projectInfo span.metadataLabel {
+    color: #8D8574;
+}
+.projectInfo div.projectDescription,
+.projectInfo div#billOfMaterials {
+  clear: left;
+  padding: 0.6em 0 0 0;
+}
+.projectInfo div.projectDescription div.content,
+.projectInfo div#billOfMaterials div.content {
+  border-top: 1px solid #ccc;
+  padding: 0.6em 0 0 0;
+}
 
 body div.actionButtons {
   width: 500px;
@@ -411,11 +476,12 @@ body .ui-dialog {
   font-size: 0.9em;
 }
 
-p.field span.units {
-  padding: 0 0 0 0.5em;
+#body span.units {
+  padding: 0 0 0 0.3em;
   color: #666;
   font-size: 0.9em;
 }
+
 p.field div.wysiwyg {
   margin-left: 20px;
   width: 550px;
@@ -440,6 +506,10 @@ p.field div.wysiwyg iframe.wysiwyg-input {
 }
 
 
+
+#body div.ui-accordion .ui-accordion-content {
+    padding: 0.5em 0.5em 1em 0.5em;
+}
 #body h3.ui-accordion-header {
   margin-bottom: 0;
 }
@@ -457,8 +527,10 @@ div.homepageContent, div.dataEntry, div.errorDetails, div.googleLogon {
   background: url('../images/content-bg.gif') top right no-repeat;
   min-height: 300px;
 }
+
 div.homepageContent div.panel, div.dataEntry div.panel,
-div.errorDetails div.panel, div.googleLogon div.panel {
+div.errorDetails div.panel, div.googleLogon div.panel,
+div.projectInfo div.panel {
   margin-right: 280px!important;
 }
 

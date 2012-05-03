@@ -7,4 +7,10 @@
   <definition extends="default" name="projects/create">
         <put-attribute name="body" value="/WEB-INF/views/projects/create.jspx"/>
     </definition>
+  <definition extends="default" name="projects/edit">
+        <put-attribute name="body" value="/WEB-INF/views/projects/edit.jspx"/>
+    </definition>
+  <definition extends="default" name="projects/show">
+        <put-attribute name="body" value="/WEB-INF/views/projects/show.jspx"/>
+    </definition>
 </tiles-definitions>

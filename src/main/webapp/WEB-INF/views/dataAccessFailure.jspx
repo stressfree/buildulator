@@ -10,20 +10,25 @@
         <spring:message code="error_dataaccessfailure_problemdescription" />
       </p>
       <c:if test="${not empty exception}">
-        <p>
-          <h4>
-            <spring:message code="exception_details" />
-          </h4>
-          <spring:message var="message" code="exception_message" />
-            <h3><c:out value="${message}" /></h3>
-            <c:out value="${exception.localizedMessage}" />
-          <spring:message var="stacktrace" code="exception_stacktrace" />
-            <h3><c:out value="${stacktrace}" /></h3>
-            <c:forEach items="${exception.stackTrace}" var="trace">
-              <c:out value="${trace}" />
-              <br />
-            </c:forEach>
-        </p>
+        <h4>
+          <spring:message code="exception_details" />
+        </h4>
+        <div id="errorAccordion">
+            <h3><a href="#"><spring:message code="exception_message" /></a></h3>
+            <div>
+                <div class="exceptionMessage">
+                    <c:out value="${exception.localizedMessage}" />
+                </div>
+            </div>
+            <h3><a href="#"><spring:message code="exception_stacktrace" /></a></h3>
+            <div>
+                <div class="exceptionMessage">
+                    <c:forEach items="${exception.stackTrace}" var="trace">
+                     <c:out value="${trace}" /><br />
+                    </c:forEach>
+                </div>
+            </div>
+         </div>
       </c:if>
     </div>
   </div>

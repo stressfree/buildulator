@@ -16,7 +16,6 @@
 
         <!-- Configure these elements to secure URIs in your application -->
         <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/library/materials/list.json" access="permitAll" />
         <intercept-url pattern="/library/**" access="hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')"/>
         <intercept-url pattern="/resources/**" access="permitAll" />
         <intercept-url pattern="/**" access="permitAll" />

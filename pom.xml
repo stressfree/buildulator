@@ -387,6 +387,12 @@
             <artifactId>poi</artifactId>
             <version>3.7</version>
         </dependency>
+        <!-- HTML parser -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.6.2</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

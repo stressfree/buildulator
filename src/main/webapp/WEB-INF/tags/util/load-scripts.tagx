@@ -3,6 +3,8 @@
   <c:set var="userLocale">
     <c:out value="${pageContext.response.locale}" default="en" />
   </c:set>
+  <spring:url value="/projects/" var="show_project_url" />
+  <spring:url value="/projects/${project.id}?edit" var="edit_project_url" />
   <spring:url value="/styles/buildulator.css" var="buildulator_css_url" />
   <spring:url value="/styles/editor.css" var="wysiwyg_css_url" />
   <spring:url value="/js/jquery.jeditable-min.js" var="jeditable_js_url" />
@@ -35,5 +37,9 @@
   <script type="text/javascript" charset="utf8" src="${wysiwyg_js_url}"><!-- required for FF3 and Opera --></script>
   <script type="text/javascript" charset="utf8" src="${selectmenu_js_url}"><!-- required for FF3 and Opera --></script>
   <script type="text/javascript" charset="utf8" src="${gritter_js_url}"><!-- required for FF3 and Opera --></script>
-  <script type="text/javascript" charset="utf8">var wysiwygCss = '<c:out value="${wysiwyg_css_url}" />';</script>
+  <script type="text/javascript" charset="utf8">
+      var wysiwygCss = '<c:out value="${wysiwyg_css_url}" />';
+      var showProjectUrl = '<c:out value="${show_project_url}" />';
+      var editProjectUrl = '<c:out value="${edit_project_url}" />';
+  </script>
 </jsp:root>

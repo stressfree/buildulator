@@ -8,7 +8,36 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    $('select').selectmenu();
+
+    $('#btnEditProject').click(function() {
+        document.location.href = editProjectUrl;
+    });
+
+    $('#formCloneProject').dialog({
+        autoOpen : false,
+        modal : true
+    });
+
+    $('#btnCloneProject').click(function() {
+        $('#formCloneProject').dialog('open');
+    });
+
+    $('#formCloneProject .cancelAction a').click(function() {
+        $('#formCloneProject').dialog('close');
+    });
+
+    $('#formDeleteProject').dialog({
+        autoOpen : false,
+        modal : true
+    });
+
+    $('#btnDeleteProject').click(function() {
+        $('#formDeleteProject').dialog('open');
+    });
+
+    $('#formDeleteProject .cancelAction a').click(function() {
+        $('#formDeleteProject').dialog('close');
+    });
 });
 
 $(document).ready(function() {
@@ -115,10 +144,21 @@ $(document).ready(function() {
         "bLengthChange" : false,
         "iDisplayLength" : 50,
         "sAjaxSource" : './projects/list.json',
+        "fnDrawCallback": function(){
+            $('.dataTable tbody tr').click(function() {
+                var projectId = $(this).attr('id');
+                document.location.href = showProjectUrl + projectId;
+            });
+            $('.dataTable tbody tr').hover(function() {
+                $(this).addClass('row_selected');
+            }, function() {
+                $(this).removeClass('row_selected');
+            });
+        },
         "aoColumns": [ {
             "bSortable": true
         }, {
-            "bSortable": true
+            "bVisible": false
         }, {
             "bSortable": true
         }, {
@@ -127,21 +167,29 @@ $(document).ready(function() {
             "bVisible": false
         } ],
         "aoColumnDefs" : [ {
+            "fnRender": function ( oObj, sVal ) {
+                var name = '<strong>' + sVal + '</strong>';
+                var address = oObj.aData[1];
+                if (address != '') {
+                    name += '<br/>' + address;
+                }
+                return name;
+            },
             "sClass" : "column-1",
             "aTargets" : [ 0 ]
         }, {
             "sClass" : "column-2",
-            "aTargets" : [ 1 ]
+            "aTargets" : [ 2 ]
         }, {
             "sClass" : "column-3",
-            "aTargets" : [ 2 ]
+            "aTargets" : [ 3 ]
         } ]
     });
 });
 
 $(document).ready(function() {
     $('#adminTabs').tabs();
-    $('#adminAccordion').accordion({ autoHeight: false });
+    $('#adminAccordion').accordion({autoHeight: false});
 
     $('#usersList').dataTable({
         "bProcessing" : true,
@@ -266,4 +314,12 @@ $(document).ready(function() {
             },
         }
     });
+});
+
+$(document).ready(function() {
+    $('select').selectmenu();
+});
+
+$(document).ready(function() {
+    $('#errorAccordion').accordion({autoHeight: false});
 });

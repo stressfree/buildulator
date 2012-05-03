@@ -18,7 +18,9 @@ import javax.validation.constraints.NotNull;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Index;
+import org.jsoup.Jsoup;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
@@ -66,12 +68,64 @@ public class Project {
     @Column(name = "created", nullable = false)
     private Date created;
 
+
     /**
      * The on create actions.
      */
     @PrePersist
     protected void onCreate() {
         created = new Date();
+    }
+
+    /**
+     * Checks if the description is set.
+     *
+     * @return true, if is description set
+     */
+    public final boolean isDescriptionSet() {
+
+        boolean descriptionSet = false;
+
+        if (StringUtils.isNotBlank(this.description)) {
+            String content = Jsoup.parse(this.description).text();
+            if (StringUtils.isNotBlank(content)) {
+                descriptionSet = true;
+            }
+        }
+        return descriptionSet;
+    }
+
+    /**
+     * Update the project details based on the supplied project.
+     *
+     * @param project the project
+     */
+    public final void update(final Project project) {
+        this.setName(project.getName());
+        this.setLocation(project.getLocation());
+        this.setOccupants(project.getOccupants());
+        this.setEnergyConsumption(project.getEnergyConsumption());
+        this.setEnergySource(project.getEnergySource());
+        this.setDescription(project.getDescription());
+    }
+
+    /**
+     * Clone the project.
+     */
+    public final Project clone() {
+
+        Project project = new Project();
+
+        project.setName("Copy of " + this.getName());
+        project.setLocation(this.getLocation());
+        project.setOccupants(this.getOccupants());
+        project.setEnergyConsumption(this.getEnergyConsumption());
+        project.setEnergySource(this.getEnergySource());
+        project.setDescription(this.getDescription());
+        project.setPerson(this.getPerson());
+        project.setSession(this.getSession());
+
+        return project;
     }
 
     /**
