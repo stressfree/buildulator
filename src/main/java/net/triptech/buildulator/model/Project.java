@@ -54,6 +54,10 @@ public class Project {
     @Lob
     private String description;
 
+    /** The project data. */
+    @Lob
+    private String data;
+
     /** The energy source. */
     @ManyToOne
     @Index(name="ownerPerson")

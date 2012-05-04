@@ -439,12 +439,12 @@ input.error {
     color: #8D8574;
 }
 .projectInfo div.projectDescription,
-.projectInfo div#billOfMaterials {
+.projectInfo div.billOfMaterials {
   clear: left;
   padding: 0.6em 0 0 0;
 }
 .projectInfo div.projectDescription div.content,
-.projectInfo div#billOfMaterials div.content {
+.projectInfo div.billOfMaterials div.content {
   border-top: 1px solid #ccc;
   padding: 0.6em 0 0 0;
 }
@@ -545,6 +545,77 @@ div.homepageContent div.newProject {
   position: absolute;
 }
 
+
+/** Bill of materials styles */
+div.billOfMaterials {
+  font-size: 0.9em;
+}
+div.billOfMaterials div.contentFooter {
+  clear: left;
+}
+
+div.billOfMaterials ul {
+  margin: 0;
+  padding: 0;
+}
+
+div.billOfMaterials li {
+  margin: 0;
+  padding: 0;
+  clear: left;
+}
+
+div.billOfMaterials li div {
+  float: left;
+  line-height: 1.4em;
+  padding: 0.2em 4px 0.2em 0;
+}
+
+div.billOfMaterials div.bomSName {
+  width: 440px;
+  font-weight: bold;
+}
+
+div.billOfMaterials div.bomAName {
+  width: 322px;
+}
+
+div.billOfMaterials div.bomMName {
+  margin-left: 12px;
+  width: 310px;
+}
+
+div.billOfMaterials div.bomSName, div.billOfMaterials div.bomSCarbon, div.billOfMaterials div.bomSEnergy {
+  padding-top: 0.8em;
+}
+div.billOfMaterials div.bomAName, div.billOfMaterials div.bomAQuantity, div.billOfMaterials div.bomAUnits,
+div.billOfMaterials div.bomACarbon, div.billOfMaterials div.bomAEnergy {
+  padding-top: 0.5em;
+}
+
+div.billOfMaterials div.bomAUnits, div.billOfMaterials div.bomMUnits,
+div.billOfMaterials div.bomAQuantity, div.billOfMaterials div.bomMQuantity,
+div.billOfMaterials div.bomSEnergy, div.billOfMaterials div.bomAEnergy, div.billOfMaterials div.bomMEnergy,
+div.billOfMaterials div.bomSCarbon, div.billOfMaterials div.bomACarbon, div.billOfMaterials div.bomMCarbon {
+    height: 1.4em;
+    overflow: hidden;
+}
+
+div.billOfMaterials div.bomAUnits, div.billOfMaterials div.bomMUnits {
+    width: 50px;
+}
+
+div.billOfMaterials div.bomAQuantity, div.billOfMaterials div.bomMQuantity {
+    width: 60px;
+    text-align: right;
+}
+
+div.billOfMaterials div.bomSEnergy, div.billOfMaterials div.bomAEnergy, div.billOfMaterials div.bomMEnergy,
+div.billOfMaterials div.bomSCarbon, div.billOfMaterials div.bomACarbon, div.billOfMaterials div.bomMCarbon {
+    width: 100px;
+    text-align: right;
+    border-left: 1px solid #eee;
+}
 
 /** JQuery WYSIWYG CSS **/
 div.wysiwyg {

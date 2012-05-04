@@ -37,7 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class LibraryController extends BaseController {
 
-
+    /** The logger. */
     private static Logger logger = Logger.getLogger(LibraryController.class);
 
     /**

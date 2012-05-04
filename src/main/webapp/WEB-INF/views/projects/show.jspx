@@ -61,10 +61,11 @@
                     </div>
                 </div>
             </c:if>
-            <div id="billOfMaterials">
+            <div class="billOfMaterials" id="billOfMaterials${project.id}">
                 <div class="content">
                     <!-- -->
                 </div>
+                <div class="contentFooter"><!-- --></div>
             </div>
         </div>
     </div>

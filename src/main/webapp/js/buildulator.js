@@ -1,3 +1,5 @@
+var bomData;
+
 $(document).ready(function() {
     if ($('#flashMessage p.flashMessageContent').html() != null) {
         $.gritter.add({
@@ -323,3 +325,83 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#errorAccordion').accordion({autoHeight: false});
 });
+
+$(document).ready(function() {
+   $('div.billOfMaterials').each(function () {
+       var pid = this.id.replace('billOfMaterials','');
+       var bomUrl = showProjectUrl + pid + '/bom.json';
+
+       $.getJSON(bomUrl, function(data) {
+           bomData = data;
+
+           var sections = [];
+           $(bomData.sections).each(function(index, section){
+               sections[index] = renderBOMSection(section);
+           });
+
+           $('<ul/>', {
+               'class': 'bomSections', html: sections.join('')
+           }).appendTo('div.billOfMaterials div.content');
+       });
+   });
+});
+
+function renderBOMSection(section) {
+    var html = '<li class="bomSection"><div class="bomSName">';
+    html += section.name;
+    html += '</div><div class="bomSEnergy">';
+    html += section.totalEnergy;
+    html += '</div><div class="bomSCarbon">';
+    html += section.totalCarbon;
+    html += '</div><ul class="bomAssemblies">';
+
+    var assemblies = [];
+    $(section.assemblies).each(function(index, assembly){
+        assemblies[index] = renderBOMAssembly(assembly);
+    });
+    html += assemblies.join('');
+
+    html += '</ul></li>';
+
+    return html;
+}
+
+function renderBOMAssembly(assembly) {
+    var html = '<li class="bomAssembly"><div class="bomAName">';
+    html += assembly.name;
+    html += '</div><div class="bomAQuantity">';
+    html += assembly.quantity;
+    html += '</div><div class="bomAUnits">';
+    html += assembly.units;
+    html += '</div><div class="bomAEnergy">';
+    html += assembly.totalEnergy;
+    html += '</div><div class="bomACarbon">';
+    html += assembly.totalCarbon;
+    html += '</div><ul class="bomMaterials">';
+
+    var materials = [];
+    $(assembly.materials).each(function(index, material){
+        materials[index] = renderBOMMaterial(material);
+    });
+    html += materials.join('');
+
+    html += '</ul></li>';
+
+    return html;
+}
+
+function renderBOMMaterial(material) {
+    var html = '<li class="bomMaterial"><div class="bomMName">';
+    html += material.name;
+    html += '</div><div class="bomMQuantity">';
+    html += material.quantity;
+    html += '</div><div class="bomMUnits">';
+    html += material.units;
+    html += '</div><div class="bomMEnergy">';
+    html += material.totalEnergy;
+    html += '</div><div class="bomMCarbon">';
+    html += material.totalCarbon;
+    html += '</div></li>';
+
+    return html;
+}

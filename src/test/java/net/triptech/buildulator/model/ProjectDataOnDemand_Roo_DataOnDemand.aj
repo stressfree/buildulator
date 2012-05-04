@@ -39,6 +39,7 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     public Project ProjectDataOnDemand.getNewTransientProject(int index) {
         Project obj = new Project();
         setCreated(obj, index);
+        setData(obj, index);
         setDescription(obj, index);
         setEnergyConsumption(obj, index);
         setEnergySource(obj, index);
@@ -53,6 +54,11 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     public void ProjectDataOnDemand.setCreated(Project obj, int index) {
         Date created = new GregorianCalendar(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH), Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), Calendar.getInstance().get(Calendar.SECOND) + new Double(Math.random() * 1000).intValue()).getTime();
         obj.setCreated(created);
+    }
+    
+    public void ProjectDataOnDemand.setData(Project obj, int index) {
+        String data = "data_" + index;
+        obj.setData(data);
     }
     
     public void ProjectDataOnDemand.setDescription(Project obj, int index) {

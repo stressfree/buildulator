@@ -1,0 +1,26 @@
+<jsp:root xmlns:spring="http://www.springframework.org/tags" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+  <jsp:output omit-xml-declaration="yes" />
+
+  <ul class="bomSections">
+  <c:forEach var="section" items="${bom.sections}">
+    <li class="bomSection">
+        <div class="bomSName"><c:out value="${section.name}" /></div>
+        <div class="bomSEnergy"><c:out value="${section.formattedTotalEnergy}" /></div>
+        <div class="bomSCarbon"><c:out value="${section.formattedTotalCarbon}" /></div>
+        <c:if test="${not empty section.assemblies}">
+            <ul class="bomAssemblies">
+                <c:forEach var="assembly" items="${section.assemblies}">
+                    <li class="bomAssembly">
+                        <div class="bomAName"><c:out value="${assembly.name}" /></div>
+                        <div class="bomAQuantity"><c:out value="${assembly.formattedQuantity}" /></div>
+                        <div class="bomAUnits"><c:out value="${assembly.units}" /></div>
+                        <div class="bomAEnergy"><c:out value="${assembly.formattedTotalEnergy}" /></div>
+                        <div class="bomACarbon"><c:out value="${assembly.formattedTotalCarbon}" /></div>
+                    </li>
+                </c:forEach>
+            </ul>
+        </c:if>
+    </li>
+  </c:forEach>
+  </ul>
+</jsp:root>

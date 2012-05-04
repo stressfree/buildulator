@@ -58,6 +58,14 @@ privileged aspect Project_Roo_JavaBean {
         this.description = description;
     }
     
+    public String Project.getData() {
+        return this.data;
+    }
+    
+    public void Project.setData(String data) {
+        this.data = data;
+    }
+    
     public Person Project.getPerson() {
         return this.person;
     }

@@ -21,6 +21,7 @@ import net.triptech.buildulator.FlashScope;
 import net.triptech.buildulator.model.EnergySource;
 import net.triptech.buildulator.model.Project;
 import net.triptech.buildulator.model.Person;
+import net.triptech.buildulator.model.bom.BillOfMaterials;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -102,6 +103,7 @@ public class ProjectController extends BaseController {
 
         if (checkProjectPermission(project, request)) {
             uiModel.addAttribute("project", project);
+            uiModel.addAttribute("bom", BillOfMaterials.parseJson(project.getData()));
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             page = "resourceNotFound";
@@ -298,6 +300,34 @@ public class ProjectController extends BaseController {
     @RequestMapping(value = "/list.json", method = RequestMethod.GET)
     public @ResponseBody String listProjects(final HttpServletRequest request) {
         return Project.toJson(loadProjects(request));
+    }
+
+
+    /**
+     * Returns the project's bill of materials if the user has the rights to view it.
+     * Otherwise a 404 error is returned.
+     *
+     * @param id the id
+     * @param uiModel the ui model
+     * @param request the request
+     * @param response the response
+     * @return the string
+     */
+    @RequestMapping(value = "/{id}/bom.json", method = RequestMethod.GET)
+    public @ResponseBody String show(@PathVariable("id") Long id,
+            HttpServletRequest request, final HttpServletResponse response) {
+
+        String result = "";
+
+        Project project = Project.findProject(id);
+
+        if (checkProjectPermission(project, request)) {
+            BillOfMaterials bom = BillOfMaterials.parseJson(project.getData());
+            result = bom.toJson();
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        return result;
     }
 
 

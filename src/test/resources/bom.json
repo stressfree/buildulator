@@ -1,0 +1,39 @@
+{
+  sections: [
+    {
+        name: 'Test 1',
+        assemblies: [
+            {
+                name: 'Test Assembly 1',
+                units: 'm',
+                quantity: 10,
+                totalCarbon: 320,
+                totalEnergy: 320,
+                materials:
+                    [
+                        {
+                            name: 'Test Material 1',
+                            units: 'm2',
+                            quantity: 100,
+                            totalCarbon: 200,
+                            totalEnergy: 200
+                        },
+                        {
+                            name: 'Test Material 2',
+                            units: 'm3',
+                            quantity: 20,
+                            totalCarbon: 120,
+                            totalEnergy: 120
+                        }
+                    ]
+            },
+            {
+                name: 'Test Assembly 2'
+            }
+        ]
+    },
+    {
+        name: 'Test 2'
+    }
+  ]
+}
