@@ -4,17 +4,17 @@
 package net.triptech.buildulator.model.bom;
 
 import java.util.List;
-import net.triptech.buildulator.model.bom.AssemblyQuantity;
+import net.triptech.buildulator.model.bom.Element;
 import net.triptech.buildulator.model.bom.Section;
 
 privileged aspect Section_Roo_JavaBean {
     
-    public List<AssemblyQuantity> Section.getAssemblies() {
-        return this.assemblies;
+    public List<Element> Section.getElements() {
+        return this.elements;
     }
     
-    public void Section.setAssemblies(List<AssemblyQuantity> assemblies) {
-        this.assemblies = assemblies;
+    public void Section.setElements(List<Element> elements) {
+        this.elements = elements;
     }
     
 }

@@ -60,13 +60,13 @@ public class BillOfMaterials {
 
         for (Section section : this.getSections()) {
 
-            List<Map<String, Object>> asJson = new ArrayList<Map<String, Object>>();
+            List<Map<String, Object>> esJson = new ArrayList<Map<String, Object>>();
 
-            for (AssemblyQuantity assembly : section.getAssemblies()) {
+            for (Element element : section.getElements()) {
 
                 List<Map<String, Object>> msJson = new ArrayList<Map<String, Object>>();
 
-                for (MaterialQuantity material : assembly.getMaterials()) {
+                for (Material material : element.getMaterials()) {
 
                     Map<String, Object> mJson = new LinkedHashMap<String, Object>();
 
@@ -80,17 +80,17 @@ public class BillOfMaterials {
                     msJson.add(mJson);
                 }
 
-                Map<String, Object> aJson = new LinkedHashMap<String, Object>();
+                Map<String, Object> eJson = new LinkedHashMap<String, Object>();
 
-                aJson.put("id", assembly.getId());
-                aJson.put("name", assembly.getName());
-                aJson.put("units", assembly.getUnits());
-                aJson.put("quantity", assembly.getFormattedQuantity());
-                aJson.put("totalEnergy", assembly.getFormattedTotalEnergy());
-                aJson.put("totalCarbon", assembly.getFormattedTotalCarbon());
-                aJson.put("materials", msJson);
+                eJson.put("id", element.getId());
+                eJson.put("name", element.getName());
+                eJson.put("units", element.getUnits());
+                eJson.put("quantity", element.getFormattedQuantity());
+                eJson.put("totalEnergy", element.getFormattedTotalEnergy());
+                eJson.put("totalCarbon", element.getFormattedTotalCarbon());
+                eJson.put("materials", msJson);
 
-                asJson.add(aJson);
+                esJson.add(eJson);
             }
 
             Map<String, Object> sJson = new LinkedHashMap<String, Object>();
@@ -99,7 +99,7 @@ public class BillOfMaterials {
             sJson.put("name", section.getName());
             sJson.put("totalEnergy", section.getFormattedTotalEnergy());
             sJson.put("totalCarbon", section.getFormattedTotalCarbon());
-            sJson.put("assemblies", asJson);
+            sJson.put("elements", esJson);
 
             ssJson.add(sJson);
         }
@@ -156,25 +156,25 @@ public class BillOfMaterials {
             section.setId(s);
             section.setName(getString(sectionJson, "name"));
 
-            JSONArray assembliesJson = getArray(sectionJson, "assemblies");
+            JSONArray elementsJson = getArray(sectionJson, "elements");
 
-            for (int a = 0; a < assembliesJson.size(); a++) {
-                JSONObject assemblyJson = assembliesJson.getJSONObject(a);
+            for (int a = 0; a < elementsJson.size(); a++) {
+                JSONObject elementJson = elementsJson.getJSONObject(a);
 
-                AssemblyQuantity assembly = new AssemblyQuantity();
-                assembly.setId(a);
-                assembly.setName(getString(assemblyJson, "name"));
-                assembly.setUnits(getString(assemblyJson, "units"));
-                assembly.setQuantity(getDouble(assemblyJson, "quantity"));
-                assembly.setTotalEnergy(getDouble(assemblyJson, "totalEnergy"));
-                assembly.setTotalCarbon(getDouble(assemblyJson, "totalCarbon"));
+                Element element = new Element();
+                element.setId(a);
+                element.setName(getString(elementJson, "name"));
+                element.setUnits(getString(elementJson, "units"));
+                element.setQuantity(getDouble(elementJson, "quantity"));
+                element.setTotalEnergy(getDouble(elementJson, "totalEnergy"));
+                element.setTotalCarbon(getDouble(elementJson, "totalCarbon"));
 
-                JSONArray materialsJson = getArray(assemblyJson, "materials");
+                JSONArray materialsJson = getArray(elementJson, "materials");
 
                 for (int m = 0; m < materialsJson.size(); m++) {
                     JSONObject materialJson = materialsJson.getJSONObject(m);
 
-                    MaterialQuantity material = new MaterialQuantity();
+                    Material material = new Material();
                     material.setId(m);
                     material.setName(getString(materialJson, "name"));
                     material.setUnits(getString(materialJson, "units"));
@@ -182,9 +182,9 @@ public class BillOfMaterials {
                     material.setTotalEnergy(getDouble(materialJson, "totalEnergy"));
                     material.setTotalCarbon(getDouble(materialJson, "totalCarbon"));
 
-                    assembly.addMaterial(material);
+                    element.addMaterial(material);
                 }
-                section.addAssembly(assembly);
+                section.addElement(element);
             }
             bom.addSection(section);
         }

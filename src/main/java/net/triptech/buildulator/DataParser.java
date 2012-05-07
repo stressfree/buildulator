@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringUtils;
+import org.jsoup.Jsoup;
+
 import net.triptech.buildulator.SmartTokenizer;
 
 
@@ -22,6 +25,25 @@ import net.triptech.buildulator.SmartTokenizer;
  * The Class DataParser.
  */
 public class DataParser {
+
+    /**
+     * Strip any html elements from the supplied input.
+     *
+     * @param htmlString the html string
+     * @return the string
+     */
+    public static String stripHtml(final String htmlString) {
+        String text = "";
+
+        if (StringUtils.isNotBlank(htmlString)) {
+            try {
+                text = Jsoup.parse(htmlString).text();
+            } catch (Exception e) {
+                text = "";
+            }
+        }
+        return text;
+    }
 
     /**
      * Parses the text data.

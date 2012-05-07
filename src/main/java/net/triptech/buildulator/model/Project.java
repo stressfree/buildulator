@@ -17,10 +17,10 @@ import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 
 import net.sf.json.JSONObject;
+import net.triptech.buildulator.DataParser;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Index;
-import org.jsoup.Jsoup;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
@@ -90,11 +90,8 @@ public class Project {
 
         boolean descriptionSet = false;
 
-        if (StringUtils.isNotBlank(this.description)) {
-            String content = Jsoup.parse(this.description).text();
-            if (StringUtils.isNotBlank(content)) {
-                descriptionSet = true;
-            }
+        if (StringUtils.isNotBlank(DataParser.stripHtml(this.getDescription()))) {
+            descriptionSet = true;
         }
         return descriptionSet;
     }

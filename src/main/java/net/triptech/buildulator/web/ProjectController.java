@@ -17,13 +17,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import net.triptech.buildulator.DataParser;
 import net.triptech.buildulator.FlashScope;
+import net.triptech.buildulator.model.DataGrid;
 import net.triptech.buildulator.model.EnergySource;
 import net.triptech.buildulator.model.Project;
 import net.triptech.buildulator.model.Person;
 import net.triptech.buildulator.model.bom.BillOfMaterials;
+import net.triptech.buildulator.model.bom.Section;
+import net.triptech.buildulator.model.bom.Element;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * The Class ProjectController.
@@ -40,6 +46,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/projects")
 @Controller
 public class ProjectController extends BaseController {
+
+    /** The logger. */
+    private static Logger logger = Logger.getLogger(ProjectController.class);
 
     /**
      * Index.
@@ -314,7 +323,7 @@ public class ProjectController extends BaseController {
      * @return the string
      */
     @RequestMapping(value = "/{id}/bom.json", method = RequestMethod.GET)
-    public @ResponseBody String show(@PathVariable("id") Long id,
+    public @ResponseBody String jsonBOM(@PathVariable("id") Long id,
             HttpServletRequest request, final HttpServletResponse response) {
 
         String result = "";
@@ -328,6 +337,72 @@ public class ProjectController extends BaseController {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
         return result;
+    }
+
+    /**
+     * Import the bill of materials.
+     *
+     * @param id the id
+     * @param data the data
+     * @param request the request
+     * @param response the response
+     * @return the string
+     */
+    @RequestMapping(value = "/{id}/import", method = RequestMethod.POST)
+    public String importBOM(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "bomData", required = true) String data,
+            HttpServletRequest request, final HttpServletResponse response)  {
+
+        String page = "resourceNotFound";
+
+        Project project = Project.findProject(id);
+
+        if (checkProjectPermission(project, request)) {
+
+            String message = getMessage("projects_bom_import_nodata");
+
+            if (StringUtils.isNotBlank(data)) {
+                project.setData(parseBillOfMaterials(data).toJson());
+
+                project.merge();
+                project.flush();
+
+                message = getMessage("projects_bom_import_complete");
+            }
+            FlashScope.appendMessage(message, request);
+
+            page = "redirect:/projects/"
+                    + encodeUrlPathSegment(project.getId().toString(), request);
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        return page;
+    }
+
+    /**
+     * Builds the template for importing a QS report.
+     *
+     * @param request the request
+     * @param response the response
+     * @return the model and view
+     * @throws Exception the exception
+     */
+    @RequestMapping(value = "/qs-template.xls", method = RequestMethod.GET)
+    public ModelAndView buildTemplate(HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+
+        DataGrid dataGrid = new DataGrid();
+        dataGrid.setTitle(this.getMessage("projects_bom_import_template_title"));
+
+        dataGrid.addHeaderField(this.getMessage(
+                "projects_bom_import_template_item"));
+        dataGrid.addHeaderField(this.getMessage(
+                "projects_bom_import_template_quantity"));
+        dataGrid.addHeaderField(this.getMessage(
+                "projects_bom_import_template_units"));
+
+        return new ModelAndView("ExcelTemplateView", "dataGrid", dataGrid);
     }
 
 
@@ -395,4 +470,85 @@ public class ProjectController extends BaseController {
         }
         return showProject;
     }
+
+    /**
+     * Parses the bill of materials.
+     *
+     * @param data the data
+     * @return the bill of materials
+     */
+    private BillOfMaterials parseBillOfMaterials(final String data) {
+
+        BillOfMaterials bom = new BillOfMaterials();
+
+        DataGrid parsedData = new DataGrid(data);
+
+        int itemId = 0, quantityId = 0, unitsId = 0, headerCount = 0;
+
+        for (String header : parsedData.getHeaderFields()) {
+            if (StringUtils.equalsIgnoreCase(header, this.getMessage(
+                    "projects_bom_import_template_item"))) {
+                itemId = headerCount;
+            }
+            if (StringUtils.equalsIgnoreCase(header, this.getMessage(
+                    "projects_bom_import_template_quantity"))) {
+                quantityId = headerCount;
+            }
+            if (StringUtils.equalsIgnoreCase(header, this.getMessage(
+                    "projects_bom_import_template_units"))) {
+                unitsId = headerCount;
+            }
+            headerCount++;
+        }
+
+        for (List<String> row : parsedData.getRows()) {
+
+            String itemName = DataParser.stripHtml(row.get(itemId));
+
+            if (StringUtils.isNotBlank(itemName)) {
+                // A field name exists, continue
+                String quantityValue = DataParser.stripHtml(row.get(quantityId));
+                String unitsValue = DataParser.stripHtml(row.get(unitsId));
+
+                if (StringUtils.isNotBlank(quantityValue)) {
+                    Element element = new Element();
+                    element.setName(itemName);
+
+                    try {
+                        element.setQuantity(Double.parseDouble(quantityValue));
+                    } catch (Exception e) {
+                        logger.info("Error parsing the quantity value: "
+                                + e.getMessage());
+                        // Append to the unitsValue
+                        unitsValue = quantityValue.trim() + " "
+                                + unitsValue.trim();
+                    }
+
+                    if (StringUtils.isNotBlank(unitsValue)) {
+                        element.setUnits(unitsValue.trim());
+                    }
+
+                    // Add to the current section - add a new section if required
+                    if (bom.getSections().size() == 0) {
+                        Section section = new Section();
+                        section.setName(
+                                getMessage("projects_bom_import_unnamedsection"));
+                        bom.addSection(section);
+                    }
+
+                    bom.getSections().get(bom.getSections().size() - 1)
+                            .addElement(element);
+
+                } else {
+                    // This is a new section
+                    Section section = new Section();
+                    section.setName(itemName);
+
+                    bom.addSection(section);
+                }
+            }
+        }
+        return bom;
+    }
+
 }

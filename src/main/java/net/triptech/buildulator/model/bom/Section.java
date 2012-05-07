@@ -11,27 +11,27 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 @RooJavaBean
 public class Section extends SustainabilityBase {
 
-    /** The assemblies. */
-    private List<AssemblyQuantity> assemblies = new ArrayList<AssemblyQuantity>();
+    /** The elements. */
+    private List<Element> elements = new ArrayList<Element>();
 
     /**
-     * Adds the assembly.
+     * Adds the element.
      *
-     * @param assembly the assembly
+     * @param element the element
      */
-    public final void addAssembly(final AssemblyQuantity assembly) {
-        assembly.setId(this.getAssemblies().size());
-        this.getAssemblies().add(assembly);
+    public final void addElement(final Element element) {
+        element.setId(this.getElements().size());
+        this.getElements().add(element);
     }
 
     /**
-     * Removes the assembly.
+     * Removes the element.
      *
      * @param id the id
      */
-    public final void removeAssembly(final int id) {
-        if (this.getAssemblies().size() >= id) {
-            this.getAssemblies().remove(id);
+    public final void removeElement(final int id) {
+        if (this.getElements().size() >= id) {
+            this.getElements().remove(id);
         }
     }
 

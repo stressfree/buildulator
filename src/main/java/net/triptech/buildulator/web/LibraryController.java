@@ -15,6 +15,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.triptech.buildulator.DataParser;
 import net.triptech.buildulator.FlashScope;
 import net.triptech.buildulator.model.EnergySource;
 import net.triptech.buildulator.model.Material;
@@ -171,7 +172,7 @@ public class LibraryController extends BaseController {
 
     @PreAuthorize("hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')")
     @RequestMapping(value = "/materials/bulk", method = RequestMethod.POST)
-    public String complete(
+    public String importMaterialList(
             @RequestParam(value = "materialsData", required = true) String data,
             Model uiModel, HttpServletRequest request) throws Exception {
 
@@ -181,9 +182,9 @@ public class LibraryController extends BaseController {
             DataGrid parsedData = new DataGrid(data);
 
             int materialCount = 0, nameId = 0, unitOfMeasureId = 0, lifeYearsId = 0,
-                carbonPerUnitId = 0, energyPerUnitId = 0, wastagePercentId = 0;
+                carbonPerUnitId = 0, energyPerUnitId = 0, wastagePercentId = 0,
+                headerCount = 0;
 
-            int headerCount = 0;
             for (String header : parsedData.getHeaderFields()) {
                 if (StringUtils.equalsIgnoreCase(header, this.getMessage(
                         "label_net_triptech_buildulator_model_material_name"))) {
@@ -217,8 +218,8 @@ public class LibraryController extends BaseController {
 
                 Material material = new Material();
 
-                material.setName(row.get(nameId));
-                material.setUnitOfMeasure(row.get(unitOfMeasureId));
+                material.setName(DataParser.stripHtml(row.get(nameId)));
+                material.setUnitOfMeasure(DataParser.stripHtml(row.get(unitOfMeasureId)));
                 try {
                     material.setLifeYears(Integer.parseInt(row.get(lifeYearsId)));
                 } catch (Exception e) {
@@ -265,7 +266,7 @@ public class LibraryController extends BaseController {
         return "redirect:/library";
     }
 
-    @RequestMapping(value = "/template.xls", method = RequestMethod.GET)
+    @RequestMapping(value = "/material-template.xls", method = RequestMethod.GET)
     public ModelAndView buildTemplate(HttpServletRequest request,
             HttpServletResponse response) throws Exception {
 

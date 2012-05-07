@@ -6,13 +6,13 @@ import java.util.List;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 /**
- * The Class AssemblyQuantity.
+ * The Class Element.
  */
 @RooJavaBean
-public class AssemblyQuantity extends SustainabilityBase {
+public class Element extends SustainabilityBase {
 
     /** The materials. */
-    private List<MaterialQuantity> materials = new ArrayList<MaterialQuantity>();
+    private List<Material> materials = new ArrayList<Material>();
 
 
     /**
@@ -20,7 +20,7 @@ public class AssemblyQuantity extends SustainabilityBase {
      *
      * @param material the material
      */
-    public final void addMaterial(final MaterialQuantity material) {
+    public final void addMaterial(final Material material) {
         material.setId(this.getMaterials().size());
         this.getMaterials().add(material);
     }

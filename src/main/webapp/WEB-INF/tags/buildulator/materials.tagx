@@ -51,15 +51,13 @@
 
      <spring:url value="/library/materials/bulk" var="bulkAddUrl" />
      <form id="formBulkAddMaterials" action="${bulkAddUrl}" method="post">
-        <p>
-            <spring:url value="library/template.xls" var="templateUrl" />
-            <spring:message code="materials_library_bulkadd_intro" arguments="${templateUrl}" htmlEscape="false" />
-        </p>
+        <spring:url value="/library/material-template.xls" var="templateUrl" />
+        <spring:message code="materials_library_bulkadd_intro" arguments="${templateUrl}" htmlEscape="false" />
         <p>
             <textarea name="materialsData" id="materialsData" class="required"><!-- --></textarea>
         </p>
         <div class="actionButtons">
-            <button type="submit"><spring:message code="materials_library_bulkadd_submit" /></button>
+            <button type="submit"><spring:message code="button_submit" /></button>
         </div>
      </form>
 </jsp:root>

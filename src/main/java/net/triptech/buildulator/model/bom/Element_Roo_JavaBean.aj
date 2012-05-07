@@ -4,16 +4,16 @@
 package net.triptech.buildulator.model.bom;
 
 import java.util.List;
-import net.triptech.buildulator.model.bom.AssemblyQuantity;
-import net.triptech.buildulator.model.bom.MaterialQuantity;
+import net.triptech.buildulator.model.bom.Element;
+import net.triptech.buildulator.model.bom.Material;
 
-privileged aspect AssemblyQuantity_Roo_JavaBean {
+privileged aspect Element_Roo_JavaBean {
     
-    public List<MaterialQuantity> AssemblyQuantity.getMaterials() {
+    public List<Material> Element.getMaterials() {
         return this.materials;
     }
     
-    public void AssemblyQuantity.setMaterials(List<MaterialQuantity> materials) {
+    public void Element.setMaterials(List<Material> materials) {
         this.materials = materials;
     }
     

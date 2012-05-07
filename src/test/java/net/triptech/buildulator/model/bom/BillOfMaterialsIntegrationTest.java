@@ -70,29 +70,29 @@ public class BillOfMaterialsIntegrationTest {
      */
     private void runBOMTests(final BillOfMaterials bom) {
 
-        assertEquals("Test 1", bom.getSections().get(0).getName());
-        assertEquals("Test 2", bom.getSections().get(1).getName());
+        assertEquals("Test Section 1", bom.getSections().get(0).getName());
+        assertEquals("Test Section 2", bom.getSections().get(1).getName());
 
         Section section = bom.getSections().get(0);
 
-        assertEquals("Test Assembly 1", section.getAssemblies().get(0).getName());
-        assertEquals("Test Assembly 2", section.getAssemblies().get(1).getName());
+        assertEquals("Test Element 1", section.getElements().get(0).getName());
+        assertEquals("Test Element 2", section.getElements().get(1).getName());
 
 
-        assertEquals("m", section.getAssemblies().get(0).getUnits());
-        assertEquals(10, (int) section.getAssemblies().get(0).getQuantity());
-        assertEquals(320, (int) section.getAssemblies().get(0).getTotalEnergy());
-        assertEquals(320, (int) section.getAssemblies().get(0).getTotalCarbon());
+        assertEquals("m", section.getElements().get(0).getUnits());
+        assertEquals(10, (int) section.getElements().get(0).getQuantity());
+        assertEquals(320, (int) section.getElements().get(0).getTotalEnergy());
+        assertEquals(320, (int) section.getElements().get(0).getTotalCarbon());
 
-        AssemblyQuantity assembly = section.getAssemblies().get(0);
+        Element element = section.getElements().get(0);
 
-        assertEquals("Test Material 1", assembly.getMaterials().get(0).getName());
-        assertEquals("Test Material 2", assembly.getMaterials().get(1).getName());
+        assertEquals("Test Material 1", element.getMaterials().get(0).getName());
+        assertEquals("Test Material 2", element.getMaterials().get(1).getName());
 
-        assertEquals("m2", assembly.getMaterials().get(0).getUnits());
-        assertEquals(100, (int) assembly.getMaterials().get(0).getQuantity());
-        assertEquals(200, (int) assembly.getMaterials().get(0).getTotalEnergy());
-        assertEquals(200, (int) assembly.getMaterials().get(0).getTotalCarbon());
+        assertEquals("m2", element.getMaterials().get(0).getUnits());
+        assertEquals(100, (int) element.getMaterials().get(0).getQuantity());
+        assertEquals(200, (int) element.getMaterials().get(0).getTotalEnergy());
+        assertEquals(200, (int) element.getMaterials().get(0).getTotalCarbon());
 
     }
 }
