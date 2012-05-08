@@ -316,6 +316,7 @@ p.field .ui-dialog label.error {
 #adminTabs .ui-tabs-nav li,
 #libraryTabs .ui-tabs-nav li {
   font-weight: normal;
+  list-style: none;
 }
 #adminTabs .ui-tabs-nav li.ui-tabs-selected a,
 #libraryTabs .ui-tabs-nav li.ui-tabs-selected a {
