@@ -21,7 +21,6 @@ public class Element extends SustainabilityBase {
      * @param material the material
      */
     public final void addMaterial(final Material material) {
-        material.setId(this.getMaterials().size());
         this.getMaterials().add(material);
     }
 

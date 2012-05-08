@@ -7,14 +7,6 @@ import net.triptech.buildulator.model.bom.BillOfMaterialsBase;
 
 privileged aspect BillOfMaterialsBase_Roo_JavaBean {
     
-    public int BillOfMaterialsBase.getId() {
-        return this.id;
-    }
-    
-    public void BillOfMaterialsBase.setId(int id) {
-        this.id = id;
-    }
-    
     public String BillOfMaterialsBase.getName() {
         return this.name;
     }

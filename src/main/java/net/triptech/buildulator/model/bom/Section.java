@@ -20,7 +20,6 @@ public class Section extends SustainabilityBase {
      * @param element the element
      */
     public final void addElement(final Element element) {
-        element.setId(this.getElements().size());
         this.getElements().add(element);
     }
 

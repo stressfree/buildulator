@@ -33,7 +33,6 @@ public class BillOfMaterials {
      * @param section the section
      */
     public final void addSection(final Section section) {
-        section.setId(this.getSections().size());
         this.getSections().add(section);
     }
 
@@ -70,7 +69,6 @@ public class BillOfMaterials {
 
                     Map<String, Object> mJson = new LinkedHashMap<String, Object>();
 
-                    mJson.put("id", material.getId());
                     mJson.put("name", material.getName());
                     mJson.put("units", material.getUnits());
                     mJson.put("quantity", material.getFormattedQuantity());
@@ -82,7 +80,6 @@ public class BillOfMaterials {
 
                 Map<String, Object> eJson = new LinkedHashMap<String, Object>();
 
-                eJson.put("id", element.getId());
                 eJson.put("name", element.getName());
                 eJson.put("units", element.getUnits());
                 eJson.put("quantity", element.getFormattedQuantity());
@@ -95,7 +92,6 @@ public class BillOfMaterials {
 
             Map<String, Object> sJson = new LinkedHashMap<String, Object>();
 
-            sJson.put("id", section.getId());
             sJson.put("name", section.getName());
             sJson.put("totalEnergy", section.getFormattedTotalEnergy());
             sJson.put("totalCarbon", section.getFormattedTotalCarbon());
@@ -153,7 +149,6 @@ public class BillOfMaterials {
             JSONObject sectionJson = sectionsJson.getJSONObject(s);
 
             Section section = new Section();
-            section.setId(s);
             section.setName(getString(sectionJson, "name"));
 
             JSONArray elementsJson = getArray(sectionJson, "elements");
@@ -162,7 +157,6 @@ public class BillOfMaterials {
                 JSONObject elementJson = elementsJson.getJSONObject(a);
 
                 Element element = new Element();
-                element.setId(a);
                 element.setName(getString(elementJson, "name"));
                 element.setUnits(getString(elementJson, "units"));
                 element.setQuantity(getDouble(elementJson, "quantity"));
@@ -175,7 +169,6 @@ public class BillOfMaterials {
                     JSONObject materialJson = materialsJson.getJSONObject(m);
 
                     Material material = new Material();
-                    material.setId(m);
                     material.setName(getString(materialJson, "name"));
                     material.setUnits(getString(materialJson, "units"));
                     material.setQuantity(getDouble(materialJson, "quantity"));

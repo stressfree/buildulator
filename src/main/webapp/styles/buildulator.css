@@ -616,7 +616,7 @@ div.homepageContent div.newProject {
 /** Bill of materials styles */
 div.billOfMaterials div.content {
   font-size: 0.9em;
-  border: 1px solid #eee;
+  border: 1px solid #ccc;
   background: url('../images/bom-content.png') top right repeat-y #fff;
 }
 
@@ -638,7 +638,7 @@ div.billOfMaterials div.content li {
 
 div.billOfMaterials div.content li.bomSection {
   padding: 0.8em 0 0.8em 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ccc;
 }
 
 div.billOfMaterials div.content li.bomElement {
@@ -664,6 +664,7 @@ div.billOfMaterials div.content li.addToBOM a {
   padding-left: 19px;
   background: url('../images/buttons.gif') 0px 0px no-repeat;
   font-style: normal;
+  margin: 0 0 0 5px;
 }
 
 div.billOfMaterials div.content li.addToBOM a:hover {
@@ -674,7 +675,6 @@ div.billOfMaterials div.content li.addToBOM a:hover {
 
 div.billOfMaterials div.content ul.bomSections li.addToBOM {
   padding: 0.8em 0 0.8em 0;
-  margin: 0 0 0 5px;
   font-weight: bold;
 }
 
@@ -684,12 +684,12 @@ div.billOfMaterials div.content ul.bomSections ul li.addToBOM {
 }
 
 div.billOfMaterials div.content li.bomElement li.addToBOM {
-  margin-left: 25px;
+  margin-left: 20px;
 }
 
 div.billOfMaterials div.content li div.deleteFromBOM {
   padding: 0;
-  margin: 0.45em 4px 0 5px;
+  margin: 0.35em 6px 0 5px;
 }
 div.billOfMaterials div.content li div.deleteFromBOM a {
   overflow: hidden;
@@ -726,11 +726,11 @@ div.billOfMaterials div.content div.bomSCarbon, div.billOfMaterials div.content 
     overflow: hidden;
 }
 
-div.billOfMaterials div.content div.bomAUnits, div.billOfMaterials div.bomMUnits {
+div.billOfMaterials div.content div.bomEUnits, div.billOfMaterials div.bomMUnits {
     width: 50px;
 }
 
-div.billOfMaterials div.content div.bomAQuantity, div.billOfMaterials div.bomMQuantity {
+div.billOfMaterials div.content div.bomEQuantity, div.billOfMaterials div.bomMQuantity {
     width: 60px;
     text-align: right;
 }
@@ -807,6 +807,30 @@ div.billOfMaterials div.content div.bomFooter div.bomFClear {
     clear: left;
     height: 1px;
     float: none;
+}
+
+div.billOfMaterials div.content div.bomAddSubmitCancelOptions {
+  margin: 0 0 0 455px;
+  float: none;
+}
+div.billOfMaterials div.content div.bomSectionNameInput,
+div.billOfMaterials div.content div.bomElementNameInput {
+  margin: 0 0 0.8em 15px;
+  padding-top: 4px;
+}
+div.billOfMaterials div.content div.bomSectionNameInput input {
+  width: 425px;
+}
+
+div.billOfMaterials div.content div.bomElementQuantityInput,
+div.billOfMaterials div.content div.bomElementUnitsInput {
+  padding-top: 4px;
+}
+div.billOfMaterials div.content div.bomElementQuantityInput input {
+  width: 50px;
+}
+div.billOfMaterials div.content div.bomElementUnitsInput input {
+  width: 60px;
 }
 
 

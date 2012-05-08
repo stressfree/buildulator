@@ -414,15 +414,27 @@ function BillOfMaterials (config) {
         });
     }
 
+    function _addRowHandlers(node) {
+        $(node).find('div.deleteFromBOM a').click(function () {
+            _confirmDelete(this);
+        });
+        $(_div + ' li.addToBOM a').click(function () {
+            _displayAddForm(this);
+        });
+        $(node).find('div.bomEditable').dblclick(function () {
+            _displayEditForm(this);
+        });
+    }
+
     function _assignAddSubmitCancelOptionEventHandlers(addDiv) {
         var type = _getType(addDiv);
 
-        $(addDiv).find('input.bomSubmit').click(function(e) {
+        $(addDiv).find('input.bomSubmit').button().click(function(e) {
             e.preventDefault();
             $(this).closest('form').submit();
         });
 
-        $(addDiv).find('input.bomCancel').click(function(e) {
+        $(addDiv).find('input.bomCancel').button().click(function(e) {
             e.preventDefault();
             addDiv.html(_renderAddControlText(type));
             $(addDiv).find('a').click(function() {
@@ -446,11 +458,7 @@ function BillOfMaterials (config) {
                 return false;
             }
 
-            var name = '';
-            var quantity = '';
-            var units = '';
-            var sid = '';
-            var eid = '';
+            var name = '', quantity = '', units = '', sid = '', eid = '';
 
             switch (type) {
                 case 'section':
@@ -470,15 +478,37 @@ function BillOfMaterials (config) {
                     break;
             }
 
-            var params = 'name=' + name + '&quantity=' + quantity + '&units=' + units + '&sid=' + sid + '&eid=' + eid;
+            var params = 'name=' + name + '&quantity=' + quantity
+                    + '&units=' + units + '&sid=' + sid + '&eid=' + eid;
             var addUrl = _projectUrl + _projectId + '/newitem';
             $.ajax({
                 type: 'POST',
                 url: addUrl,
                 data: params,
                 success: function(data){
-                    var json = $.parseJSON(data);
-                    alert(json.name);
+                    _data = $.parseJSON(data);
+                    var html = '';
+                    switch (type) {
+                        case 'section':
+                            var lastId = _data.sections.length - 1;
+                            var html = _renderSection(_data.sections[lastId]);
+                            break;
+                        case 'element':
+                            var section = _data.sections[sid - 1];
+                            var lastId = section.elements.length - 1;
+                            var html = _renderElement(section.elements[lastId]);
+                            break;
+                        case 'material':
+                            var element = _data.sections[sid - 1].elements[eid - 1];
+                            var lastId = element.materials.length - 1;
+                            var html = _renderMaterial(element.materials[lastId]);
+                            break;
+                    }
+                    $(addDiv).before(html);
+                    _addRowHandlers($(addDiv).prev());
+
+                    // Reset the inputs
+                    $(addDiv).find('input.bomText').val('').first().focus();
                 },
                 error: function(e){
                     alert('Error adding ' + type + ': ' + e);
@@ -490,15 +520,19 @@ function BillOfMaterials (config) {
     function _assignEditSubmitCancelOptionEventHandlers(editDiv) {
         var type = _getType(editDiv);
 
-        $(editDiv).find('input.bomSubmit').click(function(e) {
+        $(editDiv).find('input.bomSubmit').button().click(function(e) {
             e.preventDefault();
             $(this).closest('form').submit();
         });
 
-        $(editDiv).find('input.bomCancel').click(function(e) {
+        $(editDiv).find('input.bomCancel').button().click(function(e) {
             e.preventDefault();
             $(editDiv).children('form').remove();
             $(editDiv).children('div').show();
+
+            $(editDiv).dblclick(function () {
+                _displayEditForm(this);
+            });
         });
 
         var form = $(editDiv).find('form');
@@ -549,8 +583,26 @@ function BillOfMaterials (config) {
                 url: editUrl,
                 data: params,
                 success: function(data){
-                    var json = $.parseJSON(data);
-                    alert(json.name);
+                    _data = $.parseJSON(data);
+                    var html = '';
+                    switch (type) {
+                        case 'section':
+                            var html = _renderSection(_data.sections[sid - 1]);
+                            break;
+                        case 'element':
+                            var section = _data.sections[sid - 1];
+                            var html = _renderElement(section.elements[eid - 1]);
+                            break;
+                        case 'material':
+                            var element = _data.sections[sid - 1].elements[eid - 1];
+                            var html = _renderMaterial(element.materials[mid - 1]);
+                            break;
+                    }
+                    var parentLi = $(editDiv).closest('li');
+                    parentLi.before(html);
+                    _addRowHandlers(parentLi.prev());
+
+                    parentLi.remove();
                 },
                 error: function(e){
                     alert('Error editing ' + type + ': ' + e);
@@ -563,6 +615,8 @@ function BillOfMaterials (config) {
         var addDiv = $(node).closest('li.addToBOM');
         $(addDiv).html('<form>' + _renderFormInputs(node) + _renderSubmitCancelOptions(_addText, _cancelText) + '</form>');
         _assignAddSubmitCancelOptionEventHandlers(addDiv);
+
+        $(addDiv).find('input:first').focus();
     }
 
     function _displayEditForm(node) {
@@ -584,6 +638,10 @@ function BillOfMaterials (config) {
         $(node).children('div').hide();
         $(node).append('<form>' + _renderFormInputs(node, field) + _renderSubmitCancelOptions(_editText, _cancelText) + '</form>');
         _assignEditSubmitCancelOptionEventHandlers(node);
+
+        $(node).off('dblclick');
+
+        $(node).find('input:first').focus();
     }
 
     function _renderSubmitCancelOptions(submitText, cancelText) {
@@ -606,18 +664,18 @@ function BillOfMaterials (config) {
         switch(_getType(node)) {
             case "element":
                 var sid = $(node).closest('li.bomSection').index();
-                html += '<div class="bomElementNameInput"><input type="text" class="required" id="bomS' + sid + 'ElementName" value="' + name + '" /></div>';
-                html += '<div class="bomElementQuantityInput"><input type="text" class="required number" id="bomS' + sid + 'ElementQuantity" value="' + quantity + '" /></div>'
-                html += '<div class="bomElementUnitsInput"><input type="text" id="bomS' + sid + 'ElementUnits" value="' + units + '" /></div>'
+                html += '<div class="bomElementNameInput"><input type="text" class="bomText required" id="bomS' + sid + 'ElementName" value="' + name + '" /></div>';
+                html += '<div class="bomElementQuantityInput"><input type="text" class="bomText required number" id="bomS' + sid + 'ElementQuantity" value="' + quantity + '" /></div>'
+                html += '<div class="bomElementUnitsInput"><input type="text" class="bomText" id="bomS' + sid + 'ElementUnits" value="' + units + '" /></div>'
                 break;
             case "material":
                 var sid = $(node).closest('li.bomSection').index();
                 var eid = $(node).closest('li.bomElement').index();
-                html = '<div class="bomMaterialNameInput"><input type="text" class="required" id="bomS' + sid + 'E' + eid + 'MaterialName" value="' + name + '" /></div>';
-                html += '<div class="bomMaterialQuantityInput"><input type="text" class="required number" id="bomS' + sid + 'E' + eid + 'MaterialQuantity" value="' + quantity + '" /></div>'
+                html = '<div class="bomMaterialNameInput"><input type="text" class="bomText required" id="bomS' + sid + 'E' + eid + 'MaterialName" value="' + name + '" /></div>';
+                html += '<div class="bomMaterialQuantityInput"><input type="text" class="bomText required number" id="bomS' + sid + 'E' + eid + 'MaterialQuantity" value="' + quantity + '" /></div>'
                 break;
             default:
-                html += '<div class="bomSectionNameInput"><input type="text" class="required" id="bomSectionName" value="' + name + '" /></div>';
+                html += '<div class="bomSectionNameInput"><input type="text" class="bomText required" id="bomSectionName" value="' + name + '" /></div>';
         }
         return html;
     }
@@ -658,20 +716,21 @@ function BillOfMaterials (config) {
                 type: 'POST',
                 url: deleteUrl,
                 data: params,
-                success: function(data){
-                    var json = $.parseJSON(data);
-                    alert(json.name);
+                success: function(data) {
+                    // Remove the parent li
+                    $(node).closest('li').remove();
+                    // Re-render the sustainability totals
                 },
                 error: function(e){
-                    alert('Error deleting ' + type + ': ' + e);
+                    alert('Error deleting ' + type + ': ' + data);
                 },
             });
         }
     }
 
     function _renderSection(section) {
-        var html = '<li class="bomSection"><div class="deleteFromBOM"><a>';
-        html += _deleteText + '</a></div><div class="bomEditable"><div class="bomSName">';
+        var html = '<li class="bomSection"><div class="bomEditable"><div class="deleteFromBOM"><a>';
+        html += _deleteText + '</a></div><div class="bomSName">';
         html += _readValue(section.name);
         html += '</div><div class="bomSEnergy">';
         html += '</div><div class="bomSCarbon">';
@@ -689,8 +748,8 @@ function BillOfMaterials (config) {
     }
 
     function _renderElement(element) {
-        var html = '<li class="bomElement"><div class="deleteFromBOM"><a>';
-        html += _deleteText + '</a></div><div class="bomEditable"><div class="bomEName">';
+        var html = '<li class="bomElement"><div class="bomEditable"><div class="deleteFromBOM"><a>';
+        html += _deleteText + '</a></div><div class="bomEName">';
         html += _readValue(element.name);
         html += '</div><div class="bomEQuantity">';
         html += _readValue(element.quantity);
@@ -712,8 +771,8 @@ function BillOfMaterials (config) {
     }
 
     function _renderMaterial(material) {
-        var html = '<li class="bomMaterial"><div class="deleteFromBOM"><a>';
-        html += _deleteText + '</a></div><div class="bomEditable"><div class="bomMName">';
+        var html = '<li class="bomMaterial"><div class="bomEditable"><div class="deleteFromBOM"><a>';
+        html += _deleteText + '</a></div><div class="bomMName">';
         html += _readValue(material.name);
         html += '</div><div class="bomMQuantity">';
         html += _readValue(material.quantity);

@@ -26,6 +26,7 @@ import net.triptech.buildulator.model.Person;
 import net.triptech.buildulator.model.bom.BillOfMaterials;
 import net.triptech.buildulator.model.bom.Section;
 import net.triptech.buildulator.model.bom.Element;
+import net.triptech.buildulator.model.bom.Material;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -290,6 +291,116 @@ public class ProjectController extends BaseController {
     }
 
     /**
+     * Add an item to the project's bill of materials.
+     *
+     * @param id the id
+     * @param sid the sid
+     * @param eid the eid
+     * @param request the http servlet request
+     * @param response the http servlet response
+     * @return the string
+     */
+    @RequestMapping(value = "/{id}/newitem", method = RequestMethod.POST)
+    public @ResponseBody String newItem(@PathVariable("id") Long id,
+            @RequestParam(value = "sid", required = false) Integer sid,
+            @RequestParam(value = "eid", required = false) Integer eid,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "quantity", required = false) String quantity,
+            @RequestParam(value = "units", required = false) String units,
+            final HttpServletRequest request, final HttpServletResponse response) {
+
+        String returnMessage = "";
+
+        Project project = Project.findProject(id);
+
+        if (checkProjectPermission(project, request)) {
+            returnMessage = newBOMItem(project, sid, eid, name, quantity, units);
+        } else {
+            returnMessage = this.getMessage("projects_bom_projectnotfound");
+        }
+        if (StringUtils.equals(returnMessage, "ok")) {
+            // Return the bill of materials JSON
+            returnMessage = BillOfMaterials.parseJson(project.getData()).toJson();
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        return returnMessage;
+    }
+
+    /**
+     * Edit an item within the project's bill of materials.
+     *
+     * @param id the id
+     * @param sid the sid
+     * @param eid the eid
+     * @param mid the mid
+     * @param request the http servlet request
+     * @param response the http servlet response
+     * @return the string
+     */
+    @RequestMapping(value = "/{id}/edititem", method = RequestMethod.POST)
+    public @ResponseBody String editItem(@PathVariable("id") Long id,
+            @RequestParam(value = "sid", required = false) Integer sid,
+            @RequestParam(value = "eid", required = false) Integer eid,
+            @RequestParam(value = "mid", required = false) Integer mid,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "quantity", required = false) String quantity,
+            @RequestParam(value = "units", required = false) String units,
+            final HttpServletRequest request, final HttpServletResponse response) {
+
+        String returnMessage = "";
+
+        Project project = Project.findProject(id);
+
+        if (checkProjectPermission(project, request)) {
+            returnMessage = editBOMItem(project, sid, eid, mid, name, quantity, units);
+        } else {
+            returnMessage = this.getMessage("projects_bom_projectnotfound");
+        }
+        if (StringUtils.equals(returnMessage, "ok")) {
+            // Return the bill of materials JSON
+            returnMessage = BillOfMaterials.parseJson(project.getData()).toJson();
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        return returnMessage;
+    }
+
+
+    /**
+     * Delete an item from the project's bill of materials.
+     *
+     * @param id the id
+     * @param sid the sid
+     * @param eid the eid
+     * @param mid the mid
+     * @param request the http servlet request
+     * @param response the http servlet response
+     * @return the string
+     */
+    @RequestMapping(value = "/{id}/deleteitem", method = RequestMethod.POST)
+    public @ResponseBody String deleteItem(@PathVariable("id") Long id,
+            @RequestParam(value = "sid", required = false) Integer sid,
+            @RequestParam(value = "eid", required = false) Integer eid,
+            @RequestParam(value = "mid", required = false) Integer mid,
+            final HttpServletRequest request, final HttpServletResponse response) {
+
+        String returnMessage = "";
+
+        Project project = Project.findProject(id);
+
+        if (checkProjectPermission(project, request)) {
+            returnMessage = deleteBOMItem(project, sid, eid, mid);
+        } else {
+            returnMessage = this.getMessage("projects_bom_projectnotfound");
+        }
+        if (!StringUtils.equals(returnMessage, "ok")) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        return returnMessage;
+    }
+
+    /**
      * Returns the new project form.
      *
      * @param uiModel the ui model
@@ -549,6 +660,210 @@ public class ProjectController extends BaseController {
             }
         }
         return bom;
+    }
+
+
+    /**
+     * Adds the item to the bill of materials.
+     *
+     * @param project the project
+     * @param sid the sid
+     * @param eid the eid
+     * @param nameVal the name val
+     * @param quantityVal the quantity val
+     * @param unitsVal the units val
+     * @return the string
+     */
+    private String newBOMItem(final Project project, final Integer sid,
+            final Integer eid, final String nameVal, final String quantityVal,
+            final String unitsVal) {
+
+        String returnMessage = this.getMessage("projects_bom_new_cannotadd");
+
+        double quantity = 0;
+        try {
+            quantity = Integer.parseInt(quantityVal);
+        } catch (Exception e) {
+            // Error casting the quantityVal to a double
+        }
+
+        BillOfMaterials bom = BillOfMaterials.parseJson(project.getData());
+
+        if (StringUtils.isNotBlank(nameVal)) {
+            if (sid != null && sid > 0) {
+                if (bom.getSections().size() >= sid) {
+                    if (eid != null && eid > 0) {
+                        if (bom.getSections().get(sid - 1).getElements().size() >= eid) {
+                            // Add a new material
+                            Material material = new Material();
+
+                            //TODO Load the material and set the units
+                            material.setName(DataParser.stripHtml(nameVal));
+                            material.setQuantity(quantity);
+
+                            bom.getSections().get(sid - 1).getElements()
+                                    .get(eid - 1).addMaterial(material);
+                            returnMessage = "ok";
+                        }
+                    } else {
+                        // Add a new element
+                        Element element = new Element();
+                        element.setName(DataParser.stripHtml(nameVal));
+                        element.setQuantity(quantity);
+                        element.setUnits(DataParser.stripHtml(unitsVal));
+
+                        bom.getSections().get(sid - 1).addElement(element);
+                        returnMessage = "ok";
+                    }
+                }
+            } else {
+                // Add a new section to the BOM
+                Section section = new Section();
+                section.setName(DataParser.stripHtml(nameVal));
+
+                bom.addSection(section);
+                returnMessage = "ok";
+            }
+        } else {
+            returnMessage = this.getMessage("projects_bom_new_noname");
+        }
+
+        if (StringUtils.equals(returnMessage, "ok")) {
+            try {
+                project.setData(bom.toJson());
+                project.merge();
+                project.flush();
+            } catch (Exception e) {
+                returnMessage = this.getMessage("projects_bom_new_error");
+            }
+        }
+        return returnMessage;
+    }
+
+
+    /**
+     * Edits an item within the project's bill of materials.
+     *
+     * @param project the project
+     * @param sid the sid
+     * @param eid the eid
+     * @param mid the mid
+     * @param nameVal the name val
+     * @param quantityVal the quantity val
+     * @param unitsVal the units val
+     * @return the string
+     */
+    private String editBOMItem(final Project project, final Integer sid,
+            final Integer eid, final Integer mid, final String nameVal,
+            final String quantityVal, final String unitsVal) {
+
+        String returnMessage = this.getMessage("projects_bom_edit_cannotedit");
+
+        double quantity = 0;
+        try {
+            quantity = Integer.parseInt(quantityVal);
+        } catch (Exception e) {
+            // Error casting the quantityVal to a double
+        }
+
+        BillOfMaterials bom = BillOfMaterials.parseJson(project.getData());
+
+        if (sid != null && sid > 0) {
+            if (bom.getSections().size() >= sid) {
+                Section section = bom.getSections().get(sid - 1);
+
+                if (eid != null && eid > 0) {
+                    if (section.getElements().size() >= eid) {
+                        Element element = section.getElements().get(eid - 1);
+
+                        if (mid != null && mid > 0) {
+                            if (element.getMaterials().size() >= mid) {
+                                // Edit the material
+                                Material material = element.getMaterials().get(mid - 1);
+
+                                //TODO Load the material and set the units
+                                material.setName(DataParser.stripHtml(nameVal));
+                                material.setQuantity(quantity);
+
+                                returnMessage = "ok";
+                            }
+                        } else {
+                            // Edit the element
+                            element.setName(DataParser.stripHtml(nameVal));
+                            element.setQuantity(quantity);
+                            element.setUnits(DataParser.stripHtml(unitsVal));
+
+                            returnMessage = "ok";
+                        }
+                    }
+                } else {
+                    // Edit the section
+                    section.setName(DataParser.stripHtml(nameVal));
+
+                    returnMessage = "ok";
+                }
+            }
+        }
+
+        if (StringUtils.equals(returnMessage, "ok")) {
+            try {
+                project.setData(bom.toJson());
+                project.merge();
+                project.flush();
+            } catch (Exception e) {
+                returnMessage = this.getMessage("projects_bom_edit_error");
+            }
+        }
+        return returnMessage;
+    }
+
+    /**
+     * Delete an item within the bill of materials.
+     *
+     * @param project the project
+     * @param sid the sid
+     * @param eid the eid
+     * @param mid the mid
+     * @return the string
+     */
+    private String deleteBOMItem(final Project project, final Integer sid,
+            final Integer eid, final Integer mid) {
+
+        String returnMessage = this.getMessage("projects_bom_delete_noitemfound");
+
+        BillOfMaterials bom = BillOfMaterials.parseJson(project.getData());
+
+        if (sid != null && sid > 0 && bom.getSections().size() >= sid) {
+            if (eid != null && eid > 0) {
+                Section section = bom.getSections().get(sid - 1);
+                if (section.getElements().size() >= eid) {
+                    if (mid != null && mid > 0) {
+                        Element element = section.getElements().get(eid - 1);
+                        if (element.getMaterials().size() >= mid) {
+                            element.getMaterials().remove(mid - 1);
+                            returnMessage = "ok";
+                        }
+                    } else {
+                        section.getElements().remove(eid - 1);
+                        returnMessage = "ok";
+                    }
+                }
+            } else {
+                bom.removeSection(sid - 1);
+                returnMessage = "ok";
+            }
+        }
+
+        if (StringUtils.equals(returnMessage, "ok")) {
+            try {
+                project.setData(bom.toJson());
+                project.merge();
+                project.flush();
+            } catch (Exception e) {
+                returnMessage = this.getMessage("projects_bom_delete_error");
+            }
+        }
+        return returnMessage;
     }
 
 }
