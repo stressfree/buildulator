@@ -712,7 +712,7 @@ div.billOfMaterials div.content div.bomSName {
 }
 
 div.billOfMaterials div.content div.bomEName {
-  width: 343px;
+  width: 300px;
 }
 
 div.billOfMaterials div.content div.bomMName {
@@ -799,7 +799,8 @@ div.billOfMaterials div.content div.bomFooter div.bomFSummary {
   margin: 0 0 0 5px;
 }
 
-div.billOfMaterials div.content div.bomFooter div.bomFEnergy, div.billOfMaterials div.content div.bomFooter div.bomFCarbon {
+div.billOfMaterials div.content div.bomFooter div.bomFEnergy,
+div.billOfMaterials div.content div.bomFooter div.bomFCarbon {
   width: 100px;
   text-align: right;
 }
@@ -814,26 +815,60 @@ div.billOfMaterials div.content div.bomAddSubmitCancelOptions {
   margin: 0 0 0 455px;
   float: none;
 }
+div.billOfMaterials div.content ul.bomMaterials div.bomAddSubmitCancelOptions {
+  margin: 0 0 0 435px;
+}
+
 div.billOfMaterials div.content div.bomSectionNameInput,
-div.billOfMaterials div.content div.bomElementNameInput {
+div.billOfMaterials div.content div.bomElementNameInput,
+div.billOfMaterials div.content div.bomMaterialNameInput {
   margin: 0 0 0.8em 15px;
   padding-top: 4px;
 }
+
 div.billOfMaterials div.content div.bomSectionNameInput input {
   width: 425px;
 }
 
-div.billOfMaterials div.content div.bomElementQuantityInput,
-div.billOfMaterials div.content div.bomElementUnitsInput {
-  padding-top: 4px;
-}
-div.billOfMaterials div.content div.bomElementQuantityInput input {
-  width: 50px;
-}
-div.billOfMaterials div.content div.bomElementUnitsInput input {
-  width: 60px;
+div.billOfMaterials div.content div.bomElementNameInput input {
+  width: 313px;
 }
 
+div.billOfMaterials div.content div.bomMaterialNameInput input {
+  width: 280px;
+}
+
+div.billOfMaterials div.content div.bomElementQuantityInput,
+div.billOfMaterials div.content div.bomMaterialQuantityInput {
+ padding: 4px 0 0.2em 0;
+  width: 58px;
+}
+div.billOfMaterials div.content div.bomElementQuantityInput input,
+div.billOfMaterials div.content div.bomMaterialQuantityInput input {
+  width: 50px;
+}
+
+div.billOfMaterials div.content div.bomElementUnitsInput {
+ width: 48px;
+ padding: 4px 0 0.2em 0;
+}
+div.billOfMaterials div.content div.bomElementUnitsInput input {
+  width: 48px;
+}
+
+div.billOfMaterials div.content form {
+    margin-bottom: 1em;
+}
+
+div.billOfMaterials div.content label.error {
+  float: none;
+  clear: left;
+  position: absolute;
+  display: block;
+  font-size: 0.9em;
+  color: #FF3333;
+  font-weight: normal;
+}
 
 
 /** JQuery WYSIWYG CSS **/
