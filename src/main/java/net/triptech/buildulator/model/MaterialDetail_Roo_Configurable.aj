@@ -3,11 +3,11 @@
 
 package net.triptech.buildulator.model;
 
-import net.triptech.buildulator.model.MaterialIntegrationTest;
+import net.triptech.buildulator.model.MaterialDetail;
 import org.springframework.beans.factory.annotation.Configurable;
 
-privileged aspect MaterialIntegrationTest_Roo_Configurable {
+privileged aspect MaterialDetail_Roo_Configurable {
     
-    declare @type: MaterialIntegrationTest: @Configurable;
+    declare @type: MaterialDetail: @Configurable;
     
 }

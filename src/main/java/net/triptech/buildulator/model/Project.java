@@ -47,8 +47,7 @@ public class Project {
     /** The energy source. */
     @ManyToOne
     @Index(name="energySourceIndex")
-    @NotNull
-    private EnergySource energySource;
+    private MaterialDetail energySource;
 
     /** The project description. */
     @Lob
@@ -123,6 +122,7 @@ public class Project {
         project.setEnergyConsumption(this.getEnergyConsumption());
         project.setEnergySource(this.getEnergySource());
         project.setDescription(this.getDescription());
+        project.setData(this.getData());
         project.setPerson(this.getPerson());
         project.setSession(this.getSession());
 

@@ -20,7 +20,8 @@ import javax.validation.Valid;
 import net.triptech.buildulator.DataParser;
 import net.triptech.buildulator.FlashScope;
 import net.triptech.buildulator.model.DataGrid;
-import net.triptech.buildulator.model.EnergySource;
+import net.triptech.buildulator.model.MaterialDetail;
+import net.triptech.buildulator.model.MaterialType;
 import net.triptech.buildulator.model.Project;
 import net.triptech.buildulator.model.Person;
 import net.triptech.buildulator.model.bom.BillOfMaterials;
@@ -422,6 +423,17 @@ public class ProjectController extends BaseController {
         return Project.toJson(loadProjects(request));
     }
 
+    /**
+     * List the materials.
+     *
+     * @return the string
+     */
+    @RequestMapping(value = "/materials.json", method = RequestMethod.GET)
+    public @ResponseBody String listMaterials(final HttpServletRequest request) {
+        return MaterialDetail.toJson(MaterialDetail.findMaterialDetails(
+                MaterialType.CONSTRUCTION));
+    }
+
 
     /**
      * Returns the project's bill of materials if the user has the rights to view it.
@@ -518,18 +530,8 @@ public class ProjectController extends BaseController {
 
 
     @ModelAttribute("energySources")
-    public final List<EnergySource> getEnergySources() {
-        return EnergySource.findAllEnergySources();
-    }
-
-    @ModelAttribute("controllerUrl")
-    public final String getControllerUrl() {
-        return "/projects";
-    }
-
-    @ModelAttribute("controllerName")
-    public final String getControllerName() {
-        return getMessage("controller_projects");
+    public final List<MaterialDetail> getEnergySources() {
+        return MaterialDetail.findMaterialDetails(MaterialType.ENERGY_SOURCE);
     }
 
     /**
@@ -695,15 +697,23 @@ public class ProjectController extends BaseController {
                     if (eid != null && eid > 0) {
                         if (bom.getSections().get(sid - 1).getElements().size() >= eid) {
                             // Add a new material
-                            Material material = new Material();
+                            try {
+                                MaterialDetail m = MaterialDetail.findByName(nameVal);
+                                if (m != null) {
+                                    Material material = new Material();
 
-                            //TODO Load the material and set the units
-                            material.setName(DataParser.stripHtml(nameVal));
-                            material.setQuantity(quantity);
+                                    material.setName(m.getName());
+                                    material.setQuantity(quantity);
+                                    material.setUnits(m.getUnitOfMeasure());
 
-                            bom.getSections().get(sid - 1).getElements()
-                                    .get(eid - 1).addMaterial(material);
-                            returnMessage = "ok";
+                                    bom.getSections().get(sid - 1).getElements()
+                                            .get(eid - 1).addMaterial(material);
+                                    returnMessage = "ok";
+                                }
+                            } catch (Exception e) {
+                                logger.error("Could not add material '" + nameVal + "': "
+                                        + e.getMessage());
+                            }
                         }
                     } else {
                         // Add a new element
@@ -781,11 +791,19 @@ public class ProjectController extends BaseController {
                                 // Edit the material
                                 Material material = element.getMaterials().get(mid - 1);
 
-                                //TODO Load the material and set the units
-                                material.setName(DataParser.stripHtml(nameVal));
-                                material.setQuantity(quantity);
+                                try {
+                                    MaterialDetail m = MaterialDetail.findByName(nameVal);
+                                    if (m != null) {
+                                        material.setName(m.getName());
+                                        material.setQuantity(quantity);
+                                        material.setUnits(m.getUnitOfMeasure());
 
-                                returnMessage = "ok";
+                                        returnMessage = "ok";
+                                    }
+                                } catch (Exception e) {
+                                    logger.error("Could not edit material '" + nameVal
+                                            + "': " + e.getMessage());
+                                }
                             }
                         } else {
                             // Edit the element

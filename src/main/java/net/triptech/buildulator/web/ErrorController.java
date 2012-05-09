@@ -11,7 +11,6 @@
 package net.triptech.buildulator.web;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -44,13 +43,4 @@ public class ErrorController extends BaseController {
         return "accountDisabled";
     }
 
-    @ModelAttribute("controllerUrl")
-    public final String getControllerUrl() {
-        return "/error";
-    }
-
-    @ModelAttribute("controllerName")
-    public final String getControllerName() {
-        return getMessage("controller_error");
-    }
 }

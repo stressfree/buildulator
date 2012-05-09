@@ -327,7 +327,7 @@ public class Person implements UserDetails {
      * @param context the context
      * @return the user role
      */
-    private static UserRole getUserRole(final String value,
+    public static UserRole getUserRole(final String value,
             final ApplicationContext context) {
         UserRole pUserRole = UserRole.ROLE_USER;
 
@@ -349,7 +349,7 @@ public class Person implements UserDetails {
      * @param context the context
      * @return the user status
      */
-    private static UserStatus getUserStatus(final String value,
+    public static UserStatus getUserStatus(final String value,
             final ApplicationContext context) {
         UserStatus pUserStatus = UserStatus.ACTIVE;
 

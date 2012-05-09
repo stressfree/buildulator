@@ -9,34 +9,34 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
-import net.triptech.buildulator.model.Material;
+import net.triptech.buildulator.model.MaterialDetail;
 
-privileged aspect Material_Roo_Jpa_Entity {
+privileged aspect MaterialDetail_Roo_Jpa_Entity {
     
-    declare @type: Material: @Entity;
+    declare @type: MaterialDetail: @Entity;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long Material.id;
+    private Long MaterialDetail.id;
     
     @Version
     @Column(name = "version")
-    private Integer Material.version;
+    private Integer MaterialDetail.version;
     
-    public Long Material.getId() {
+    public Long MaterialDetail.getId() {
         return this.id;
     }
     
-    public void Material.setId(Long id) {
+    public void MaterialDetail.setId(Long id) {
         this.id = id;
     }
     
-    public Integer Material.getVersion() {
+    public Integer MaterialDetail.getVersion() {
         return this.version;
     }
     
-    public void Material.setVersion(Integer version) {
+    public void MaterialDetail.setVersion(Integer version) {
         this.version = version;
     }
     

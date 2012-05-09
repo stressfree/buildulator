@@ -3,11 +3,11 @@
 
 package net.triptech.buildulator.model;
 
-import net.triptech.buildulator.model.MaterialDataOnDemand;
+import net.triptech.buildulator.model.MaterialDetailIntegrationTest;
 import org.springframework.beans.factory.annotation.Configurable;
 
-privileged aspect MaterialDataOnDemand_Roo_Configurable {
+privileged aspect MaterialDetailIntegrationTest_Roo_Configurable {
     
-    declare @type: MaterialDataOnDemand: @Configurable;
+    declare @type: MaterialDetailIntegrationTest: @Configurable;
     
 }

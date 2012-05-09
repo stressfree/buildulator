@@ -11,7 +11,6 @@
 package net.triptech.buildulator.web;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -24,13 +23,4 @@ public class LoginController extends BaseController {
         return "login";
     }
 
-    @ModelAttribute("controllerUrl")
-    public final String getControllerUrl() {
-        return "/login";
-    }
-
-    @ModelAttribute("controllerName")
-    public final String getControllerName() {
-        return getMessage("controller_login");
-    }
 }

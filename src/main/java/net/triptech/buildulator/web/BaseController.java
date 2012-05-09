@@ -28,7 +28,7 @@ import org.springframework.web.util.WebUtils;
 
 
 
-public abstract class BaseController implements BuildulatorController {
+public abstract class BaseController {
 
     @Autowired
     private ApplicationContext context;

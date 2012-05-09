@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Random;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import net.triptech.buildulator.model.EnergySource;
-import net.triptech.buildulator.model.EnergySourceDataOnDemand;
+import net.triptech.buildulator.model.MaterialDetail;
 import net.triptech.buildulator.model.Person;
 import net.triptech.buildulator.model.PersonDataOnDemand;
 import net.triptech.buildulator.model.Project;
@@ -29,9 +28,6 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     private Random ProjectDataOnDemand.rnd = new SecureRandom();
     
     private List<Project> ProjectDataOnDemand.data;
-    
-    @Autowired
-    private EnergySourceDataOnDemand ProjectDataOnDemand.energySourceDataOnDemand;
     
     @Autowired
     private PersonDataOnDemand ProjectDataOnDemand.personDataOnDemand;
@@ -72,7 +68,7 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     }
     
     public void ProjectDataOnDemand.setEnergySource(Project obj, int index) {
-        EnergySource energySource = energySourceDataOnDemand.getRandomEnergySource();
+        MaterialDetail energySource = null;
         obj.setEnergySource(energySource);
     }
     

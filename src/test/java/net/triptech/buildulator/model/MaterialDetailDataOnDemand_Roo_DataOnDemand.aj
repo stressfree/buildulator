@@ -10,45 +10,52 @@ import java.util.List;
 import java.util.Random;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import net.triptech.buildulator.model.Material;
-import net.triptech.buildulator.model.MaterialDataOnDemand;
+import net.triptech.buildulator.model.MaterialDetail;
+import net.triptech.buildulator.model.MaterialDetailDataOnDemand;
+import net.triptech.buildulator.model.MaterialType;
 import org.springframework.stereotype.Component;
 
-privileged aspect MaterialDataOnDemand_Roo_DataOnDemand {
+privileged aspect MaterialDetailDataOnDemand_Roo_DataOnDemand {
     
-    declare @type: MaterialDataOnDemand: @Component;
+    declare @type: MaterialDetailDataOnDemand: @Component;
     
-    private Random MaterialDataOnDemand.rnd = new SecureRandom();
+    private Random MaterialDetailDataOnDemand.rnd = new SecureRandom();
     
-    private List<Material> MaterialDataOnDemand.data;
+    private List<MaterialDetail> MaterialDetailDataOnDemand.data;
     
-    public Material MaterialDataOnDemand.getNewTransientMaterial(int index) {
-        Material obj = new Material();
+    public MaterialDetail MaterialDetailDataOnDemand.getNewTransientMaterialDetail(int index) {
+        MaterialDetail obj = new MaterialDetail();
         setCarbonPerUnit(obj, index);
         setEnergyPerUnit(obj, index);
         setLifeYears(obj, index);
+        setMaterialType(obj, index);
         setName(obj, index);
         setUnitOfMeasure(obj, index);
         setWastagePercent(obj, index);
         return obj;
     }
     
-    public void MaterialDataOnDemand.setCarbonPerUnit(Material obj, int index) {
+    public void MaterialDetailDataOnDemand.setCarbonPerUnit(MaterialDetail obj, int index) {
         double carbonPerUnit = new Integer(index).doubleValue();
         obj.setCarbonPerUnit(carbonPerUnit);
     }
     
-    public void MaterialDataOnDemand.setEnergyPerUnit(Material obj, int index) {
+    public void MaterialDetailDataOnDemand.setEnergyPerUnit(MaterialDetail obj, int index) {
         double energyPerUnit = new Integer(index).doubleValue();
         obj.setEnergyPerUnit(energyPerUnit);
     }
     
-    public void MaterialDataOnDemand.setLifeYears(Material obj, int index) {
+    public void MaterialDetailDataOnDemand.setLifeYears(MaterialDetail obj, int index) {
         int lifeYears = index;
         obj.setLifeYears(lifeYears);
     }
     
-    public void MaterialDataOnDemand.setName(Material obj, int index) {
+    public void MaterialDetailDataOnDemand.setMaterialType(MaterialDetail obj, int index) {
+        MaterialType materialType = MaterialType.class.getEnumConstants()[0];
+        obj.setMaterialType(materialType);
+    }
+    
+    public void MaterialDetailDataOnDemand.setName(MaterialDetail obj, int index) {
         String name = "name_" + index;
         if (name.length() > 100) {
             name = new Random().nextInt(10) + name.substring(1, 100);
@@ -56,7 +63,7 @@ privileged aspect MaterialDataOnDemand_Roo_DataOnDemand {
         obj.setName(name);
     }
     
-    public void MaterialDataOnDemand.setUnitOfMeasure(Material obj, int index) {
+    public void MaterialDetailDataOnDemand.setUnitOfMeasure(MaterialDetail obj, int index) {
         String unitOfMeasure = "unitOfMeasure_" + index;
         if (unitOfMeasure.length() > 50) {
             unitOfMeasure = unitOfMeasure.substring(0, 50);
@@ -64,12 +71,12 @@ privileged aspect MaterialDataOnDemand_Roo_DataOnDemand {
         obj.setUnitOfMeasure(unitOfMeasure);
     }
     
-    public void MaterialDataOnDemand.setWastagePercent(Material obj, int index) {
+    public void MaterialDetailDataOnDemand.setWastagePercent(MaterialDetail obj, int index) {
         double wastagePercent = new Integer(index).doubleValue();
         obj.setWastagePercent(wastagePercent);
     }
     
-    public Material MaterialDataOnDemand.getSpecificMaterial(int index) {
+    public MaterialDetail MaterialDetailDataOnDemand.getSpecificMaterialDetail(int index) {
         init();
         if (index < 0) {
             index = 0;
@@ -77,36 +84,36 @@ privileged aspect MaterialDataOnDemand_Roo_DataOnDemand {
         if (index > (data.size() - 1)) {
             index = data.size() - 1;
         }
-        Material obj = data.get(index);
+        MaterialDetail obj = data.get(index);
         Long id = obj.getId();
-        return Material.findMaterial(id);
+        return MaterialDetail.findMaterialDetail(id);
     }
     
-    public Material MaterialDataOnDemand.getRandomMaterial() {
+    public MaterialDetail MaterialDetailDataOnDemand.getRandomMaterialDetail() {
         init();
-        Material obj = data.get(rnd.nextInt(data.size()));
+        MaterialDetail obj = data.get(rnd.nextInt(data.size()));
         Long id = obj.getId();
-        return Material.findMaterial(id);
+        return MaterialDetail.findMaterialDetail(id);
     }
     
-    public boolean MaterialDataOnDemand.modifyMaterial(Material obj) {
+    public boolean MaterialDetailDataOnDemand.modifyMaterialDetail(MaterialDetail obj) {
         return false;
     }
     
-    public void MaterialDataOnDemand.init() {
+    public void MaterialDetailDataOnDemand.init() {
         int from = 0;
         int to = 10;
-        data = Material.findMaterialEntries(from, to);
+        data = MaterialDetail.findMaterialDetailEntries(from, to);
         if (data == null) {
-            throw new IllegalStateException("Find entries implementation for 'Material' illegally returned null");
+            throw new IllegalStateException("Find entries implementation for 'MaterialDetail' illegally returned null");
         }
         if (!data.isEmpty()) {
             return;
         }
         
-        data = new ArrayList<Material>();
+        data = new ArrayList<MaterialDetail>();
         for (int i = 0; i < 10; i++) {
-            Material obj = getNewTransientMaterial(i);
+            MaterialDetail obj = getNewTransientMaterialDetail(i);
             try {
                 obj.persist();
             } catch (ConstraintViolationException e) {

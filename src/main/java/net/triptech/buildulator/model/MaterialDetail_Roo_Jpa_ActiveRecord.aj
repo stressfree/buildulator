@@ -6,66 +6,66 @@ package net.triptech.buildulator.model;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import net.triptech.buildulator.model.EnergySource;
+import net.triptech.buildulator.model.MaterialDetail;
 import org.springframework.transaction.annotation.Transactional;
 
-privileged aspect EnergySource_Roo_Jpa_ActiveRecord {
+privileged aspect MaterialDetail_Roo_Jpa_ActiveRecord {
     
     @PersistenceContext
-    transient EntityManager EnergySource.entityManager;
+    transient EntityManager MaterialDetail.entityManager;
     
-    public static final EntityManager EnergySource.entityManager() {
-        EntityManager em = new EnergySource().entityManager;
+    public static final EntityManager MaterialDetail.entityManager() {
+        EntityManager em = new MaterialDetail().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
         return em;
     }
     
-    public static long EnergySource.countEnergySources() {
-        return entityManager().createQuery("SELECT COUNT(o) FROM EnergySource o", Long.class).getSingleResult();
+    public static long MaterialDetail.countMaterialDetails() {
+        return entityManager().createQuery("SELECT COUNT(o) FROM MaterialDetail o", Long.class).getSingleResult();
     }
     
-    public static EnergySource EnergySource.findEnergySource(Long id) {
+    public static MaterialDetail MaterialDetail.findMaterialDetail(Long id) {
         if (id == null) return null;
-        return entityManager().find(EnergySource.class, id);
+        return entityManager().find(MaterialDetail.class, id);
     }
     
-    public static List<EnergySource> EnergySource.findEnergySourceEntries(int firstResult, int maxResults) {
-        return entityManager().createQuery("SELECT o FROM EnergySource o", EnergySource.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    public static List<MaterialDetail> MaterialDetail.findMaterialDetailEntries(int firstResult, int maxResults) {
+        return entityManager().createQuery("SELECT o FROM MaterialDetail o", MaterialDetail.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional
-    public void EnergySource.persist() {
+    public void MaterialDetail.persist() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.persist(this);
     }
     
     @Transactional
-    public void EnergySource.remove() {
+    public void MaterialDetail.remove() {
         if (this.entityManager == null) this.entityManager = entityManager();
         if (this.entityManager.contains(this)) {
             this.entityManager.remove(this);
         } else {
-            EnergySource attached = EnergySource.findEnergySource(this.id);
+            MaterialDetail attached = MaterialDetail.findMaterialDetail(this.id);
             this.entityManager.remove(attached);
         }
     }
     
     @Transactional
-    public void EnergySource.flush() {
+    public void MaterialDetail.flush() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.flush();
     }
     
     @Transactional
-    public void EnergySource.clear() {
+    public void MaterialDetail.clear() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.clear();
     }
     
     @Transactional
-    public EnergySource EnergySource.merge() {
+    public MaterialDetail MaterialDetail.merge() {
         if (this.entityManager == null) this.entityManager = entityManager();
-        EnergySource merged = this.entityManager.merge(this);
+        MaterialDetail merged = this.entityManager.merge(this);
         this.entityManager.flush();
         return merged;
     }

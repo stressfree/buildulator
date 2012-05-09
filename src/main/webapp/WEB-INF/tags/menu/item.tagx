@@ -1,4 +1,4 @@
-<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:tiles="http://tiles.apache.org/tags-tiles" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
   <jsp:output omit-xml-declaration="yes" />
 
   <jsp:directive.attribute name="id" type="java.lang.String" required="true" rtexprvalue="true" description="The identifier for this tag (do not change!)" />
@@ -10,6 +10,8 @@
 
   <c:if test="${empty render or render}">
 
+    <c:set var="currentPageUrl" value="${fn:replace(pageUrl, '_', '/') }" />
+
     <c:if test="${empty label}">
       <spring:message code="menu_item_${fn:toLowerCase(fn:substringAfter(id,'_'))}_label" var="label" htmlEscape="false" />
     </c:if>
@@ -17,7 +19,7 @@
     <c:if test="${not empty messageCode}">
       <spring:message code="${messageCode}" var="label" arguments="${label}" htmlEscape="false" />
     </c:if>
-    <c:if test="${url eq controllerUrl}">
+    <c:if test="${url eq currentPageUrl}">
         <c:set var="activeItem" value="activeItem" />
         <c:set var="activeLink" value="activeLink" />
     </c:if>

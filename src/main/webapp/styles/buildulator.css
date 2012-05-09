@@ -307,19 +307,17 @@ p.field .ui-dialog label.error {
   margin-bottom: 0.5em;
 }
 
-#adminTabs, #libraryTabs {
+#adminTabs {
   font-size: 1em;
   background: #fff;
   margin: 5px 5px 20px 5px;
   border-color: #ccc;
 }
-#adminTabs .ui-tabs-nav li,
-#libraryTabs .ui-tabs-nav li {
+#adminTabs .ui-tabs-nav li {
   font-weight: normal;
   list-style: none;
 }
-#adminTabs .ui-tabs-nav li.ui-tabs-selected a,
-#libraryTabs .ui-tabs-nav li.ui-tabs-selected a {
+#adminTabs .ui-tabs-nav li.ui-tabs-selected a {
     color: #2D3442;
 }
 
@@ -334,12 +332,10 @@ p.field .ui-dialog label.error {
 
 
 #projectsList_wrapper td.column-2,
-#materialsList_wrapper td.column-3,
 #materialsList_wrapper td.column-4,
 #materialsList_wrapper td.column-5,
 #materialsList_wrapper td.column-6,
-#energySourcesList_wrapper td.column-2,
-#energySourcesList_wrapper td.column-3 {
+#materialsList_wrapper td.column-7 {
   text-align: center;
 }
 
@@ -411,8 +407,8 @@ th.projectOccupants {
 th.materialName {
   width: 30%!important;
 }
-th.energySourceName {
-  width: 50%!important;
+th.materialMaterialType {
+  width: 16%!important;
 }
 
 input.error {
@@ -525,9 +521,6 @@ body div.actionButtons span.cancelAction a:hover {
   color: #ff3333;
 }
 
-.ui-dialog div.actionButtons {
-  width: 97%!important;
-}
 
 body .ui-button {
   font-size: 0.8em !important;
@@ -537,6 +530,14 @@ body .ui-dialog {
   width: 600px !important;
   text-align: left;
   font-size: 0.9em;
+}
+
+body .ui-dialog div.actionButtons {
+  width: 97%!important;
+}
+
+body .ui-dialog .ui-selectmenu {
+  font-size: 0.8em;
 }
 
 #body span.units {
@@ -646,9 +647,12 @@ div.billOfMaterials div.content li.bomElement {
   font-style: italic;
 }
 
+div.billOfMaterials div.content ul.bomMaterials {
+  font-style: normal;
+}
+
 div.billOfMaterials div.content li.bomMaterial {
   margin-left: 20px;
-  font-style: normal;
 }
 
 div.billOfMaterials div.content li input {
@@ -661,14 +665,14 @@ div.billOfMaterials div.content li div {
   padding: 0.2em 4px 0.2em 0;
 }
 
-div.billOfMaterials div.content li.addToBOM a {
+div.billOfMaterials div.content li.addToBOM a.addToBOM {
   padding-left: 19px;
   background: url('../images/buttons.gif') 0px 0px no-repeat;
   font-style: normal;
   margin: 0 0 0 5px;
 }
 
-div.billOfMaterials div.content li.addToBOM a:hover {
+div.billOfMaterials div.content li.addToBOM a.addToBOM:hover {
   background-position: 0px -186px;
   text-decoration: underline;
   cursor: pointer;
@@ -820,10 +824,20 @@ div.billOfMaterials div.content ul.bomMaterials div.bomAddSubmitCancelOptions {
 }
 
 div.billOfMaterials div.content div.bomSectionNameInput,
-div.billOfMaterials div.content div.bomElementNameInput,
-div.billOfMaterials div.content div.bomMaterialNameInput {
+div.billOfMaterials div.content div.bomElementNameInput {
   margin: 0 0 0.8em 15px;
   padding-top: 4px;
+}
+
+div.billOfMaterials div.content div.bomMaterialNameInput {
+  margin: 0 0 0.8em 15px;
+}
+div.billOfMaterials div.content div.bomMaterialNameInput div {
+  margin: 0;
+  padding: 0;
+}
+div.billOfMaterials div.content input.bomSelectValue {
+  display: none;
 }
 
 div.billOfMaterials div.content div.bomSectionNameInput input {

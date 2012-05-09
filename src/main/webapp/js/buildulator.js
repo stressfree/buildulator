@@ -45,54 +45,62 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    $('#libraryTabs').tabs();
-
     $('#materialsList').dataTable({
-        "bProcessing" : true,
-        "bJQueryUI" : true,
-        "sPaginationType" : "full_numbers",
-        "bLengthChange" : false,
-        "iDisplayLength" : 50,
-        "sAjaxSource" : './library/materials/list.json',
-        "aoColumnDefs" : [ {
-            "sClass" : "column-1",
-            "aTargets" : [ 0 ]
+        'bProcessing' : true,
+        'bJQueryUI' : true,
+        'sPaginationType' : 'full_numbers',
+        'bLengthChange' : false,
+        'iDisplayLength' : 50,
+        'sAjaxSource' : materialLibraryUrl + '/list.json',
+        'aoColumnDefs' : [ {
+            'sClass' : 'column-1',
+            'aTargets' : [ 0 ]
         }, {
-            "sClass" : "column-2",
-            "aTargets" : [ 1 ]
+            'sClass' : 'column-2',
+            'aTargets' : [ 1 ]
         }, {
-            "sClass" : "column-3",
-            "aTargets" : [ 2 ]
+            'sClass' : 'column-3',
+            'aTargets' : [ 2 ]
         }, {
-            "sClass" : "column-4",
-            "aTargets" : [ 3 ]
+            'sClass' : 'column-4',
+            'aTargets' : [ 3 ]
         }, {
-            "sClass" : "column-5",
-            "aTargets" : [ 4 ]
+            'sClass' : 'column-5',
+            'aTargets' : [ 4 ]
         }, {
-            "sClass" : "column-6",
-            "aTargets" : [ 5 ]
+            'sClass' : 'column-6',
+            'aTargets' : [ 5 ]
+        }, {
+            'sClass' : 'column-7',
+            'aTargets' : [ 6 ]
         } ]
     }).makeEditable({
-        sAddURL : "./library/materials",
-        sDeleteURL : "./library/materials/delete",
-        sUpdateURL : "./library/materials/update",
-        sAddNewRowButtonId: "btnAddMaterial",
-        sAddNewRowFormId: "formAddMaterial",
-        sDeleteRowButtonId: "btnDeleteMaterial",
+        sAddURL : materialLibraryUrl,
+        sDeleteURL : materialLibraryUrl + '/delete',
+        sUpdateURL : materialLibraryUrl + '/update',
+        sAddNewRowButtonId: 'btnAddMaterial',
+        sAddNewRowFormId: 'formAddMaterial',
+        sDeleteRowButtonId: 'btnDeleteMaterial',
         oDeleteRowButtonOptions : {},
         aoColumns : [ {
-            cssclass : "required"
+            cssclass : 'required'
         }, {
-            cssclass : "required"
+            cssclass : 'required',
+            type: 'select',
+            onblur: 'submit',
+            loadurl: materialLibraryUrl + '/types.json',
+            loadtype: 'GET',
+            event: 'click'
         }, {
-            cssclass : "required number"
+            cssclass : 'required'
         }, {
-            cssclass : "required number"
+            cssclass : 'number'
         }, {
-            cssclass : "required number"
+            cssclass : 'required number'
         }, {
-            cssclass : "required number"
+            cssclass : 'required number'
+        }, {
+            cssclass : 'number'
         } ]
     });
 
@@ -103,41 +111,6 @@ $(document).ready(function() {
     });
     $('#btnBulkAddMaterials').removeAttr("disabled").click(function() {
         $('#formBulkAddMaterials').dialog('open')
-    });
-
-
-    $('#energySourcesList').dataTable({
-        "bProcessing" : true,
-        "bJQueryUI" : true,
-        "sPaginationType" : "full_numbers",
-        "bLengthChange" : false,
-        "iDisplayLength" : 50,
-        "sAjaxSource" : './library/energysources/list.json',
-        "aoColumnDefs" : [ {
-            "sClass" : "column-1",
-            "aTargets" : [ 0 ]
-        }, {
-            "sClass" : "column-2",
-            "aTargets" : [ 1 ]
-        }, {
-            "sClass" : "column-3",
-            "aTargets" : [ 2 ]
-        } ]
-    }).makeEditable({
-        sAddURL : "./library/energysources",
-        sDeleteURL : "./library/energysources/delete",
-        sUpdateURL : "./library/energysources/update",
-        sAddNewRowButtonId: "btnAddEnergySource",
-        sAddNewRowFormId: "formAddEnergySource",
-        sDeleteRowButtonId: "btnDeleteEnergySource",
-        oDeleteRowButtonOptions : {},
-        aoColumns : [ {
-            cssclass : "required"
-        }, {
-            cssclass : "required number"
-        }, {
-            cssclass : "required number"
-        } ]
     });
 });
 
@@ -190,6 +163,8 @@ $(document).ready(function() {
             "aTargets" : [ 3 ]
         } ]
     });
+
+    $('#formAddMaterial select').selectmenu({width: '250px'});
 });
 
 $(document).ready(function() {
@@ -322,7 +297,7 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    $('select').selectmenu();
+    $('#project select').selectmenu({width: '320px'});
 });
 
 $(document).ready(function() {
@@ -357,6 +332,7 @@ $(document).ready(function() {
 function BillOfMaterials (config) {
     if (config == undefined) { config = new Array(); }
     var _data;
+    var _materials;
     var _div = (config.div != undefined) ? config.div : 'div.billOfMaterials div.content';
     var _projectId = (config.projectId != undefined) ? config.projectId : 1;
     var _projectUrl = (config.projectUrl != undefined) ? config.projectUrl : './projects/';
@@ -376,6 +352,11 @@ function BillOfMaterials (config) {
 
     this._render = function() {
         var bomUrl = _projectUrl + _projectId + '/bom.json';
+        var materialsUrl = _projectUrl + '/materials.json';
+
+        $.getJSON(materialsUrl, function(data){
+            _materials = data;
+        });
 
         $.getJSON(bomUrl, function(data){
             _data = data;
@@ -406,7 +387,7 @@ function BillOfMaterials (config) {
         $(_div + ' div.deleteFromBOM a').click(function () {
             _confirmDelete(this);
         });
-        $(_div + ' li.addToBOM a').click(function () {
+        $(_div + ' li.addToBOM a.addToBOM').click(function () {
             _displayAddForm(this);
         });
         $(_div + ' div.bomEditable').dblclick(function () {
@@ -418,7 +399,7 @@ function BillOfMaterials (config) {
         $(node).find('div.deleteFromBOM a').click(function () {
             _confirmDelete(this);
         });
-        $(_div + ' li.addToBOM a').click(function () {
+        $(_div + ' li.addToBOM a.addToBOM').click(function () {
             _displayAddForm(this);
         });
         $(node).find('div.bomEditable').dblclick(function () {
@@ -614,6 +595,7 @@ function BillOfMaterials (config) {
     function _displayAddForm(node) {
         var addDiv = $(node).closest('li.addToBOM');
         $(addDiv).html('<form>' + _renderFormInputs(node) + _renderSubmitCancelOptions(_addText, _cancelText) + '</form>');
+        _populateMaterialSelect(addDiv);
         _assignAddSubmitCancelOptionEventHandlers(addDiv);
 
         $(addDiv).find('input:first').focus();
@@ -637,11 +619,47 @@ function BillOfMaterials (config) {
         }
         $(node).children('div').hide();
         $(node).append('<form>' + _renderFormInputs(node, field) + _renderSubmitCancelOptions(_editText, _cancelText) + '</form>');
+        _populateMaterialSelect(node);
         _assignEditSubmitCancelOptionEventHandlers(node);
 
         $(node).off('dblclick');
 
         $(node).find('input:first').focus();
+    }
+
+    function _populateMaterialSelect(node) {
+        if (_getType(node) == 'material') {
+            var selectedValue = $(node).find('input.bomSelectValue').val();
+            var selectedUnits = '';
+
+            $(node).find('select.bomSelect').each(function() {
+                var materialOptions = [];
+                $(_materials).each(function(index, material){
+                    var selected = '';
+
+                    if (selectedValue == '') {
+                        selectedValue = material.name;
+                    }
+                    if (selectedValue == material.name) {
+                        selected = 'selected';
+                        selectedUnits = material.units;
+                    }
+                    materialOptions[index] = '<option value="' + material.name + '" ' + selected + '>' + material.name + '</option>';
+                });
+                $(this).html(materialOptions.join(''));
+                $(this).selectmenu({width: '295px'}).change(function() {
+                    var selected = $(this).val();
+                    $(_materials).each(function(index, material) {
+                        if (material.name == selected) {
+                            $(node).find('input.bomSelectValue').val(material.name);
+                            $(node).find('div.bomMUnits').html(material.units);
+                        }
+                    });
+                });
+            });
+            $(node).find('input.bomSelectValue').val(selectedValue);
+            $(node).find('div.bomMUnits').html(selectedUnits);
+        }
     }
 
     function _renderSubmitCancelOptions(submitText, cancelText) {
@@ -671,8 +689,10 @@ function BillOfMaterials (config) {
             case "material":
                 var sid = $(node).closest('li.bomSection').index();
                 var eid = $(node).closest('li.bomElement').index();
-                html = '<div class="bomMaterialNameInput"><input type="text" class="bomText required" id="bomS' + sid + 'E' + eid + 'MaterialName" value="' + name + '" /></div>';
-                html += '<div class="bomMaterialQuantityInput"><input type="text" class="bomText required number" id="bomS' + sid + 'E' + eid + 'MaterialQuantity" value="' + quantity + '" /></div>'
+                html = '<div class="bomMaterialNameInput"><input type="text" class="bomSelectValue" id="bomS' + sid + 'E' + eid + 'MaterialName" value="' + name + '" />';
+                html += '<select type="text" class="bomSelect" id="bomS' + sid + 'E' + eid + 'MaterialSelect" value="' + name + '" /></div>';
+                html += '<div class="bomMaterialQuantityInput"><input type="text" class="bomText required number" id="bomS' + sid + 'E' + eid + 'MaterialQuantity" value="' + quantity + '" />';
+                html += '</div><div class="bomMUnits"></div>'
                 break;
             default:
                 html += '<div class="bomSectionNameInput"><input type="text" class="bomText required" id="bomSectionName" value="' + name + '" /></div>';
@@ -690,7 +710,7 @@ function BillOfMaterials (config) {
                 returnText = _addElementText;
                 break;
         }
-        return '<a>' + returnText + '</a>';
+        return '<a class="addToBOM">' + returnText + '</a>';
     }
 
     function _confirmDelete(node) {

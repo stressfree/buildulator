@@ -4,32 +4,86 @@
 
   <definition extends="default" name="homepage">
     <put-attribute name="body" value="/WEB-INF/views/homepage.jspx" />
+    <put-attribute name="title" value="" />
+    <put-attribute name="pageUrl" value="_" />
   </definition>
 
   <definition extends="default" name="dataAccessFailure">
     <put-attribute name="body" value="/WEB-INF/views/dataAccessFailure.jspx" />
+    <put-attribute name="title" value="pagetitle_dataaccessfailure" />
+    <put-attribute name="pageUrl" value="_error" />
   </definition>
 
   <definition extends="default" name="resourceNotFound">
     <put-attribute name="body" value="/WEB-INF/views/resourceNotFound.jspx" />
+    <put-attribute name="title" value="pagetitle_resourcenotfound" />
+    <put-attribute name="pageUrl" value="_error" />
   </definition>
 
   <definition extends="default" name="uncaughtException">
-    <put-attribute name="body"
-      value="/WEB-INF/views/uncaughtException.jspx" />
+    <put-attribute name="body" value="/WEB-INF/views/uncaughtException.jspx" />
+    <put-attribute name="title" value="pagetitle_uncaughtexception" />
+    <put-attribute name="pageUrl" value="_error" />
   </definition>
 
   <definition extends="default" name="accessDenied">
     <put-attribute name="body" value="/WEB-INF/views/accessDenied.jspx" />
+    <put-attribute name="title" value="pagetitle_accessdenied" />
+    <put-attribute name="pageUrl" value="_error" />
   </definition>
 
   <definition extends="default" name="accountDisabled">
-    <put-attribute name="body"
-      value="/WEB-INF/views/accountDisabled.jspx" />
+    <put-attribute name="body" value="/WEB-INF/views/accountDisabled.jspx" />
+    <put-attribute name="title" value="pagetitle_accountdisabled" />
+    <put-attribute name="pageUrl" value="_error" />
   </definition>
 
   <definition extends="default" name="login">
     <put-attribute name="body" value="/WEB-INF/views/login.jspx" />
+    <put-attribute name="title" value="pagetitle_login" />
+    <put-attribute name="pageUrl" value="_login" />
+  </definition>
+
+  <definition extends="default" name="library/list">
+    <put-attribute name="body" value="/WEB-INF/views/library/list.jspx" />
+    <put-attribute name="title" value="pagetitle_library" />
+    <put-attribute name="pageUrl" value="_library" />
+  </definition>
+
+  <definition extends="default" name="admin/update">
+    <put-attribute name="body" value="/WEB-INF/views/admin/preferences.jspx" />
+    <put-attribute name="title" value="pagetitle_preferences" />
+    <put-attribute name="pageUrl" value="_admin" />
+  </definition>
+
+  <definition extends="default" name="user/update">
+    <put-attribute name="body" value="/WEB-INF/views/user/update.jspx" />
+    <put-attribute name="title" value="pagetitle_user" />
+    <put-attribute name="pageUrl" value="_user" />
+  </definition>
+
+  <definition extends="default" name="projects/list">
+    <put-attribute name="body" value="/WEB-INF/views/projects/list.jspx" />
+    <put-attribute name="title" value="pagetitle_projects" />
+    <put-attribute name="pageUrl" value="_projects" />
+  </definition>
+
+  <definition extends="default" name="projects/create">
+    <put-attribute name="body" value="/WEB-INF/views/projects/create.jspx" />
+    <put-attribute name="title" value="pagetitle_projects_create" />
+    <put-attribute name="pageUrl" value="_projects" />
+  </definition>
+
+  <definition extends="default" name="projects/edit">
+    <put-attribute name="body" value="/WEB-INF/views/projects/edit.jspx" />
+    <put-attribute name="title" value="pagetitle_projects_edit" />
+    <put-attribute name="pageUrl" value="_projects" />
+  </definition>
+
+  <definition extends="default" name="projects/show">
+    <put-attribute name="body" value="/WEB-INF/views/projects/show.jspx" />
+    <put-attribute name="title" value="pagetitle_projects_show" />
+    <put-attribute name="pageUrl" value="_projects" />
   </definition>
 
 </tiles-definitions>

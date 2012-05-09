@@ -4,7 +4,7 @@
 package net.triptech.buildulator.model;
 
 import java.util.Date;
-import net.triptech.buildulator.model.EnergySource;
+import net.triptech.buildulator.model.MaterialDetail;
 import net.triptech.buildulator.model.Person;
 import net.triptech.buildulator.model.Project;
 
@@ -42,11 +42,11 @@ privileged aspect Project_Roo_JavaBean {
         this.energyConsumption = energyConsumption;
     }
     
-    public EnergySource Project.getEnergySource() {
+    public MaterialDetail Project.getEnergySource() {
         return this.energySource;
     }
     
-    public void Project.setEnergySource(EnergySource energySource) {
+    public void Project.setEnergySource(MaterialDetail energySource) {
         this.energySource = energySource;
     }
     

@@ -5,6 +5,7 @@
   </c:set>
   <spring:url value="/projects/" var="show_project_url" />
   <spring:url value="/projects/${project.id}?edit" var="edit_project_url" />
+  <spring:url value="/library/materials" var="material_library_url" />
   <spring:url value="/styles/buildulator.css" var="buildulator_css_url" />
   <spring:url value="/styles/editor.css" var="wysiwyg_css_url" />
   <spring:url value="/js/jquery.jeditable-min.js" var="jeditable_js_url" />
@@ -41,5 +42,6 @@
       var wysiwygCss = '<c:out value="${wysiwyg_css_url}" />';
       var showProjectUrl = '<c:out value="${show_project_url}" />';
       var editProjectUrl = '<c:out value="${edit_project_url}" />';
+      var materialLibraryUrl = '<c:out value="${material_library_url}" />';
   </script>
 </jsp:root>

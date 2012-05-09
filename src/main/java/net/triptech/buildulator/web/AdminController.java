@@ -28,7 +28,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -188,16 +187,6 @@ public class AdminController extends BaseController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public @ResponseBody String list() {
         return Person.toJson(Person.findAllPeople(), this.getContext());
-    }
-
-    @ModelAttribute("controllerUrl")
-    public final String getControllerUrl() {
-        return "/admin";
-    }
-
-    @ModelAttribute("controllerName")
-    public final String getControllerName() {
-        return getMessage("controller_admin");
     }
 
 }

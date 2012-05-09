@@ -3,11 +3,11 @@
 
 package net.triptech.buildulator.model;
 
-import net.triptech.buildulator.model.EnergySource;
+import net.triptech.buildulator.model.MaterialDetailDataOnDemand;
 import org.springframework.beans.factory.annotation.Configurable;
 
-privileged aspect EnergySource_Roo_Configurable {
+privileged aspect MaterialDetailDataOnDemand_Roo_Configurable {
     
-    declare @type: EnergySource: @Configurable;
+    declare @type: MaterialDetailDataOnDemand: @Configurable;
     
 }
