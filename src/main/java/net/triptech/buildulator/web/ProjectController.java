@@ -24,6 +24,7 @@ import net.triptech.buildulator.model.MaterialDetail;
 import net.triptech.buildulator.model.MaterialType;
 import net.triptech.buildulator.model.Project;
 import net.triptech.buildulator.model.Person;
+import net.triptech.buildulator.model.UserRole;
 import net.triptech.buildulator.model.bom.BillOfMaterials;
 import net.triptech.buildulator.model.bom.Section;
 import net.triptech.buildulator.model.bom.Element;
@@ -113,8 +114,13 @@ public class ProjectController extends BaseController {
         Project project = Project.findProject(id);
 
         if (checkProjectPermission(project, request)) {
+            boolean noBOMData = true;
+            if (StringUtils.isNotBlank(project.getDataField("construction"))) {
+                noBOMData = false;
+            }
+
             uiModel.addAttribute("project", project);
-            uiModel.addAttribute("bom", BillOfMaterials.parseJson(project.getData()));
+            uiModel.addAttribute("noBOMData", noBOMData);
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             page = "resourceNotFound";
@@ -133,6 +139,7 @@ public class ProjectController extends BaseController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public String create(@Valid Project project,
+            @RequestParam(value = "templateId", required = false) Long templateId,
             BindingResult bindingResult, Model uiModel,
             HttpServletRequest request) {
 
@@ -157,6 +164,26 @@ public class ProjectController extends BaseController {
         } else {
             // Set the logged in person as the owner
             project.setPerson(user);
+        }
+
+        // Check the privileges for the template functionality
+        if (project.isTemplate()) {
+            if (!Project.canViewOrEditTemplates(user)) {
+                project.setTemplate(false);
+            }
+        }
+
+        if (templateId != null && templateId > 0) {
+            // Try loading the template and assigning the data to the new project.
+            try {
+                Project template = Project.findProject(templateId);
+                if (template != null && template.isTemplate()) {
+                    project.setData(template.getData());
+                }
+            } catch (Exception e) {
+                logger.error("Error loading template (" + templateId + "): "
+                        + e.getMessage());
+            }
         }
 
         project.persist();
@@ -303,6 +330,7 @@ public class ProjectController extends BaseController {
      */
     @RequestMapping(value = "/{id}/newitem", method = RequestMethod.POST)
     public @ResponseBody String newItem(@PathVariable("id") Long id,
+            @RequestParam(value = "type", required = false) String typeVal,
             @RequestParam(value = "sid", required = false) Integer sid,
             @RequestParam(value = "eid", required = false) Integer eid,
             @RequestParam(value = "name", required = false) String name,
@@ -314,14 +342,20 @@ public class ProjectController extends BaseController {
 
         Project project = Project.findProject(id);
 
+        String type = "construction";
+        if (StringUtils.isNotBlank(typeVal)) {
+            type = typeVal.toLowerCase();
+        }
+
         if (checkProjectPermission(project, request)) {
-            returnMessage = newBOMItem(project, sid, eid, name, quantity, units);
+            returnMessage = newBOMItem(project, type, sid, eid, name, quantity, units);
         } else {
             returnMessage = this.getMessage("projects_bom_projectnotfound");
         }
         if (StringUtils.equals(returnMessage, "ok")) {
             // Return the bill of materials JSON
-            returnMessage = BillOfMaterials.parseJson(project.getData()).toJson();
+            returnMessage = BillOfMaterials.parseJson(
+                    project.getDataField(type)).toJson();
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
@@ -341,6 +375,7 @@ public class ProjectController extends BaseController {
      */
     @RequestMapping(value = "/{id}/edititem", method = RequestMethod.POST)
     public @ResponseBody String editItem(@PathVariable("id") Long id,
+            @RequestParam(value = "type", required = false) String typeVal,
             @RequestParam(value = "sid", required = false) Integer sid,
             @RequestParam(value = "eid", required = false) Integer eid,
             @RequestParam(value = "mid", required = false) Integer mid,
@@ -353,14 +388,21 @@ public class ProjectController extends BaseController {
 
         Project project = Project.findProject(id);
 
+        String type = "construction";
+        if (StringUtils.isNotBlank(typeVal)) {
+            type = typeVal.toLowerCase();
+        }
+
         if (checkProjectPermission(project, request)) {
-            returnMessage = editBOMItem(project, sid, eid, mid, name, quantity, units);
+            returnMessage = editBOMItem(project, type, sid, eid, mid,
+                    name, quantity, units);
         } else {
             returnMessage = this.getMessage("projects_bom_projectnotfound");
         }
         if (StringUtils.equals(returnMessage, "ok")) {
             // Return the bill of materials JSON
-            returnMessage = BillOfMaterials.parseJson(project.getData()).toJson();
+            returnMessage = BillOfMaterials.parseJson(
+                    project.getDataField(type)).toJson();
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
@@ -381,6 +423,7 @@ public class ProjectController extends BaseController {
      */
     @RequestMapping(value = "/{id}/deleteitem", method = RequestMethod.POST)
     public @ResponseBody String deleteItem(@PathVariable("id") Long id,
+            @RequestParam(value = "type", required = false) String typeVal,
             @RequestParam(value = "sid", required = false) Integer sid,
             @RequestParam(value = "eid", required = false) Integer eid,
             @RequestParam(value = "mid", required = false) Integer mid,
@@ -390,8 +433,13 @@ public class ProjectController extends BaseController {
 
         Project project = Project.findProject(id);
 
+        String type = "construction";
+        if (StringUtils.isNotBlank(typeVal)) {
+            type = typeVal.toLowerCase();
+        }
+
         if (checkProjectPermission(project, request)) {
-            returnMessage = deleteBOMItem(project, sid, eid, mid);
+            returnMessage = deleteBOMItem(project, type, sid, eid, mid);
         } else {
             returnMessage = this.getMessage("projects_bom_projectnotfound");
         }
@@ -429,9 +477,16 @@ public class ProjectController extends BaseController {
      * @return the string
      */
     @RequestMapping(value = "/materials.json", method = RequestMethod.GET)
-    public @ResponseBody String listMaterials(final HttpServletRequest request) {
-        return MaterialDetail.toJson(MaterialDetail.findMaterialDetails(
-                MaterialType.CONSTRUCTION));
+    public @ResponseBody String listMaterials(
+            @RequestParam(value = "type", required = true) String type,
+            final HttpServletRequest request) {
+
+        MaterialType mt = MaterialType.CONSTRUCTION;
+
+        if (StringUtils.equalsIgnoreCase(type, "operating_energy")) {
+            mt = MaterialType.ENERGY_SOURCE;
+        }
+        return MaterialDetail.toJson(MaterialDetail.findMaterialDetails(mt));
     }
 
 
@@ -447,6 +502,7 @@ public class ProjectController extends BaseController {
      */
     @RequestMapping(value = "/{id}/bom.json", method = RequestMethod.GET)
     public @ResponseBody String jsonBOM(@PathVariable("id") Long id,
+            @RequestParam(value = "type", required = true) String type,
             HttpServletRequest request, final HttpServletResponse response) {
 
         String result = "";
@@ -454,7 +510,7 @@ public class ProjectController extends BaseController {
         Project project = Project.findProject(id);
 
         if (checkProjectPermission(project, request)) {
-            BillOfMaterials bom = BillOfMaterials.parseJson(project.getData());
+            BillOfMaterials bom = BillOfMaterials.parseJson(project.getDataField(type));
             result = bom.toJson();
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -486,7 +542,7 @@ public class ProjectController extends BaseController {
             String message = getMessage("projects_bom_import_nodata");
 
             if (StringUtils.isNotBlank(data)) {
-                project.setData(parseBillOfMaterials(data).toJson());
+                project.setDataField("construction", parseBillOfMaterials(data).toJson());
 
                 project.merge();
                 project.flush();
@@ -529,9 +585,9 @@ public class ProjectController extends BaseController {
     }
 
 
-    @ModelAttribute("energySources")
-    public final List<MaterialDetail> getEnergySources() {
-        return MaterialDetail.findMaterialDetails(MaterialType.ENERGY_SOURCE);
+    @ModelAttribute("projectTemplates")
+    public final List<Project> getProjectTemplates() {
+        return Project.findProjectTemplates();
     }
 
     /**
@@ -570,11 +626,25 @@ public class ProjectController extends BaseController {
         if (project != null) {
             Person user = getUser(request);
 
-            if (user != null && project.getPerson() != null) {
-                if (user.getId() == project.getPerson().getId()) {
+            if (user != null) {
+                if (user.getUserRole() != null) {
+                    // Administrators can see everything.
+                    if (user.getUserRole() == UserRole.ROLE_ADMIN) {
+                        showProject = true;
+                    }
+                    // An editor can view a template project.
+                    if (user.getUserRole() == UserRole.ROLE_EDITOR
+                            && project.isTemplate()) {
+                        showProject = true;
+                    }
+                }
+                // If the user owns the project allow them to see it.
+                if (project.getPerson() != null
+                        && user.getId() == project.getPerson().getId()) {
                     showProject = true;
                 }
             } else {
+                // If the sessions match allow them to see it.
                 if (StringUtils.equalsIgnoreCase(
                         request.getSession().getId(), project.getSession())) {
                     showProject = true;
@@ -669,6 +739,7 @@ public class ProjectController extends BaseController {
      * Adds the item to the bill of materials.
      *
      * @param project the project
+     * @param type the type
      * @param sid the sid
      * @param eid the eid
      * @param nameVal the name val
@@ -676,9 +747,9 @@ public class ProjectController extends BaseController {
      * @param unitsVal the units val
      * @return the string
      */
-    private String newBOMItem(final Project project, final Integer sid,
-            final Integer eid, final String nameVal, final String quantityVal,
-            final String unitsVal) {
+    private String newBOMItem(final Project project, final String type,
+            final Integer sid, final Integer eid, final String nameVal,
+            final String quantityVal, final String unitsVal) {
 
         String returnMessage = this.getMessage("projects_bom_new_cannotadd");
 
@@ -689,7 +760,7 @@ public class ProjectController extends BaseController {
             // Error casting the quantityVal to a double
         }
 
-        BillOfMaterials bom = BillOfMaterials.parseJson(project.getData());
+        BillOfMaterials bom = BillOfMaterials.parseJson(project.getDataField(type));
 
         if (StringUtils.isNotBlank(nameVal)) {
             if (sid != null && sid > 0) {
@@ -740,7 +811,7 @@ public class ProjectController extends BaseController {
 
         if (StringUtils.equals(returnMessage, "ok")) {
             try {
-                project.setData(bom.toJson());
+                project.setDataField(type, bom.toJson());
                 project.merge();
                 project.flush();
             } catch (Exception e) {
@@ -755,6 +826,7 @@ public class ProjectController extends BaseController {
      * Edits an item within the project's bill of materials.
      *
      * @param project the project
+     * @param type the type
      * @param sid the sid
      * @param eid the eid
      * @param mid the mid
@@ -763,9 +835,9 @@ public class ProjectController extends BaseController {
      * @param unitsVal the units val
      * @return the string
      */
-    private String editBOMItem(final Project project, final Integer sid,
-            final Integer eid, final Integer mid, final String nameVal,
-            final String quantityVal, final String unitsVal) {
+    private String editBOMItem(final Project project, final String type,
+            final Integer sid, final Integer eid, final Integer mid,
+            final String nameVal, final String quantityVal, final String unitsVal) {
 
         String returnMessage = this.getMessage("projects_bom_edit_cannotedit");
 
@@ -776,7 +848,7 @@ public class ProjectController extends BaseController {
             // Error casting the quantityVal to a double
         }
 
-        BillOfMaterials bom = BillOfMaterials.parseJson(project.getData());
+        BillOfMaterials bom = BillOfMaterials.parseJson(project.getDataField(type));
 
         if (sid != null && sid > 0) {
             if (bom.getSections().size() >= sid) {
@@ -825,7 +897,7 @@ public class ProjectController extends BaseController {
 
         if (StringUtils.equals(returnMessage, "ok")) {
             try {
-                project.setData(bom.toJson());
+                project.setDataField(type, bom.toJson());
                 project.merge();
                 project.flush();
             } catch (Exception e) {
@@ -839,17 +911,18 @@ public class ProjectController extends BaseController {
      * Delete an item within the bill of materials.
      *
      * @param project the project
+     * @param type the type
      * @param sid the sid
      * @param eid the eid
      * @param mid the mid
      * @return the string
      */
-    private String deleteBOMItem(final Project project, final Integer sid,
-            final Integer eid, final Integer mid) {
+    private String deleteBOMItem(final Project project, final String type,
+            final Integer sid, final Integer eid, final Integer mid) {
 
         String returnMessage = this.getMessage("projects_bom_delete_noitemfound");
 
-        BillOfMaterials bom = BillOfMaterials.parseJson(project.getData());
+        BillOfMaterials bom = BillOfMaterials.parseJson(project.getDataField(type));
 
         if (sid != null && sid > 0 && bom.getSections().size() >= sid) {
             if (eid != null && eid > 0) {
@@ -874,7 +947,7 @@ public class ProjectController extends BaseController {
 
         if (StringUtils.equals(returnMessage, "ok")) {
             try {
-                project.setData(bom.toJson());
+                project.setDataField(type, bom.toJson());
                 project.merge();
                 project.flush();
             } catch (Exception e) {

@@ -4,7 +4,6 @@
 package net.triptech.buildulator.model;
 
 import java.util.Date;
-import net.triptech.buildulator.model.MaterialDetail;
 import net.triptech.buildulator.model.Person;
 import net.triptech.buildulator.model.Project;
 
@@ -16,6 +15,14 @@ privileged aspect Project_Roo_JavaBean {
     
     public void Project.setName(String name) {
         this.name = name;
+    }
+    
+    public boolean Project.isTemplate() {
+        return this.template;
+    }
+    
+    public void Project.setTemplate(boolean template) {
+        this.template = template;
     }
     
     public String Project.getLocation() {
@@ -32,22 +39,6 @@ privileged aspect Project_Roo_JavaBean {
     
     public void Project.setOccupants(int occupants) {
         this.occupants = occupants;
-    }
-    
-    public double Project.getEnergyConsumption() {
-        return this.energyConsumption;
-    }
-    
-    public void Project.setEnergyConsumption(double energyConsumption) {
-        this.energyConsumption = energyConsumption;
-    }
-    
-    public MaterialDetail Project.getEnergySource() {
-        return this.energySource;
-    }
-    
-    public void Project.setEnergySource(MaterialDetail energySource) {
-        this.energySource = energySource;
     }
     
     public String Project.getDescription() {

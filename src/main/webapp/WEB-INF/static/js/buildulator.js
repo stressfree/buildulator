@@ -141,11 +141,18 @@ $(document).ready(function() {
             "iDataSort": 4
         }, {
             "bVisible": false
+        }, {
+            "bVisible": false
         } ],
         "aoColumnDefs" : [ {
             "fnRender": function ( oObj, sVal ) {
                 var name = '<strong>' + sVal + '</strong>';
                 var address = oObj.aData[1];
+                var template = oObj.aData[5];
+
+                if (template) {
+                    name += ' (Template)';
+                }
                 if (address != '') {
                     name += '<br/>' + address;
                 }
@@ -335,15 +342,16 @@ function BillOfMaterials (config) {
     if (config == undefined) { config = new Array(); }
     var _data;
     var _materials;
-    var _div = (config.div != undefined) ? config.div : 'div.billOfMaterials div.content';
+    var _div = (config.div != undefined) ? config.div : 'div.bomTable';
+    var _type = (config.type != undefined) ? config.type : 'construction';
     var _projectId = (config.projectId != undefined) ? config.projectId : 1;
     var _projectUrl = (config.projectUrl != undefined) ? config.projectUrl : './projects/';
     var _addText = (config.addText != undefined) ? config.addText : 'Add';
     var _editText = (config.editText != undefined) ? config.editText : 'Update';
     var _cancelText = (config.cancelText != undefined) ? config.cancelText : 'Cancel';
-    var _addSectionText = (config.sectionText != undefined) ? config.sectionText : 'Add section';
-    var _addElementText = (config.elementText != undefined) ? config.materialText : 'Add element';
-    var _addMaterialText = (config.materialText != undefined) ? config.materialText : 'Add material';
+    var _sectionText = (config.sectionText != undefined) ? config.sectionText : 'section';
+    var _elementText = (config.elementText != undefined) ? config.elementText : 'element';
+    var _materialText = (config.materialText != undefined) ? config.materialText : 'material';
     var _deleteText = (config.deleteText != undefined) ? config.deleteText : 'Delete';
     var _deleteConfirmText = (config.deleteConfirmText != undefined) ? config.deleteConfirmText : 'Are you sure you want to delete this';
     var _headerNameText = (config.headerNameText != undefined) ? config.headerNameText : '';
@@ -353,8 +361,8 @@ function BillOfMaterials (config) {
     var _footerSummaryText = (config.footerSummaryText != undefined) ? config.footerSummaryText : 'Total material energy/carbon footprint';
 
     this._render = function() {
-        var bomUrl = _projectUrl + _projectId + '/bom.json';
-        var materialsUrl = _projectUrl + '/materials.json';
+        var bomUrl = _projectUrl + _projectId + '/bom.json?type=' + _type.toLowerCase();
+        var materialsUrl = _projectUrl + '/materials.json?type=' + _type.toLowerCase();
 
         $.getJSON(materialsUrl, function(data){
             _materials = data;
@@ -461,7 +469,7 @@ function BillOfMaterials (config) {
                     break;
             }
 
-            var params = 'name=' + name + '&quantity=' + quantity
+            var params = 'type=' + _type + '&name=' + name + '&quantity=' + quantity
                     + '&units=' + units + '&sid=' + sid + '&eid=' + eid;
             var addUrl = _projectUrl + _projectId + '/newitem';
             $.ajax({
@@ -559,7 +567,8 @@ function BillOfMaterials (config) {
                     break;
             }
 
-            var params = 'name=' + name + '&quantity=' + quantity + '&units=' + units + '&sid=' + sid + '&eid=' + eid + '&mid=' + mid;
+            var params = 'type=' + _type + '&name=' + name + '&quantity=' + quantity
+                    + '&units=' + units + '&sid=' + sid + '&eid=' + eid + '&mid=' + mid;
             var editUrl = _projectUrl + _projectId + '/edititem';
             $.ajax({
                 type: 'POST',
@@ -703,21 +712,12 @@ function BillOfMaterials (config) {
     }
 
     function _renderAddControlText(type) {
-        var returnText = _addMaterialText;
-        switch(type) {
-            case "section":
-                returnText = _addSectionText;
-                break;
-            case "element":
-                returnText = _addElementText;
-                break;
-        }
-        return '<a class="addToBOM">' + returnText + '</a>';
+        return '<a class="addToBOM">' + _addText + ' ' + _getTypeText(type) + '</a>';
     }
 
     function _confirmDelete(node) {
         var type = _getType(node);
-        if (confirm(_deleteConfirmText + ' ' + type + '?')) {
+        if (confirm(_deleteConfirmText + ' ' + _getTypeText(type) + '?')) {
             var sid = $(node).closest('li.bomSection').index() + 1;
             var eid = '';
             var mid = '';
@@ -731,7 +731,7 @@ function BillOfMaterials (config) {
                     eid = $(node).closest('li.bomElement').index() + 1;
                     break;
             }
-            var params = 'sid=' + sid + '&eid=' + eid + '&mid=' + mid;
+            var params = 'type=' + _type + '&sid=' + sid + '&eid=' + eid + '&mid=' + mid;
             var deleteUrl = _projectUrl + _projectId + '/deleteitem';
 
             $.ajax({
@@ -845,6 +845,20 @@ function BillOfMaterials (config) {
                 break;
         }
         return type;
+    }
+
+    function _getTypeText(type) {
+        var typeText = _materialText;
+
+        switch (type) {
+            case 'section':
+                typeText = _sectionText;
+                break;
+            case 'element':
+                typeText = _elementText;
+                break;
+        }
+        return typeText;
     }
 
     function _readValue(value) {

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Random;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import net.triptech.buildulator.model.MaterialDetail;
 import net.triptech.buildulator.model.Person;
 import net.triptech.buildulator.model.PersonDataOnDemand;
 import net.triptech.buildulator.model.Project;
@@ -37,13 +36,12 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
         setCreated(obj, index);
         setData(obj, index);
         setDescription(obj, index);
-        setEnergyConsumption(obj, index);
-        setEnergySource(obj, index);
         setLocation(obj, index);
         setName(obj, index);
         setOccupants(obj, index);
         setPerson(obj, index);
         setSession(obj, index);
+        setTemplate(obj, index);
         return obj;
     }
     
@@ -60,16 +58,6 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     public void ProjectDataOnDemand.setDescription(Project obj, int index) {
         String description = "description_" + index;
         obj.setDescription(description);
-    }
-    
-    public void ProjectDataOnDemand.setEnergyConsumption(Project obj, int index) {
-        double energyConsumption = new Integer(index).doubleValue();
-        obj.setEnergyConsumption(energyConsumption);
-    }
-    
-    public void ProjectDataOnDemand.setEnergySource(Project obj, int index) {
-        MaterialDetail energySource = null;
-        obj.setEnergySource(energySource);
     }
     
     public void ProjectDataOnDemand.setLocation(Project obj, int index) {
@@ -95,6 +83,11 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     public void ProjectDataOnDemand.setSession(Project obj, int index) {
         String session = "session_" + index;
         obj.setSession(session);
+    }
+    
+    public void ProjectDataOnDemand.setTemplate(Project obj, int index) {
+        Boolean template = true;
+        obj.setTemplate(template);
     }
     
     public Project ProjectDataOnDemand.getSpecificProject(int index) {

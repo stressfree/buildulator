@@ -253,25 +253,25 @@ public class LibraryController extends BaseController {
                 try {
                     material.setLifeYears(Integer.parseInt(row.get(lifeYearsId)));
                 } catch (Exception e) {
-                    logger.error("Error parsing lifeYears value: " + e.getMessage());
+                    logger.info("Error parsing lifeYears value: " + e.getMessage());
                 }
                 try {
                     material.setCarbonPerUnit(Double.parseDouble(
                             row.get(carbonPerUnitId)));
                 } catch (Exception e) {
-                    logger.error("Error parsing carbonPerUnit value: " + e.getMessage());
+                    logger.info("Error parsing carbonPerUnit value: " + e.getMessage());
                 }
                 try {
                     material.setEnergyPerUnit(Double.parseDouble(
                             row.get(energyPerUnitId)));
                 } catch (Exception e) {
-                    logger.error("Error parsing energyPerUnit value: " + e.getMessage());
+                    logger.info("Error parsing energyPerUnit value: " + e.getMessage());
                 }
                 try {
                     material.setWastagePercent(Double.parseDouble(
                             row.get(wastagePercentId)));
                 } catch (Exception e) {
-                    logger.error("Error parsing wastagePercent value: " + e.getMessage());
+                    logger.info("Error parsing wastagePercent value: " + e.getMessage());
                 }
 
                 try {
@@ -279,7 +279,7 @@ public class LibraryController extends BaseController {
                     material.flush();
                     materialCount++;
                 } catch (Exception e) {
-                    logger.error("Error persisting material: " + e.getMessage());
+                    logger.info("Error persisting material: " + e.getMessage());
                 }
             }
 

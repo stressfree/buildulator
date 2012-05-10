@@ -3,6 +3,8 @@ package net.triptech.buildulator.model;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,7 @@ import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 
 import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 import net.triptech.buildulator.DataParser;
 
 import org.apache.commons.lang.StringUtils;
@@ -35,19 +38,14 @@ public class Project {
     @NotNull
     private String name;
 
+    /** A flag as to whether the project is a template. */
+    private boolean template;
+
     /** The location. */
     private String location;
 
     /** The occupants. */
     private int occupants = 4;
-
-    /** The energy consumption. */
-    private double energyConsumption;
-
-    /** The energy source. */
-    @ManyToOne
-    @Index(name="energySourceIndex")
-    private MaterialDetail energySource;
 
     /** The project description. */
     @Lob
@@ -80,6 +78,42 @@ public class Project {
         created = new Date();
     }
 
+
+    /**
+     * Sets the data field.
+     *
+     * @param key the key
+     * @param dataString the data string
+     */
+    public final void setDataField(final String key, final String dataString) {
+
+        Map<String, String> parsedData = this.parseData();
+
+        parsedData.put(key, dataString);
+
+        JSONObject jsonObject = JSONObject.fromObject(parsedData);
+
+        this.setData(jsonObject.toString());
+    }
+
+    /**
+     * Gets the data field.
+     *
+     * @param key the key
+     * @return the data field
+     */
+    public final String getDataField(final String key) {
+        String dataString = "";
+
+        Map<String, String> parsedData = this.parseData();
+
+        if (parsedData.containsKey(key)) {
+            dataString = parsedData.get(key);
+        }
+        return dataString;
+    }
+
+
     /**
      * Checks if the description is set.
      *
@@ -102,10 +136,9 @@ public class Project {
      */
     public final void update(final Project project) {
         this.setName(project.getName());
+        this.setTemplate(project.isTemplate());
         this.setLocation(project.getLocation());
         this.setOccupants(project.getOccupants());
-        this.setEnergyConsumption(project.getEnergyConsumption());
-        this.setEnergySource(project.getEnergySource());
         this.setDescription(project.getDescription());
     }
 
@@ -119,8 +152,6 @@ public class Project {
         project.setName("Copy of " + this.getName());
         project.setLocation(this.getLocation());
         project.setOccupants(this.getOccupants());
-        project.setEnergyConsumption(this.getEnergyConsumption());
-        project.setEnergySource(this.getEnergySource());
         project.setDescription(this.getDescription());
         project.setData(this.getData());
         project.setPerson(this.getPerson());
@@ -151,6 +182,7 @@ public class Project {
             mJson.put("2", project.getOccupants());
             mJson.put("3", presentation.format(project.getCreated()));
             mJson.put("4", order.format(project.getCreated()));
+            mJson.put("5", project.isTemplate());
 
             projectsJson.add(mJson);
         }
@@ -167,16 +199,44 @@ public class Project {
     }
 
     /**
+     * Find all of the project templates.
+     *
+     * @return the list
+     */
+    public static List<Project> findProjectTemplates() {
+
+        TypedQuery<Project> q = entityManager().createQuery("SELECT p FROM Project AS p"
+                + " WHERE p.template = :template ORDER BY p.name",
+                Project.class);
+        q.setParameter("template", true);
+
+        return q.getResultList();
+    }
+
+    /**
      * Find all of the projects for a user in alphabetical order.
      *
+     * @param user the user
      * @return the list
      */
     public static List<Project> findAllProjects(final Person user) {
 
-        TypedQuery<Project> q = entityManager().createQuery("SELECT p FROM Project AS p"
-                + " JOIN p.person AS u WHERE u.id = :userId ORDER BY p.name",
+        boolean viewTemplates = canViewOrEditTemplates(user);
+
+        StringBuilder hql = new StringBuilder();
+        hql.append("SELECT p FROM Project AS p JOIN p.person AS u");
+        hql.append(" WHERE u.id = :userId");
+        if (viewTemplates) {
+            hql.append(" OR p.template = :template");
+        }
+        hql.append(" ORDER BY p.name");
+
+        TypedQuery<Project> q = entityManager().createQuery(hql.toString(),
                 Project.class);
         q.setParameter("userId", user.getId());
+        if (viewTemplates) {
+            q.setParameter("template", true);
+        }
 
         return q.getResultList();
     }
@@ -189,9 +249,20 @@ public class Project {
      */
     public static long countProjects(final Person user) {
 
-        TypedQuery<Long> q = entityManager().createQuery("SELECT COUNT(p) FROM Project p"
-                + " JOIN p.person AS u WHERE u.id = :userId", Long.class);
+        boolean viewTemplates = canViewOrEditTemplates(user);
+
+        StringBuilder hql = new StringBuilder();
+        hql.append("SELECT COUNT(p) FROM Project p JOIN p.person AS u");
+        hql.append(" WHERE u.id = :userId");
+        if (viewTemplates) {
+            hql.append(" OR p.template = :template");
+        }
+
+        TypedQuery<Long> q = entityManager().createQuery(hql.toString(), Long.class);
         q.setParameter("userId", user.getId());
+        if (viewTemplates) {
+            q.setParameter("template", true);
+        }
 
         return q.getSingleResult();
     }
@@ -226,4 +297,49 @@ public class Project {
         return q.getSingleResult();
     }
 
+    /**
+     * Can view or edit templates.
+     *
+     * @param user the user
+     * @return true, if successful
+     */
+    public static boolean canViewOrEditTemplates(final Person user) {
+        boolean allowed = false;
+
+        if (user != null && user.getUserRole() != null) {
+            if (user.getUserRole() == UserRole.ROLE_ADMIN) {
+                allowed = true;
+            }
+            if (user.getUserRole() == UserRole.ROLE_EDITOR) {
+                allowed = true;
+            }
+        }
+        return allowed;
+    }
+
+    /**
+     * Parses the data and returns a map.
+     *
+     * @return the map
+     */
+    private Map<String, String> parseData() {
+
+        Map<String, String> parsedData = new HashMap<String, String>();
+
+        if (StringUtils.isNotBlank(this.getData())) {
+            try {
+                JSONObject json = (JSONObject) JSONSerializer.toJSON(this.getData());
+                Iterator<?> iter = json.keys();
+                while (iter.hasNext()) {
+                    String key = (String) iter.next();
+                    String value = json.getString(key);
+
+                    parsedData.put(key, value);
+                }
+            } catch (ClassCastException ce) {
+                // Error parsing the data
+            }
+        }
+        return parsedData;
+    }
 }

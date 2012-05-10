@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div class="projectInfo" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:buildulator="urn:jsptagdir:/WEB-INF/tags/buildulator" xmlns:springform="http://www.springframework.org/tags/form" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+<div class="projectInfo" xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:buildulator="urn:jsptagdir:/WEB-INF/tags/buildulator"
+        xmlns:jsp="http://java.sun.com/JSP/Page"
+        xmlns:spring="http://www.springframework.org/tags"
+        version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
 
-    <c:if test="${empty project.data}">
-        <c:set var="noData" value="bomEmpty" />
+    <c:if test="${noBOMData}">
+        <c:set var="noBOMDataCss" value="bomEmpty" />
     </c:if>
 
+
+    <c:if test="${project.template}">
+        <div class="projectTemplate"><span><spring:message code="projects_template" /></span></div>
+    </c:if>
     <h1><c:out value="${project.name}" /></h1>
 
     <div class="sidePanel">
@@ -21,47 +30,28 @@
                 <!-- -->
             </div>
         </div>
-        <div class="bomInstructions ${noData}">
+        <div class="bomInstructions">
             <h3><spring:message code="projects_bom_help" /></h3>
             <p><spring:message code="projects_bom_instructions" htmlEscape="false" /></p>
         </div>
     </div>
 
-    <c:if test="${not empty project.location}">
-        <p class="projectLocation">
-            <c:out value="${project.location}" />
-        </p>
-    </c:if>
+    <spring:message code="label_net_triptech_buildulator_model_project_occupants" var="occupants" />
+    <p class="projectMetadata">
+        <c:if test="${not empty project.location}">
+            <c:out value="${project.location}" /><c:out value=" (" />
+        </c:if>
+        <c:out value="${project.occupants}" /> <c:out value=" ${fn:toLowerCase(occupants)}" />
+
+        <c:if test="${not empty project.location}">
+            <c:out value=")" />
+        </c:if>
+    </p>
 
     <buildulator:userwarning />
 
     <div class="panel">
         <div class="panelContent">
-            <ul class="metadata">
-                <li class="projectEnergyConsumption">
-                    <span class="metadataLabel"><spring:message code="label_net_triptech_buildulator_model_project_energyconsumption" />: </span>
-                    <c:choose>
-                        <c:when test="${project.energyConsumption ne 0}">
-                            <c:out value="${project.energyConsumption}" />
-                            <span class="units"><spring:message code="label_net_triptech_buildulator_model_project_energyconsumption_units" /></span>
-                        </c:when>
-                        <c:otherwise><spring:message code="buildulator_value_unknown" /></c:otherwise>
-                    </c:choose>
-                </li>
-                <li class="projectOccupants">
-                    <span class="metadataLabel"><spring:message code="label_net_triptech_buildulator_model_project_occupants" />: </span>
-                    <c:out value="${project.occupants}" />
-                </li>
-                <li class="projectEnergySource">
-                    <span class="metadataLabel"><spring:message code="label_net_triptech_buildulator_model_project_energysource" />: </span>
-                    <c:choose>
-                        <c:when test="${not empty project.energySource.name}">
-                            <c:out value="${project.energySource.name}" />
-                        </c:when>
-                        <c:otherwise><spring:message code="buildulator_value_unknown" /></c:otherwise>
-                    </c:choose>
-                </li>
-            </ul>
             <c:if test="${project.descriptionSet}">
                 <div class="projectDescription">
                     <div class="content">
@@ -69,12 +59,22 @@
                     </div>
                 </div>
             </c:if>
-            <div class="billOfMaterials" id="billOfMaterials${project.id}">
+            <div class="operatingEnergy">
+                <div class="contentHeader">
+                    <h3><spring:message code="projects_operatingenergy_title" /></h3>
+                    <p><spring:message code="projects_operatingenergy_intro" /></p>
+                </div>
+                <div class="content bomTable">
+                    <!-- -->
+                </div>
+                <div class="contentFooter"><!-- --></div>
+            </div>
+            <div class="materialsBreakdown">
                 <div class="contentHeader">
                     <h3><spring:message code="projects_bom_title" /></h3>
                     <p><spring:message code="projects_bom_intro" /></p>
 
-                    <c:if test="${empty project.data}">
+                    <c:if test="${noBOMData}">
                         <div class="bomImport">
                             <p><spring:message code="projects_bom_import" htmlEscape="false" /></p>
                             <div class="bomImportButtons">
@@ -84,7 +84,7 @@
                         </div>
                     </c:if>
                 </div>
-                <div class="content ${noData}">
+                <div class="content bomTable ${noBOMDataCss}">
                     <!-- -->
                 </div>
                 <div class="contentFooter"><!-- --></div>
@@ -115,7 +115,7 @@
        </div>
     </form>
 
-    <c:if test="${empty project.data}">
+    <c:if test="${noBOMData}">
     <spring:url value="/projects/${project.id}/import" var="importBOMUrl" />
      <form id="formImportBOM" action="${importBOMUrl}" method="post">
         <spring:url value="/projects/qs-template.xls" var="templateUrl" />
@@ -131,9 +131,26 @@
 
     <script type="text/javascript" charset="utf8">
     $(document).ready(function() {
-        var bom = new BillOfMaterials({
+        var operatingEnergy = new BillOfMaterials({
             projectId: <c:out value="${project.id}" />,
-            projectUrl: config.projectsUrl
+            projectUrl: config.projectsUrl,
+            div: 'div.operatingEnergy div.bomTable',
+            type: 'operating_energy',
+            sectionText: '<spring:message code="projects_operatingenergy_section" />',
+            elementText: '<spring:message code="projects_operatingenergy_element" />',
+            materialText: '<spring:message code="projects_operatingenergy_material" />',
+            footerSummaryText: '<spring:message code="projects_operatingenergy_footersummary" />'
+        }).render();
+
+        var materialsBreakdown = new BillOfMaterials({
+            projectId: <c:out value="${project.id}" />,
+            projectUrl: config.projectsUrl,
+            div: 'div.materialsBreakdown div.bomTable',
+            type: 'construction',
+            sectionText: '<spring:message code="projects_bom_section" />',
+            elementText: '<spring:message code="projects_bom_element" />',
+            materialText: '<spring:message code="projects_bom_material" />',
+            footerSummaryText: '<spring:message code="projects_bom_footersummary" />'
         }).render();
      });
     </script>

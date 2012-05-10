@@ -415,6 +415,26 @@ input.error {
   border: 2px solid #ff3333;
 }
 
+.projectInfo div.projectTemplate {
+  margin: 0 10px 0 10px;
+  padding: 28px 0 0 0;
+  float: left;
+}
+.projectInfo div.projectTemplate span {
+  font-size: 1em;
+  color: #fff;
+  padding: 0.2em 0.5em;
+  margin: 0;
+  display: block;
+  background: #ccc;
+  border: 1px solid #D4D4D3;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -khtml-border-radius: 8px;
+  border-radius: 8px;
+  font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
 .projectInfo div#sustainabilitySummary {
   width: 245px;
   background: #8D8574;
@@ -445,44 +465,38 @@ input.error {
     margin: 0.5em 0 0 10px;
 }
 
-.projectInfo ul.metadata {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.projectInfo ul.metadata li {
-  float: left;
-  margin: 0 10px 0.3em 0;
-  padding: 0;
-  width: 320px;
-  list-style: none!important;
-}
-.projectInfo p.projectLocation {
+.projectInfo p.projectMetadata {
     margin: 0 280px 0 15px;
     position: relative;
     top: -5px;
     color: #666;
     font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
-.projectInfo span.metadataLabel {
-    color: #8D8574;
-}
-.projectInfo div.projectDescription,
-.projectInfo div.billOfMaterials {
+
+.projectInfo div.operatingEnergy,
+.projectInfo div.materialsBreakdown {
   clear: left;
-  padding: 0.6em 0 0 0;
 }
-.projectInfo div.projectDescription div.content,
-.projectInfo div.billOfMaterials div.contentHeader {
-  border-top: 1px solid #ccc;
-  padding: 0.6em 0 0 0;
+.projectInfo div.operatingEnergy {
+  padding: 0 0 1.6em 0;
+}
+.projectInfo div.projectDescription div.content {
+  border-bottom: 1px solid #ccc;
+  padding: 0 0 0.6em 0;
+  margin: 0 0 1.3em 0;
 }
 
-.projectInfo div.billOfMaterials div.contentHeader h3 {
+.projectInfo div.operatingEnergy div.contentHeader h3,
+.projectInfo div.materialsBreakdown div.contentHeader h3 {
   margin-top: 0.3em;
 }
 
-.projectInfo div.billOfMaterials div.bomImport {
+.projectInfo div.operatingEnergy div.contentFooter,
+.projectInfo div.materialsBreakdown div.contentFooter {
+  clear: left;
+}
+
+.projectInfo div.materialsBreakdown div.bomImport {
   padding: 1em;
   border: 1px solid #CCC;
   margin: 1em 50px 3em 50px;
@@ -494,7 +508,7 @@ input.error {
   border-radius: 8px;
 }
 
-.projectInfo div.billOfMaterials div.bomImportButtons {
+.projectInfo div.materialsBreakdown div.bomImportButtons {
   text-align: center;
   font-size: 1.5em;
 }
@@ -615,8 +629,8 @@ div.homepageContent div.newProject {
 }
 
 
-/** Bill of materials styles */
-div.billOfMaterials div.content {
+/** bomTable styles */
+div.bomTable {
   font-size: 0.9em;
   border: 1px solid #ccc;
   background: url('../images/bom-content.png') top right repeat-y #fff;
@@ -630,81 +644,77 @@ div.billOfMaterials div.content {
   border-top-left-radius: 8px;
 }
 
-div.billOfMaterials div.contentFooter {
-  clear: left;
-}
-
-div.billOfMaterials div.content ul {
+div.bomTable ul {
   margin: 0;
   padding: 0;
 }
 
-div.billOfMaterials div.content li {
+div.bomTable li {
   margin: 0;
   padding: 0;
   clear: left;
   list-style: none!important;
 }
 
-div.billOfMaterials div.content li.bomSection {
+div.bomTable li.bomSection {
   padding: 0.8em 0 0.8em 0;
   border-bottom: 1px solid #ccc;
 }
 
-div.billOfMaterials div.content li.bomElement {
+div.bomTable li.bomElement {
   font-style: italic;
 }
 
-div.billOfMaterials div.content ul.bomMaterials {
+div.bomTable ul.bomMaterials {
   font-style: normal;
 }
 
-div.billOfMaterials div.content li.bomMaterial {
+div.bomTable li.bomMaterial {
   margin-left: 20px;
 }
 
-div.billOfMaterials div.content li input {
+div.bomTable li input {
     font-style: normal;
 }
 
-div.billOfMaterials div.content li div {
+div.bomTable li div {
   float: left;
   line-height: 1.4em;
   padding: 0.2em 4px 0.2em 0;
 }
 
-div.billOfMaterials div.content li.addToBOM a.addToBOM {
+div.bomTable li.addToBOM a.addToBOM {
   padding-left: 19px;
   background: url('../images/buttons.gif') 0px 0px no-repeat;
   font-style: normal;
   margin: 0 0 0 5px;
 }
 
-div.billOfMaterials div.content li.addToBOM a.addToBOM:hover {
+div.bomTable li.addToBOM a.addToBOM:hover {
   background-position: 0px -186px;
   text-decoration: underline;
   cursor: pointer;
 }
 
-div.billOfMaterials div.content ul.bomSections li.addToBOM {
+div.bomTable ul.bomSections li.addToBOM {
   padding: 0.8em 0 0.8em 0;
   font-weight: bold;
 }
 
-div.billOfMaterials div.content ul.bomSections ul li.addToBOM {
+div.bomTable ul.bomSections ul li.addToBOM {
   padding: 0;
   font-weight: normal;
 }
 
-div.billOfMaterials div.content li.bomElement li.addToBOM {
+div.bomTable li.bomElement li.addToBOM {
   margin-left: 20px;
 }
 
-div.billOfMaterials div.content li div.deleteFromBOM {
+div.bomTable li div.deleteFromBOM {
   padding: 0;
   margin: 0.35em 6px 0 5px;
 }
-div.billOfMaterials div.content li div.deleteFromBOM a {
+div.bomTable li div.deleteFromBOM a {
   overflow: hidden;
   display: block;
   height: 0px;
@@ -713,48 +723,48 @@ div.billOfMaterials div.content li div.deleteFromBOM a {
   width: 14px;
   background: url('../images/buttons.gif') -1186px 0px no-repeat;
 }
-div.billOfMaterials div.content li div.deleteFromBOM a:hover {
+div.bomTable li div.deleteFromBOM a:hover {
   cursor: pointer;
   background-position: -1186px -186px
 }
 
-div.billOfMaterials div.content div.bomSName {
+div.bomTable div.bomSName {
   width: 415px;
   font-weight: bold;
 }
 
-div.billOfMaterials div.content div.bomEName {
+div.bomTable div.bomEName {
   width: 300px;
 }
 
-div.billOfMaterials div.content div.bomMName {
+div.bomTable div.bomMName {
   width: 280px;
 }
 
-div.billOfMaterials div.content div.bomAUnits, div.billOfMaterials div.content div.bomMUnits,
-div.billOfMaterials div.content div.bomAQuantity, div.billOfMaterials div.content div.bomMQuantity,
-div.billOfMaterials div.content div.bomSEnergy, div.billOfMaterials div.content div.bomAEnergy, div.billOfMaterials div.content div.bomMEnergy,
-div.billOfMaterials div.content div.bomSCarbon, div.billOfMaterials div.content div.bomACarbon, div.billOfMaterials div.content div.bomMCarbon {
+div.bomTable div.bomAUnits, div.bomTable div.bomMUnits,
+div.bomTable div.bomAQuantity, div.bomTable div.bomMQuantity,
+div.bomTable div.bomSEnergy, div.bomTable div.bomAEnergy, div.bomTable div.bomMEnergy,
+div.bomTable div.bomSCarbon, div.bomTable div.bomACarbon, div.bomTable div.bomMCarbon {
     height: 1.4em;
     overflow: hidden;
 }
 
-div.billOfMaterials div.content div.bomEUnits, div.billOfMaterials div.bomMUnits {
+div.bomTable div.bomEUnits, div.bomTable div.bomMUnits {
     width: 50px;
 }
 
-div.billOfMaterials div.content div.bomEQuantity, div.billOfMaterials div.bomMQuantity {
+div.bomTable div.bomEQuantity, div.bomTable div.bomMQuantity {
     width: 60px;
     text-align: right;
 }
 
-div.billOfMaterials div.content div.bomSEnergy, div.billOfMaterials div.content div.bomAEnergy, div.billOfMaterials div.content div.bomMEnergy,
-div.billOfMaterials div.content div.bomSCarbon, div.billOfMaterials div.content div.bomACarbon, div.billOfMaterials div.content div.bomMCarbon {
+div.bomTable div.bomSEnergy, div.bomTable div.bomAEnergy, div.bomTable div.bomMEnergy,
+div.bomTable div.bomSCarbon, div.bomTable div.bomACarbon, div.bomTable div.bomMCarbon {
     width: 100px;
     text-align: right;
 }
 
-div.billOfMaterials div.content div.bomHeader {
+div.bomTable div.bomHeader {
   clear: left;
   border: 1px solid #494437;
   border-bottom: 1px solid #ccc;
@@ -773,33 +783,33 @@ div.billOfMaterials div.content div.bomHeader {
   border-top-left-radius: 8px;
 }
 
-div.billOfMaterials div.content div.bomHeader div {
+div.bomTable div.bomHeader div {
     float: left;
     height: 1.4em;
     line-height: 1.4em;
     text-align: center;
 }
 
-div.billOfMaterials div.content div.bomHeader div.bomHName {
+div.bomTable div.bomHeader div.bomHName {
   width: 288px;
   margin: 0 0 0 5px;
 }
 
-div.billOfMaterials div.content div.bomHeader div.bomHQuantity {
+div.bomTable div.bomHeader div.bomHQuantity {
   width: 160px;
 }
 
-div.billOfMaterials div.content div.bomHeader div.bomHEnergy, div.billOfMaterials div.content div.bomHeader div.bomHCarbon {
+div.bomTable div.bomHeader div.bomHEnergy, div.bomTable div.bomHeader div.bomHCarbon {
   width: 100px;
 }
 
-div.billOfMaterials div.content div.bomHeader div.bomHClear {
+div.bomTable div.bomHeader div.bomHClear {
     clear: left;
     height: 1px;
     float: none;
 }
 
-div.billOfMaterials div.content div.bomFooter {
+div.bomTable div.bomFooter {
   background: #f2f2f2;
   clear: left;
   border-top: 1px solid #ccc;
@@ -808,89 +818,89 @@ div.billOfMaterials div.content div.bomFooter {
   font-weight: bold;
 }
 
-div.billOfMaterials div.content div.bomFooter div {
+div.bomTable div.bomFooter div {
     float: left;
     height: 1.4em;
     line-height: 1.4em;
 }
 
-div.billOfMaterials div.content div.bomFooter div.bomFSummary {
+div.bomTable div.bomFooter div.bomFSummary {
   width: 435px;
   margin: 0 0 0 5px;
 }
 
-div.billOfMaterials div.content div.bomFooter div.bomFEnergy,
-div.billOfMaterials div.content div.bomFooter div.bomFCarbon {
+div.bomTable div.bomFooter div.bomFEnergy,
+div.bomTable div.bomFooter div.bomFCarbon {
   width: 100px;
   text-align: right;
 }
 
-div.billOfMaterials div.content div.bomFooter div.bomFClear {
+div.bomTable div.bomFooter div.bomFClear {
     clear: left;
     height: 1px;
     float: none;
 }
 
-div.billOfMaterials div.content div.bomAddSubmitCancelOptions {
+div.bomTable div.bomAddSubmitCancelOptions {
   margin: 0 0 0 455px;
   float: none;
 }
-div.billOfMaterials div.content ul.bomMaterials div.bomAddSubmitCancelOptions {
+div.bomTable ul.bomMaterials div.bomAddSubmitCancelOptions {
   margin: 0 0 0 435px;
 }
 
-div.billOfMaterials div.content div.bomSectionNameInput,
-div.billOfMaterials div.content div.bomElementNameInput {
+div.bomTable div.bomSectionNameInput,
+div.bomTable div.bomElementNameInput {
   margin: 0 0 0.8em 15px;
   padding-top: 4px;
 }
 
-div.billOfMaterials div.content div.bomMaterialNameInput {
+div.bomTable div.bomMaterialNameInput {
   margin: 0 0 0.8em 15px;
 }
-div.billOfMaterials div.content div.bomMaterialNameInput div {
+div.bomTable div.bomMaterialNameInput div {
   margin: 0;
   padding: 0;
 }
-div.billOfMaterials div.content input.bomSelectValue {
+div.bomTable input.bomSelectValue {
   display: none;
 }
 
-div.billOfMaterials div.content div.bomSectionNameInput input {
+div.bomTable div.bomSectionNameInput input {
   width: 425px;
 }
 
-div.billOfMaterials div.content div.bomElementNameInput input {
+div.bomTable div.bomElementNameInput input {
   width: 313px;
 }
 
-div.billOfMaterials div.content div.bomMaterialNameInput input {
+div.bomTable div.bomMaterialNameInput input {
   width: 280px;
 }
 
-div.billOfMaterials div.content div.bomElementQuantityInput,
-div.billOfMaterials div.content div.bomMaterialQuantityInput {
+div.bomTable div.bomElementQuantityInput,
+div.bomTable div.bomMaterialQuantityInput {
  padding: 4px 0 0.2em 0;
   width: 58px;
 }
-div.billOfMaterials div.content div.bomElementQuantityInput input,
-div.billOfMaterials div.content div.bomMaterialQuantityInput input {
+div.bomTable div.bomElementQuantityInput input,
+div.bomTable div.bomMaterialQuantityInput input {
   width: 50px;
 }
 
-div.billOfMaterials div.content div.bomElementUnitsInput {
+div.bomTable div.bomElementUnitsInput {
  width: 48px;
  padding: 4px 0 0.2em 0;
 }
-div.billOfMaterials div.content div.bomElementUnitsInput input {
+div.bomTable div.bomElementUnitsInput input {
   width: 48px;
 }
 
-div.billOfMaterials div.content form {
+div.bomTable form {
     margin-bottom: 1em;
 }
 
-div.billOfMaterials div.content label.error {
+div.bomTable label.error {
   float: none;
   clear: left;
   position: absolute;
