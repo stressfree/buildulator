@@ -3,6 +3,10 @@
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
 
+    <c:if test="${empty project.data}">
+        <c:set var="noData" value="bomEmpty" />
+    </c:if>
+
     <h1><c:out value="${project.name}" /></h1>
 
     <div class="sidePanel">
@@ -16,6 +20,10 @@
             <div id="sustainabilitySummaryContent">
                 <!-- -->
             </div>
+        </div>
+        <div class="bomInstructions ${noData}">
+            <h3><spring:message code="projects_bom_help" /></h3>
+            <p><spring:message code="projects_bom_instructions" htmlEscape="false" /></p>
         </div>
     </div>
 
@@ -67,7 +75,6 @@
                     <p><spring:message code="projects_bom_intro" /></p>
 
                     <c:if test="${empty project.data}">
-                        <c:set var="noData" value="bomEmpty" />
                         <div class="bomImport">
                             <p><spring:message code="projects_bom_import" htmlEscape="false" /></p>
                             <div class="bomImportButtons">
@@ -76,9 +83,6 @@
                             </div>
                         </div>
                     </c:if>
-                    <div class="bomInstructions ${noData}">
-                        <p><spring:message code="projects_bom_instructions" htmlEscape="false" /></p>
-                    </div>
                 </div>
                 <div class="content ${noData}">
                     <!-- -->
@@ -124,5 +128,14 @@
         </div>
      </form>
     </c:if>
+
+    <script type="text/javascript" charset="utf8">
+    $(document).ready(function() {
+        var bom = new BillOfMaterials({
+            projectId: <c:out value="${project.id}" />,
+            projectUrl: config.projectsUrl
+        }).render();
+     });
+    </script>
 
 </div>

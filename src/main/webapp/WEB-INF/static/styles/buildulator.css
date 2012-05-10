@@ -421,14 +421,30 @@ input.error {
   margin: 10px 0;
   padding: 10px 0;
   border: 1px solid #D4D4D3;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -khtml-border-radius: 8px;
+  border-radius: 8px;
 }
 .projectInfo div#sustainabilitySummary h3 {
-    margin: 0 5px 0 10px;
-    padding: 0;
-    font-size: 18px;
-    font-weight: normal;
-    color: #fff;
+  margin: 0 5px 0 10px;
+  padding: 0;
+  font-size: 18px;
+  font-weight: normal;
+  color: #fff;
 }
+
+.projectInfo  div.bomInstructions {
+  font-size: 0.9em;
+  border: 1px solid #ccc;
+  background: #fff;
+  margin: 0 0 1em 0;
+  padding: 0.2em 0;
+}
+.projectInfo  div.bomInstructions h3 {
+    margin: 0.5em 0 0 10px;
+}
+
 .projectInfo ul.metadata {
   list-style: none;
   margin: 0;
@@ -466,22 +482,6 @@ input.error {
   margin-top: 0.3em;
 }
 
-.projectInfo div.billOfMaterials div.contentHeader ul {
-  font-size: 0.9em;
-  border: 1px solid #ccc;
-  background: #F0F2F2;
-  margin: 0 0 1em 0;
-  padding: 0.5em 0;
-  -moz-border-radius: 8px;
-  -webkit-border-radius: 8px;
-  -khtml-border-radius: 8px;
-  border-radius: 8px;
-}
-.projectInfo div.billOfMaterials div.contentHeader ul li {
-  list-style-position: inside!important;
-  margin: 0 0 0 15px;
-}
-
 .projectInfo div.billOfMaterials div.bomImport {
   padding: 1em;
   border: 1px solid #CCC;
@@ -499,7 +499,7 @@ input.error {
   font-size: 1.5em;
 }
 
-.projectInfo div.billOfMaterials div.bomEmpty {
+.projectInfo div.bomEmpty {
   display: none;
 }
 
@@ -620,6 +620,14 @@ div.billOfMaterials div.content {
   font-size: 0.9em;
   border: 1px solid #ccc;
   background: url('../images/bom-content.png') top right repeat-y #fff;
+  -moz-border-radius-topright: 8px;
+  -webkit-border-top-right-radius: 8px;
+  -khtml-border-top-right-radius: 8px;
+  border-top-right-radius: 8px;
+  -moz-border-radius-topleft: 8px;
+  -webkit-border-top-left-radius: 8px;
+  -khtml-border-top-left-radius: 8px;
+  border-top-left-radius: 8px;
 }
 
 div.billOfMaterials div.contentFooter {
@@ -755,6 +763,14 @@ div.billOfMaterials div.content div.bomHeader {
   color: #fff;
   font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
   background: url('../images/bom-header.png') 50% 50% repeat-x #8D8574;
+  -moz-border-radius-topright: 8px;
+  -webkit-border-top-right-radius: 8px;
+  -khtml-border-top-right-radius: 8px;
+  border-top-right-radius: 8px;
+  -moz-border-radius-topleft: 8px;
+  -webkit-border-top-left-radius: 8px;
+  -khtml-border-top-left-radius: 8px;
+  border-top-left-radius: 8px;
 }
 
 div.billOfMaterials div.content div.bomHeader div {

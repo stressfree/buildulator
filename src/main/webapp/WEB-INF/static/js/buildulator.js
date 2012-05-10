@@ -1,5 +1,3 @@
-var bomData;
-
 $(document).ready(function() {
     if ($('#flashMessage p.flashMessageContent').html() != null) {
         $.gritter.add({
@@ -12,7 +10,7 @@ $(document).ready(function() {
 $(document).ready(function() {
 
     $('#btnEditProject').click(function() {
-        document.location.href = editProjectUrl;
+        document.location.href = config.editProjectUrl;
     });
 
     $('#formCloneProject').dialog({
@@ -51,7 +49,7 @@ $(document).ready(function() {
         'sPaginationType' : 'full_numbers',
         'bLengthChange' : false,
         'iDisplayLength' : 50,
-        'sAjaxSource' : materialLibraryUrl + '/list.json',
+        'sAjaxSource' : config.materialLibraryUrl + '/list.json',
         'aoColumnDefs' : [ {
             'sClass' : 'column-1',
             'aTargets' : [ 0 ]
@@ -75,9 +73,9 @@ $(document).ready(function() {
             'aTargets' : [ 6 ]
         } ]
     }).makeEditable({
-        sAddURL : materialLibraryUrl,
-        sDeleteURL : materialLibraryUrl + '/delete',
-        sUpdateURL : materialLibraryUrl + '/update',
+        sAddURL : config.materialLibraryUrl,
+        sDeleteURL : config.materialLibraryUrl + '/delete',
+        sUpdateURL : config.materialLibraryUrl + '/update',
         sAddNewRowButtonId: 'btnAddMaterial',
         sAddNewRowFormId: 'formAddMaterial',
         sDeleteRowButtonId: 'btnDeleteMaterial',
@@ -88,7 +86,7 @@ $(document).ready(function() {
             cssclass : 'required',
             type: 'select',
             onblur: 'submit',
-            loadurl: materialLibraryUrl + '/types.json',
+            loadurl: config.materialLibraryUrl + '/types.json',
             loadtype: 'GET',
             event: 'click'
         }, {
@@ -121,11 +119,11 @@ $(document).ready(function() {
         "sPaginationType" : "full_numbers",
         "bLengthChange" : false,
         "iDisplayLength" : 50,
-        "sAjaxSource" : './projects/list.json',
+        "sAjaxSource" : config.projectsUrl + 'list.json',
         "fnDrawCallback": function(){
             $('.dataTable tbody tr').click(function() {
                 var projectId = $(this).attr('id');
-                document.location.href = showProjectUrl + projectId;
+                document.location.href = config.projectsUrl + projectId;
             });
             $('.dataTable tbody tr').hover(function() {
                 $(this).addClass('row_selected');
@@ -177,7 +175,7 @@ $(document).ready(function() {
         "sPaginationType" : "full_numbers",
         "bLengthChange" : false,
         "iDisplayLength" : 50,
-        "sAjaxSource" : './admin/users/list.json',
+        "sAjaxSource" : config.adminUsersUrl + '/list.json',
         "aoColumnDefs" : [ {
             "sClass" : "column-1",
             "aTargets" : [ 0 ]
@@ -195,8 +193,8 @@ $(document).ready(function() {
             "aTargets" : [ 4 ]
         }]
     }).makeEditable({
-        sDeleteURL : "./admin/users/delete",
-        sUpdateURL : "./admin/users/update",
+        sDeleteURL : config.adminUsersUrl + "/delete",
+        sUpdateURL : config.adminUsersUrl + "/update",
         oDeleteRowButtonOptions : {},
         aoColumns : [ {
             cssclass : "required"
@@ -208,14 +206,14 @@ $(document).ready(function() {
             cssclass : "required",
             type: "select",
             onblur: "submit",
-            loadurl: "./admin/users/roles.json",
+            loadurl: config.adminUsersUrl + "/roles.json",
             loadtype: "GET",
             event: "click"
         }, {
             cssclass : "required",
             type: "select",
             onblur: "submit",
-            loadurl: "./admin/users/statuses.json",
+            loadurl: config.adminUsersUrl + "/statuses.json",
             loadtype: "GET",
             event: "click"
         } ]
@@ -232,7 +230,7 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     $('textarea.rteditor').wysiwyg({
-        css: wysiwygCss,
+        css: config.wysiwygCss,
         iFrameClass : "wysiwyg-input",
         controls : {
             paragraph : {
@@ -320,13 +318,17 @@ $(document).ready(function() {
         $('.bomEmpty').removeClass('bomEmpty');
         $('div.bomImport').remove();
     });
-
-    $('div.billOfMaterials').each(function () {
-        var pid = this.id.replace('billOfMaterials','');
-        var bom = new BillOfMaterials({projectId: pid, projectUrl: showProjectUrl});
-        bom.render();
-     });
  });
+
+
+function BuildulatorConfig (config) {
+    if (config == undefined) { config = new Array(); }
+    this.wysiwygCss = (config.wysiwygCss != undefined) ? config.wysiwygCss : '/static/styles/editor.css';
+    this.projectsUrl = (config.projectsUrl != undefined) ? config.projectsUrl : '/projects/';
+    this.editProjectUrl = (config.editProjectUrl != undefined) ? config.editProjectUrl : '/projects/?edit';
+    this.materialLibraryUrl = (config.materialLibraryUrl != undefined) ? config.materialLibraryUrl : '/library/materials/';
+    this.adminUsersUrl = (config.adminUsersUrl != undefined) ? config.adminUsersUrl : '/admin/users/';
+}
 
 
 function BillOfMaterials (config) {
