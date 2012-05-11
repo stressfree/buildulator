@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div id="footer" xmlns:menu="urn:jsptagdir:/WEB-INF/tags/menu" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:spring="http://www.springframework.org/tags" xmlns:sec="http://www.springframework.org/security/tags" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+<div id="footer" xmlns:menu="urn:jsptagdir:/WEB-INF/tags/menu" 
+        xmlns:c="http://java.sun.com/jsp/jstl/core" 
+        xmlns:spring="http://www.springframework.org/tags" 
+        xmlns:sec="http://www.springframework.org/security/tags" 
+        xmlns:jsp="http://java.sun.com/JSP/Page" 
+        version="2.0">
   <jsp:directive.page contentType="text/html;charset=UTF-8"/>
   <jsp:output omit-xml-declaration="yes"/>
 
@@ -33,6 +38,7 @@
     var config = new BuildulatorConfig({
         wysiwygCss: '<c:out value="${wysiwyg_css_url}" />',
         projectsUrl: '<c:out value="${projects_url}" />',
+        projectsListAll: '<c:out value="${allProjects}" />',
         editProjectUrl: '<c:out value="${edit_project_url}" />',
         materialLibraryUrl: '<c:out value="${material_library_url}" />',
         adminUsersUrl: '<c:out value="${admin_users_url}" />'

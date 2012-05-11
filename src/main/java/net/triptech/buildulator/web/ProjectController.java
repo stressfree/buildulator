@@ -57,14 +57,24 @@ public class ProjectController extends BaseController {
      * Index.
      *
      * @param request the request
+     * @param allProjectsVal the all projects val
+     * @param uiModel the ui model
      * @return the string
      */
     @RequestMapping(method = RequestMethod.GET)
-    public String index(final HttpServletRequest request) {
+    public String index(final HttpServletRequest request, @RequestParam(
+            value = "all", required = false) Boolean allProjectsVal,
+            Model uiModel) {
+
         String page = "projects/list";
 
         if (getProjectCount(request) == 0) {
             page = "redirect:/projects/new";
+        } else {
+            Person user = getUser(request);
+
+            boolean allProjects = canViewAllProjects(allProjectsVal, user);
+            uiModel.addAttribute("allProjects", allProjects);
         }
         return page;
     }
@@ -114,12 +124,17 @@ public class ProjectController extends BaseController {
         Project project = Project.findProject(id);
 
         if (checkProjectPermission(project, request)) {
-            boolean noBOMData = true;
-            if (StringUtils.isNotBlank(project.getDataField("construction"))) {
-                noBOMData = false;
+            boolean noOperatingEnergyData = false;
+            boolean noBOMData = false;
+            if (testIfEmptyJson(project.getDataField("operating_energy"))) {
+                noOperatingEnergyData = true;
+            }
+            if (testIfEmptyJson(project.getDataField("construction"))) {
+                noBOMData = true;
             }
 
             uiModel.addAttribute("project", project);
+            uiModel.addAttribute("noOperatingEnergyData", noOperatingEnergyData);
             uiModel.addAttribute("noBOMData", noBOMData);
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -464,11 +479,32 @@ public class ProjectController extends BaseController {
     /**
      * List the projects.
      *
+     * @param allProjects the all projects
+     * @param request the request
      * @return the string
      */
     @RequestMapping(value = "/list.json", method = RequestMethod.GET)
-    public @ResponseBody String listProjects(final HttpServletRequest request) {
-        return Project.toJson(loadProjects(request));
+    public @ResponseBody String listProjects(
+            @RequestParam(value = "all", required = false) Boolean allProjectsVal,
+            final HttpServletRequest request) {
+
+        List<Project> projects = new ArrayList<Project>();
+
+        Person user = getUser(request);
+
+        boolean allProjects = canViewAllProjects(allProjectsVal, user);
+
+        if (user == null) {
+            projects = Project.findAllProjects(request.getSession().getId());
+        } else {
+            if (allProjects) {
+                projects = Project.findAllProjects();
+            } else {
+                projects = Project.findAllProjects(user);
+            }
+        }
+        return Project.toJson(projects,
+                getMessage("projects_list_anonymous"));
     }
 
     /**
@@ -588,26 +624,6 @@ public class ProjectController extends BaseController {
     @ModelAttribute("projectTemplates")
     public final List<Project> getProjectTemplates() {
         return Project.findProjectTemplates();
-    }
-
-    /**
-     * Load projects.
-     *
-     * @param request the request
-     * @return the list
-     */
-    private List<Project> loadProjects(final HttpServletRequest request) {
-
-        List<Project> projects = new ArrayList<Project>();
-
-        Person user = getUser(request);
-
-        if (user == null) {
-            projects = Project.findAllProjects(request.getSession().getId());
-        } else {
-            projects = Project.findAllProjects(user);
-        }
-        return projects;
     }
 
     /**
@@ -957,4 +973,44 @@ public class ProjectController extends BaseController {
         return returnMessage;
     }
 
+    /**
+     * Can view all projects.
+     *
+     * @param allProjectsVal the all projects val
+     * @param user the user
+     * @return true, if successful
+     */
+    private boolean canViewAllProjects(final Boolean allProjectsVal, final Person user) {
+
+        boolean allProjects = false;
+
+        if (allProjectsVal != null && user != null && user.getUserRole() != null) {
+            if (allProjectsVal && user.getUserRole() == UserRole.ROLE_ADMIN) {
+                allProjects = true;
+            }
+        }
+        return allProjects;
+    }
+
+    /**
+     * Test if empty json.
+     *
+     * @param jsonString the json string
+     * @return true, if successful
+     */
+    private boolean testIfEmptyJson(final String jsonString) {
+
+        boolean isEmpty = true;
+
+        if (StringUtils.isNotBlank(jsonString)) {
+            String tempString = StringUtils.replace(jsonString, "{", "");
+            tempString = StringUtils.replace(tempString, "}", "");
+            tempString = StringUtils.replace(tempString, "\"", "");
+
+            if (StringUtils.isNotBlank(tempString)) {
+                isEmpty = false;
+            }
+        }
+        return isEmpty;
+    }
 }

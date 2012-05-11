@@ -164,9 +164,12 @@ public class Project {
      * Covert the projects list to JSON.
      *
      * @param projects the projects
+     * @param authorString the author string
+     * @param anonymousString the anonymous string
      * @return the string
      */
-    public static final String toJson(final List<Project> projects) {
+    public static final String toJson(final List<Project> projects,
+            final String anonymousString) {
 
         List<Map<String, Object>> projectsJson = new ArrayList<Map<String, Object>>();
 
@@ -176,13 +179,30 @@ public class Project {
         for (Project project : projects) {
             Map<String, Object> mJson = new LinkedHashMap<String, Object>();
 
+            StringBuilder author = new StringBuilder();
+            if (project.getPerson() != null) {
+                Person person = project.getPerson();
+                if (StringUtils.isNotBlank(person.getFirstName())) {
+                    author.append(person.getFirstName());
+                }
+                if (author.length() > 0) {
+                    author.append(" ");
+                }
+                if (StringUtils.isNotBlank(person.getLastName())) {
+                    author.append(person.getLastName());
+                }
+            } else {
+                author.append(anonymousString);
+            }
+
             mJson.put("DT_RowId", project.getId());
             mJson.put("0", project.getName());
             mJson.put("1", project.getLocation());
             mJson.put("2", project.getOccupants());
             mJson.put("3", presentation.format(project.getCreated()));
             mJson.put("4", order.format(project.getCreated()));
-            mJson.put("5", project.isTemplate());
+            mJson.put("5", author.toString());
+            mJson.put("6", project.isTemplate());
 
             projectsJson.add(mJson);
         }

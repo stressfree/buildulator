@@ -113,13 +113,19 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+    var url = config.projectsUrl + 'list.json';
+
+    if (config.projectsListAll == 'true') {
+        url += '?all=true';
+    }
+
     $('#projectsList').dataTable({
         "bProcessing" : true,
         "bJQueryUI" : true,
         "sPaginationType" : "full_numbers",
         "bLengthChange" : false,
         "iDisplayLength" : 50,
-        "sAjaxSource" : config.projectsUrl + 'list.json',
+        "sAjaxSource" : url,
         "fnDrawCallback": function(){
             $('.dataTable tbody tr').click(function() {
                 var projectId = $(this).attr('id');
@@ -143,12 +149,14 @@ $(document).ready(function() {
             "bVisible": false
         }, {
             "bVisible": false
+        }, {
+            "bVisible": false
         } ],
         "aoColumnDefs" : [ {
             "fnRender": function ( oObj, sVal ) {
                 var name = '<strong>' + sVal + '</strong>';
                 var address = oObj.aData[1];
-                var template = oObj.aData[5];
+                var template = oObj.aData[6];
 
                 if (template) {
                     name += ' (Template)';
@@ -164,6 +172,13 @@ $(document).ready(function() {
             "sClass" : "column-2",
             "aTargets" : [ 2 ]
         }, {
+            "fnRender": function ( oObj, sVal ) {
+                var created = sVal;
+                if (config.projectsListAll == 'true') {
+                    created += '<br/><em>' + oObj.aData[5] + '</em>';
+                }
+                return created;
+            },
             "sClass" : "column-3",
             "aTargets" : [ 3 ]
         } ]
@@ -173,6 +188,8 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+    $('div.bomInstructions').accordion({active: 2, collapsible: true, autoHeight: false});
+
     $('#adminTabs').tabs();
     $('#adminAccordion').accordion({autoHeight: false});
 
@@ -228,11 +245,27 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    $('button, input:submit').button();
+    $('#body button, #body input:submit').button();
+
+    $('div.userWarning a').click(function(e) {
+        e.preventDefault();
+        $('#googleSignInForm').submit();
+
+    });
+    $('#usermenu button').hover(function() {
+        $(this).addClass('hoverButton');
+    }, function() {
+        $(this).removeClass('hoverButton');
+    });
+
+    $("form").validate();
 });
 
 $(document).ready(function() {
-    $("form").validate();
+    $('#viewAllProjects').change(function() {
+        alert($(this).val());
+        $('#viewAllProjectsForm').submit();
+    });
 });
 
 $(document).ready(function() {
@@ -332,6 +365,7 @@ function BuildulatorConfig (config) {
     if (config == undefined) { config = new Array(); }
     this.wysiwygCss = (config.wysiwygCss != undefined) ? config.wysiwygCss : '/static/styles/editor.css';
     this.projectsUrl = (config.projectsUrl != undefined) ? config.projectsUrl : '/projects/';
+    this.projectsListAll = (config.projectsListAll != undefined) ? config.projectsListAll : 'false';
     this.editProjectUrl = (config.editProjectUrl != undefined) ? config.editProjectUrl : '/projects/?edit';
     this.materialLibraryUrl = (config.materialLibraryUrl != undefined) ? config.materialLibraryUrl : '/library/materials/';
     this.adminUsersUrl = (config.adminUsersUrl != undefined) ? config.adminUsersUrl : '/admin/users/';
@@ -343,6 +377,7 @@ function BillOfMaterials (config) {
     var _data;
     var _materials;
     var _div = (config.div != undefined) ? config.div : 'div.bomTable';
+    var _editing = (config.editing != undefined) ? config.editing : 'true';
     var _type = (config.type != undefined) ? config.type : 'construction';
     var _projectId = (config.projectId != undefined) ? config.projectId : 1;
     var _projectUrl = (config.projectUrl != undefined) ? config.projectUrl : './projects/';
@@ -359,6 +394,8 @@ function BillOfMaterials (config) {
     var _headerEnergyText = (config.headerEnergyText != undefined) ? config.headerEnergyText : 'Energy';
     var _headerCarbonText = (config.headerCarbonText != undefined) ? config.headerCarbonText : 'Carbon';
     var _footerSummaryText = (config.footerSummaryText != undefined) ? config.footerSummaryText : 'Total material energy/carbon footprint';
+    var _editStartText = (config.editStartText != undefined) ? config.editStartText : 'Edit table';
+    var _editFinishText = (config.editFinishText != undefined) ? config.editFinishText : 'Finish editing';
 
     this._render = function() {
         var bomUrl = _projectUrl + _projectId + '/bom.json?type=' + _type.toLowerCase();
@@ -380,8 +417,13 @@ function BillOfMaterials (config) {
                 'class': 'bomHeader', html: _renderHeader()
             }).appendTo(_div);
 
+            var sectionsCss = 'bomSections';
+            if (_editing == 'false') {
+                sectionsCss += ' bomNotEditing';
+            }
+
             $('<ul/>', {
-                'class': 'bomSections', html: sections.join('')
+                'class': sectionsCss, html: sections.join('')
                 + _renderAddControl('section')
             }).appendTo(_div);
 
@@ -394,15 +436,49 @@ function BillOfMaterials (config) {
     };
 
     function _addDefaultHandlers() {
-        $(_div + ' div.deleteFromBOM a').click(function () {
+        $(_div + ' div.bomHEdit button').button().click(function () {
+            var currentlyEditing = true;
+            var sections = $(_div + ' ul.bomSections')
+            if ($(sections).hasClass('bomNotEditing')) {
+                currentlyEditing = false;
+            }
+
+            if (currentlyEditing) {
+                // Stop editing
+                $(_div + ' .bomCancel').trigger('click');
+
+                $(this).find('span').html(_editStartText);
+                $(sections).addClass('bomNotEditing');
+                _removeDefaultEditHandlers();
+            } else {
+                // Begin editing
+                $(this).find('span').html(_editFinishText);
+                $(sections).removeClass('bomNotEditing');
+                _addDefaultEditHandlers();
+            }
+        });
+
+        if (_editing != 'false') {
+            _addDefaultEditHandlers();
+        }
+    }
+
+    function _addDefaultEditHandlers() {
+        $(_div + ' div.deleteFromBOM a').bind('click.bomEdit', function() {
             _confirmDelete(this);
         });
-        $(_div + ' li.addToBOM a.addToBOM').click(function () {
+        $(_div + ' li.addToBOM a.addToBOM').bind('click.bomEdit', function() {
             _displayAddForm(this);
         });
-        $(_div + ' div.bomEditable').dblclick(function () {
+        $(_div + ' div.bomEditable').bind('dblclick.bomEdit', function () {
             _displayEditForm(this);
         });
+    }
+
+    function _removeDefaultEditHandlers() {
+        $(_div + ' div.deleteFromBOM a').unbind('click.bomEdit');
+        $(_div + ' li.addToBOM a.addToBOM').unbind('click.bomEdit');
+        $(_div + ' div.bomEditable').unbind('dblclick.bomEdit');
     }
 
     function _addRowHandlers(node) {
@@ -519,7 +595,7 @@ function BillOfMaterials (config) {
         $(editDiv).find('input.bomCancel').button().click(function(e) {
             e.preventDefault();
             $(editDiv).children('form').remove();
-            $(editDiv).children('div').show();
+            $(editDiv).children('div').removeClass('bomHidden');
 
             $(editDiv).dblclick(function () {
                 _displayEditForm(this);
@@ -628,7 +704,7 @@ function BillOfMaterials (config) {
             default:
                 field = _data.sections[sid];
         }
-        $(node).children('div').hide();
+        $(node).children('div').addClass('bomHidden');
         $(node).append('<form>' + _renderFormInputs(node, field) + _renderSubmitCancelOptions(_editText, _cancelText) + '</form>');
         _populateMaterialSelect(node);
         _assignEditSubmitCancelOptionEventHandlers(node);
@@ -764,7 +840,7 @@ function BillOfMaterials (config) {
         });
         html += elements.join('');
 
-        html += _renderAddControl('element') + '</ul></li>';
+        html += _renderAddControl('element') + '</ul><div class="bomSectionDivider"></div></li>';
 
         return html;
     }
@@ -810,7 +886,13 @@ function BillOfMaterials (config) {
     }
 
     function _renderHeader() {
-        html = '<div class="bomHName">';
+        html = '<div class="bomHEdit"><button>';
+        if (_editing == 'false') {
+            html += _editStartText;
+        } else {
+            html += _editFinishText;
+        }
+        html += '</button></div><div class="bomHName">';
         html += _headerNameText;
         html += '</div><div class="bomHQuantity">';
         html += _headerQuantityText;

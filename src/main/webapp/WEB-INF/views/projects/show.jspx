@@ -24,15 +24,21 @@
             <button id="btnCloneProject"><spring:message code="button_clone" /></button>
             <button id="btnDeleteProject"><spring:message code="button_delete" /></button>
         </div>
+
+        <div class="bomInstructions">
+            <ul>
+                <li><a href="#bomHelp"><spring:message code="projects_bom_help" /></a></li>
+            </ul>
+            <div id="bomHelp">
+                <spring:message code="projects_bom_instructions" htmlEscape="false" />
+            </div>
+        </div>
+
         <div id="sustainabilitySummary">
             <h3><spring:message code="projects_sustainability_summary" /></h3>
             <div id="sustainabilitySummaryContent">
                 <!-- -->
             </div>
-        </div>
-        <div class="bomInstructions">
-            <h3><spring:message code="projects_bom_help" /></h3>
-            <p><spring:message code="projects_bom_instructions" htmlEscape="false" /></p>
         </div>
     </div>
 
@@ -129,6 +135,18 @@
      </form>
     </c:if>
 
+    <c:out value="${noOperatingEnergyData}" />
+    <c:set var="operatingEnergyEdit" value="false" />
+    <c:if test="${noOperatingEnergyData}">
+        <c:set var="operatingEnergyEdit" value="true" />
+    </c:if>
+
+    <c:set var="bomEdit" value="false" />
+    <c:out value="${noBOMData}" />
+    <c:if test="${noBOMData}">
+        <c:set var="bomEdit" value="true" />
+    </c:if>
+
     <script type="text/javascript" charset="utf8">
     $(document).ready(function() {
         var operatingEnergy = new BillOfMaterials({
@@ -136,6 +154,7 @@
             projectUrl: config.projectsUrl,
             div: 'div.operatingEnergy div.bomTable',
             type: 'operating_energy',
+            editing: '<c:out value="${operatingEnergyEdit}" />',
             sectionText: '<spring:message code="projects_operatingenergy_section" />',
             elementText: '<spring:message code="projects_operatingenergy_element" />',
             materialText: '<spring:message code="projects_operatingenergy_material" />',
@@ -147,6 +166,7 @@
             projectUrl: config.projectsUrl,
             div: 'div.materialsBreakdown div.bomTable',
             type: 'construction',
+            editing: '<c:out value="${bomEdit}" />',
             sectionText: '<spring:message code="projects_bom_section" />',
             elementText: '<spring:message code="projects_bom_element" />',
             materialText: '<spring:message code="projects_bom_material" />',
