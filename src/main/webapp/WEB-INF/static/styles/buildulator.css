@@ -359,8 +359,12 @@ p.field .ui-dialog label.error {
   cursor: pointer;
 }
 
-#body a {
+#body a, .ui-dialog a {
   color: #8D8574;
+}
+
+#body a:hover, ui-dialog a:hover {
+  color: #4C3000;
 }
 
 #body ul, #body ol {
@@ -476,11 +480,21 @@ input.error {
   padding: 10px 0 0 0;
 }
 
+.projectInfo  div.bomInstructions ul.ui-accordion-header {
+  background: #fff;
+}
+
 .projectInfo  div.bomInstructions ul.ui-accordion-header li {
   list-style: none!important;
 }
+
 .projectInfo  div.bomInstructions ul.ui-accordion-header li a {
-  color: #381F00!important;
+  color: #8D8574!important;
+}
+
+.projectInfo  div.bomInstructions ul.ui-accordion-header li a:hover {
+  text-decoration: underline;
+  color: #4C3000!important;
 }
 
 .projectInfo  div.bomInstructions h3 {

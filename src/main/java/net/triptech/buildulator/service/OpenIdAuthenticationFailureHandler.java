@@ -157,13 +157,18 @@ public class OpenIdAuthenticationFailureHandler extends OpenIdAuthenticationBase
             lastName = "User";
         }
 
+        UserRole role = UserRole.ROLE_USER;
+        if (Person.countPeople() == 0) {
+            role = UserRole.ROLE_ADMIN;
+        }
+
         person = new Person();
         person.setOpenIdIdentifier(id);
 
         person.setEmailAddress(email);
         person.setFirstName(firstName);
         person.setLastName(lastName);
-        person.setUserRole(UserRole.ROLE_USER);
+        person.setUserRole(role);
         person.setUserStatus(UserStatus.ACTIVE);
 
         person.persist();

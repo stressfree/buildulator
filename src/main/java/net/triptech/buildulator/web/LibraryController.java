@@ -30,7 +30,6 @@ import org.apache.log4j.Logger;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,7 +51,10 @@ public class LibraryController extends BaseController {
      */
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')")
-    public String index() {
+    public String index(final Model uiModel) {
+
+        uiModel.addAttribute("materialTypes", getMaterialTypes());
+
         return "library/list";
     }
 
@@ -343,7 +345,6 @@ public class LibraryController extends BaseController {
         return jsonObject.toString();
     }
 
-    @ModelAttribute("materialTypes")
     public final List<MaterialType> getMaterialTypes() {
         List<MaterialType> materialTypes = new ArrayList<MaterialType>();
 

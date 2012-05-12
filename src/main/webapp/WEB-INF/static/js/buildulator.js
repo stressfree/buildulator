@@ -108,7 +108,7 @@ $(document).ready(function() {
         resizable: false
     });
     $('#btnBulkAddMaterials').removeAttr("disabled").click(function() {
-        $('#formBulkAddMaterials').dialog('open')
+        $('#formBulkAddMaterials').dialog('open');
     });
 });
 
@@ -245,7 +245,7 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    $('#body button, #body input:submit').button();
+    $('#body button, #body input:submit, div.actionButtons button,  div.actionButtons input:submit').button();
 
     $('div.userWarning a').click(function(e) {
         e.preventDefault();
@@ -374,8 +374,8 @@ function BuildulatorConfig (config) {
 
 function BillOfMaterials (config) {
     if (config == undefined) { config = new Array(); }
-    var _data;
-    var _materials;
+    var _data = new Array();
+    var _materials = new Array();
     var _div = (config.div != undefined) ? config.div : 'div.bomTable';
     var _editing = (config.editing != undefined) ? config.editing : 'true';
     var _type = (config.type != undefined) ? config.type : 'construction';
@@ -438,7 +438,7 @@ function BillOfMaterials (config) {
     function _addDefaultHandlers() {
         $(_div + ' div.bomHEdit button').button().click(function () {
             var currentlyEditing = true;
-            var sections = $(_div + ' ul.bomSections')
+            var sections = $(_div + ' ul.bomSections');
             if ($(sections).hasClass('bomNotEditing')) {
                 currentlyEditing = false;
             }
@@ -554,24 +554,22 @@ function BillOfMaterials (config) {
                 data: params,
                 success: function(data){
                     _data = $.parseJSON(data);
-                    var html = '';
                     switch (type) {
                         case 'section':
                             var lastId = _data.sections.length - 1;
-                            var html = _renderSection(_data.sections[lastId]);
+                            $(addDiv).before(_renderSection(_data.sections[lastId]));
                             break;
                         case 'element':
                             var section = _data.sections[sid - 1];
                             var lastId = section.elements.length - 1;
-                            var html = _renderElement(section.elements[lastId]);
+                            $(addDiv).before(_renderElement(section.elements[lastId]));
                             break;
                         case 'material':
                             var element = _data.sections[sid - 1].elements[eid - 1];
                             var lastId = element.materials.length - 1;
-                            var html = _renderMaterial(element.materials[lastId]);
+                            $(addDiv).before(_renderMaterial(element.materials[lastId]));
                             break;
                     }
-                    $(addDiv).before(html);
                     _addRowHandlers($(addDiv).prev());
 
                     // Reset the inputs
@@ -652,22 +650,20 @@ function BillOfMaterials (config) {
                 data: params,
                 success: function(data){
                     _data = $.parseJSON(data);
-                    var html = '';
+                    var parentLi = $(editDiv).closest('li');
                     switch (type) {
                         case 'section':
-                            var html = _renderSection(_data.sections[sid - 1]);
+                            parentLi.before(_renderSection(_data.sections[sid - 1]));
                             break;
                         case 'element':
                             var section = _data.sections[sid - 1];
-                            var html = _renderElement(section.elements[eid - 1]);
+                            parentLi.before(_renderElement(section.elements[eid - 1]));
                             break;
                         case 'material':
                             var element = _data.sections[sid - 1].elements[eid - 1];
-                            var html = _renderMaterial(element.materials[mid - 1]);
+                            parentLi.before(_renderMaterial(element.materials[mid - 1]));
                             break;
                     }
-                    var parentLi = $(editDiv).closest('li');
-                    parentLi.before(html);
                     _addRowHandlers(parentLi.prev());
 
                     parentLi.remove();
@@ -770,8 +766,8 @@ function BillOfMaterials (config) {
             case "element":
                 var sid = $(node).closest('li.bomSection').index();
                 html += '<div class="bomElementNameInput"><input type="text" class="bomText required" id="bomS' + sid + 'ElementName" value="' + name + '" /></div>';
-                html += '<div class="bomElementQuantityInput"><input type="text" class="bomText required number" id="bomS' + sid + 'ElementQuantity" value="' + quantity + '" /></div>'
-                html += '<div class="bomElementUnitsInput"><input type="text" class="bomText" id="bomS' + sid + 'ElementUnits" value="' + units + '" /></div>'
+                html += '<div class="bomElementQuantityInput"><input type="text" class="bomText required number" id="bomS' + sid + 'ElementQuantity" value="' + quantity + '" /></div>';
+                html += '<div class="bomElementUnitsInput"><input type="text" class="bomText" id="bomS' + sid + 'ElementUnits" value="' + units + '" /></div>';
                 break;
             case "material":
                 var sid = $(node).closest('li.bomSection').index();
@@ -779,7 +775,7 @@ function BillOfMaterials (config) {
                 html = '<div class="bomMaterialNameInput"><input type="text" class="bomSelectValue" id="bomS' + sid + 'E' + eid + 'MaterialName" value="' + name + '" />';
                 html += '<select type="text" class="bomSelect" id="bomS' + sid + 'E' + eid + 'MaterialSelect" value="' + name + '" /></div>';
                 html += '<div class="bomMaterialQuantityInput"><input type="text" class="bomText required number" id="bomS' + sid + 'E' + eid + 'MaterialQuantity" value="' + quantity + '" />';
-                html += '</div><div class="bomMUnits"></div>'
+                html += '</div><div class="bomMUnits"></div>';
                 break;
             default:
                 html += '<div class="bomSectionNameInput"><input type="text" class="bomText required" id="bomSectionName" value="' + name + '" /></div>';
@@ -948,7 +944,7 @@ function BillOfMaterials (config) {
         if (value != undefined && value != '') {
             returnVal = value;
         }
-        return returnVal
+        return returnVal;
     }
 
 }

@@ -17,19 +17,26 @@ import net.triptech.buildulator.model.MaterialType;
  */
 public enum MaterialType {
 
-    CONSTRUCTION("label_net_triptech_buildulator_model_materialtype_construction"),
-    ENERGY_SOURCE("label_net_triptech_buildulator_model_materialtype_energysource");
+    CONSTRUCTION(
+            "label_net_triptech_buildulator_model_materialtype_construction",
+            "(${quantity} * ${coefficient} * ${wastage}) / ${lifespan}"),
+    ENERGY_SOURCE(
+            "label_net_triptech_buildulator_model_materialtype_energysource",
+            "${quantity} * ${coefficient}");
 
     /** The message key. */
     private String messageKey;
+
+    private String calculation;
 
     /**
      * Instantiates a new user role.
      *
      * @param name the name
      */
-    private MaterialType(String name) {
+    private MaterialType(String name, final String calc) {
         this.messageKey = name;
+        this.calculation = calc;
     }
 
     /**
@@ -40,4 +47,14 @@ public enum MaterialType {
     public String getMessageKey() {
         return messageKey;
     }
+
+    /**
+     * Gets the calculation.
+     *
+     * @return the calculation
+     */
+    public String getCalculation() {
+        return this.calculation;
+    }
+
 }

@@ -135,14 +135,12 @@
      </form>
     </c:if>
 
-    <c:out value="${noOperatingEnergyData}" />
     <c:set var="operatingEnergyEdit" value="false" />
     <c:if test="${noOperatingEnergyData}">
         <c:set var="operatingEnergyEdit" value="true" />
     </c:if>
 
     <c:set var="bomEdit" value="false" />
-    <c:out value="${noBOMData}" />
     <c:if test="${noBOMData}">
         <c:set var="bomEdit" value="true" />
     </c:if>
