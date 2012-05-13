@@ -19,10 +19,10 @@ public enum MaterialType {
 
     CONSTRUCTION(
             "label_net_triptech_buildulator_model_materialtype_construction",
-            "(${quantity} * ${coefficient} * ${wastage}) / ${lifespan}"),
+            "(${quantity}*${coefficient}*(${wastage})/100)/${lifespan}"),
     ENERGY_SOURCE(
             "label_net_triptech_buildulator_model_materialtype_energysource",
-            "${quantity} * ${coefficient}");
+            "${quantity}*${coefficient}");
 
     /** The message key. */
     private String messageKey;

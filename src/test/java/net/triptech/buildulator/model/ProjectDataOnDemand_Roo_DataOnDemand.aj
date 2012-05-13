@@ -71,7 +71,7 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     }
     
     public void ProjectDataOnDemand.setOccupants(Project obj, int index) {
-        int occupants = 4;
+        double occupants = 4;
         obj.setOccupants(occupants);
     }
     

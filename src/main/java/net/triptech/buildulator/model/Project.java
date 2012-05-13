@@ -1,5 +1,6 @@
 package net.triptech.buildulator.model;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,7 +46,7 @@ public class Project {
     private String location;
 
     /** The occupants. */
-    private int occupants = 4;
+    private double occupants = 4;
 
     /** The project description. */
     @Lob
@@ -78,6 +79,22 @@ public class Project {
         created = new Date();
     }
 
+
+    /**
+     * Format the double to a string.
+     *
+     * @param value the value
+     * @return the string
+     */
+    public String getFormattedOccupants() {
+        String formattedOccupants = "";
+
+        if (this.occupants != 0) {
+            DecimalFormat df = new DecimalFormat("#.#");
+            formattedOccupants = df.format(this.occupants);
+        }
+        return formattedOccupants;
+    }
 
     /**
      * Sets the data field.

@@ -458,7 +458,12 @@ public class ProjectController extends BaseController {
         } else {
             returnMessage = this.getMessage("projects_bom_projectnotfound");
         }
-        if (!StringUtils.equals(returnMessage, "ok")) {
+
+        if (StringUtils.equals(returnMessage, "ok")) {
+            // Return the bill of materials JSON
+            returnMessage = BillOfMaterials.parseJson(
+                    project.getDataField(type)).toJson();
+        } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         return returnMessage;
@@ -771,7 +776,7 @@ public class ProjectController extends BaseController {
 
         double quantity = 0;
         try {
-            quantity = Integer.parseInt(quantityVal);
+            quantity = Double.parseDouble(quantityVal);
         } catch (Exception e) {
             // Error casting the quantityVal to a double
         }
@@ -793,8 +798,15 @@ public class ProjectController extends BaseController {
                                     material.setQuantity(quantity);
                                     material.setUnits(m.getUnitOfMeasure());
 
+                                    double[] results = m.performCalculations(quantity);
+                                    material.setTotalEnergy(results[0]);
+                                    material.setTotalCarbon(results[1]);
+
                                     bom.getSections().get(sid - 1).getElements()
                                             .get(eid - 1).addMaterial(material);
+
+                                    bom.recalculateTotals();
+
                                     returnMessage = "ok";
                                 }
                             } catch (Exception e) {
@@ -859,7 +871,7 @@ public class ProjectController extends BaseController {
 
         double quantity = 0;
         try {
-            quantity = Integer.parseInt(quantityVal);
+            quantity = Double.parseDouble(quantityVal);
         } catch (Exception e) {
             // Error casting the quantityVal to a double
         }
@@ -885,6 +897,12 @@ public class ProjectController extends BaseController {
                                         material.setName(m.getName());
                                         material.setQuantity(quantity);
                                         material.setUnits(m.getUnitOfMeasure());
+
+                                        double[] results = m.performCalculations(quantity);
+                                        material.setTotalEnergy(results[0]);
+                                        material.setTotalCarbon(results[1]);
+
+                                        bom.recalculateTotals();
 
                                         returnMessage = "ok";
                                     }
@@ -963,6 +981,8 @@ public class ProjectController extends BaseController {
 
         if (StringUtils.equals(returnMessage, "ok")) {
             try {
+                bom.recalculateTotals();
+
                 project.setDataField(type, bom.toJson());
                 project.merge();
                 project.flush();

@@ -33,11 +33,11 @@ privileged aspect Project_Roo_JavaBean {
         this.location = location;
     }
     
-    public int Project.getOccupants() {
+    public double Project.getOccupants() {
         return this.occupants;
     }
     
-    public void Project.setOccupants(int occupants) {
+    public void Project.setOccupants(double occupants) {
         this.occupants = occupants;
     }
     

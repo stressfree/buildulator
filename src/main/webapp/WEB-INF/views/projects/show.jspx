@@ -47,7 +47,7 @@
         <c:if test="${not empty project.location}">
             <c:out value="${project.location}" /><c:out value=" (" />
         </c:if>
-        <c:out value="${project.occupants}" /> <c:out value=" ${fn:toLowerCase(occupants)}" />
+        <c:out value="${project.formattedOccupants}" /> <c:out value=" ${fn:toLowerCase(occupants)}" />
 
         <c:if test="${not empty project.location}">
             <c:out value=")" />

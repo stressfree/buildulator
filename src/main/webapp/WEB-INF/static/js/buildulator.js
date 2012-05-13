@@ -570,6 +570,7 @@ function BillOfMaterials (config) {
                             $(addDiv).before(_renderMaterial(element.materials[lastId]));
                             break;
                     }
+                    _updateFooterTotals();
                     _addRowHandlers($(addDiv).prev());
 
                     // Reset the inputs
@@ -664,6 +665,7 @@ function BillOfMaterials (config) {
                             parentLi.before(_renderMaterial(element.materials[mid - 1]));
                             break;
                     }
+                    _updateFooterTotals();
                     _addRowHandlers(parentLi.prev());
 
                     parentLi.remove();
@@ -811,9 +813,9 @@ function BillOfMaterials (config) {
                 url: deleteUrl,
                 data: params,
                 success: function(data) {
-                    // Remove the parent li
+                    _data = $.parseJSON(data);
                     $(node).closest('li').remove();
-                    // Re-render the sustainability totals
+                    _updateFooterTotals();
                 },
                 error: function(e){
                     alert('Error deleting ' + type + ': ' + data);
@@ -905,10 +907,17 @@ function BillOfMaterials (config) {
         html = '<div class="bomFSummary">';
         html += _footerSummaryText;
         html += '</div><div class="bomFEnergy">';
+        html += _data.totalEnergy;
         html += '</div><div class="bomFCarbon">';
+        html += _data.totalCarbon;
         html += '</div><div class="bomFClear"></div>';
 
         return html;
+    }
+
+    function _updateFooterTotals() {
+        $(_div + ' div.bomFEnergy').html(_data.totalEnergy);
+        $(_div + ' div.bomFCarbon').html(_data.totalCarbon);
     }
 
     function _getType(node) {

@@ -9,7 +9,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
  * The Class Element.
  */
 @RooJavaBean
-public class Element extends SustainabilityBase {
+public class Element extends QuantityBase {
 
     /** The materials. */
     private List<Material> materials = new ArrayList<Material>();

@@ -18,7 +18,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
  * The Class BillOfMaterials.
  */
 @RooJavaBean
-public class BillOfMaterials {
+public class BillOfMaterials extends SustainabilityBase {
 
     /** The logger. */
     private static Logger logger = Logger.getLogger(BillOfMaterials.class);
@@ -26,6 +26,31 @@ public class BillOfMaterials {
     /** The sections. */
     private List<Section> sections = new ArrayList<Section>();
 
+
+    /**
+     * Recalculate the energy and carbon totals.
+     */
+    public void recalculateTotals() {
+
+        double energyRunningTotal = 0, carbonRunningTotal = 0;
+
+        if (this.getSections() != null) {
+            for (Section section : this.getSections()) {
+                if (section.getElements() != null) {
+                    for (Element element : section.getElements()) {
+                        if (element.getMaterials() != null) {
+                            for (Material material : element.getMaterials()) {
+                                energyRunningTotal += material.getTotalEnergy();
+                                carbonRunningTotal += material.getTotalCarbon();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        this.setTotalEnergy(energyRunningTotal);
+        this.setTotalCarbon(carbonRunningTotal);
+    }
 
     /**
      * Adds the section.
@@ -83,8 +108,6 @@ public class BillOfMaterials {
                 eJson.put("name", element.getName());
                 eJson.put("units", element.getUnits());
                 eJson.put("quantity", element.getFormattedQuantity());
-                eJson.put("totalEnergy", element.getFormattedTotalEnergy());
-                eJson.put("totalCarbon", element.getFormattedTotalCarbon());
                 eJson.put("materials", msJson);
 
                 esJson.add(eJson);
@@ -93,8 +116,6 @@ public class BillOfMaterials {
             Map<String, Object> sJson = new LinkedHashMap<String, Object>();
 
             sJson.put("name", section.getName());
-            sJson.put("totalEnergy", section.getFormattedTotalEnergy());
-            sJson.put("totalCarbon", section.getFormattedTotalCarbon());
             sJson.put("elements", esJson);
 
             ssJson.add(sJson);
@@ -102,6 +123,9 @@ public class BillOfMaterials {
 
         Map<String, Object> bomJson = new LinkedHashMap<String, Object>();
         bomJson.put("sections", ssJson);
+
+        bomJson.put("totalEnergy", this.getFormattedTotalEnergy());
+        bomJson.put("totalCarbon", this.getFormattedTotalEnergy());
 
         JSONObject jsonObject = JSONObject.fromObject(bomJson);
 
@@ -160,8 +184,6 @@ public class BillOfMaterials {
                 element.setName(getString(elementJson, "name"));
                 element.setUnits(getString(elementJson, "units"));
                 element.setQuantity(getDouble(elementJson, "quantity"));
-                element.setTotalEnergy(getDouble(elementJson, "totalEnergy"));
-                element.setTotalCarbon(getDouble(elementJson, "totalCarbon"));
 
                 JSONArray materialsJson = getArray(elementJson, "materials");
 
@@ -181,6 +203,10 @@ public class BillOfMaterials {
             }
             bom.addSection(section);
         }
+
+        bom.setTotalEnergy(getDouble(bomJson, "totalEnergy"));
+        bom.setTotalCarbon(getDouble(bomJson, "totalCarbon"));
+
         return bom;
     }
 

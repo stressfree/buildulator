@@ -81,8 +81,6 @@ public class BillOfMaterialsIntegrationTest {
 
         assertEquals("m", section.getElements().get(0).getUnits());
         assertEquals(10, (int) section.getElements().get(0).getQuantity());
-        assertEquals(320, (int) section.getElements().get(0).getTotalEnergy());
-        assertEquals(320, (int) section.getElements().get(0).getTotalCarbon());
 
         Element element = section.getElements().get(0);
 

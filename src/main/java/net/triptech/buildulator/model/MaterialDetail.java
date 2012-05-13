@@ -1,5 +1,8 @@
 package net.triptech.buildulator.model;
 
+import com.darius.Parser;
+import com.darius.SyntaxException;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +22,7 @@ import net.sf.json.JSONObject;
 import net.triptech.buildulator.BuildulatorException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -30,6 +34,9 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 @RooJavaBean
 @RooJpaActiveRecord
 public class MaterialDetail {
+
+    /** The logger. */
+    private static Logger logger = Logger.getLogger(MaterialDetail.class);
 
     /** The name of the material. */
     @NotNull
@@ -58,6 +65,37 @@ public class MaterialDetail {
     /** The wastage percent. */
     private double wastagePercent;
 
+
+    /**
+     * Perform calculations.
+     *
+     * @param quantity the quantity
+     * @return the double[]
+     */
+    public double[] performCalculations(final double quantity) {
+
+        double energy = 0, carbon = 0;
+
+        if (this.materialType != null
+                && StringUtils.isNotBlank(this.materialType.getCalculation())) {
+
+            String energyCalculation = buildCalc(quantity, this.getEnergyPerUnit());
+            String carbonCalculation = buildCalc(quantity, this.getCarbonPerUnit());
+
+            try {
+                energy = Parser.parse(energyCalculation).value();
+            } catch (SyntaxException se) {
+                logger.error("Error parsing energy calculation: " + se.getMessage());
+            }
+
+            try {
+                carbon = Parser.parse(carbonCalculation).value();
+            } catch (SyntaxException se) {
+                logger.error("Error parsing energy calculation: " + se.getMessage());
+            }
+        }
+        return new double[] { energy, carbon };
+    }
 
     /**
      * Covert the materials to a JSON list.
@@ -105,8 +143,8 @@ public class MaterialDetail {
                     context));
             mJson.put("2", material.getUnitOfMeasure());
             mJson.put("3", material.getLifeYears());
-            mJson.put("4", df.format(material.getCarbonPerUnit()));
-            mJson.put("5", df.format(material.getEnergyPerUnit()));
+            mJson.put("4", df.format(material.getEnergyPerUnit()));
+            mJson.put("5", df.format(material.getCarbonPerUnit()));
             mJson.put("6", df.format(material.getWastagePercent()));
 
             materialsJson.add(mJson);
@@ -157,12 +195,12 @@ public class MaterialDetail {
                     parsedValue = String.valueOf(this.getLifeYears());
                     break;
                 case 4:
-                    this.setCarbonPerUnit(Double.parseDouble(value));
-                    parsedValue = df.format(this.getCarbonPerUnit());
-                    break;
-                case 5:
                     this.setEnergyPerUnit(Double.parseDouble(value));
                     parsedValue = df.format(this.getEnergyPerUnit());
+                    break;
+                case 5:
+                    this.setCarbonPerUnit(Double.parseDouble(value));
+                    parsedValue = df.format(this.getCarbonPerUnit());
                     break;
                 case 6:
                     this.setWastagePercent(Double.parseDouble(value));
@@ -265,4 +303,26 @@ public class MaterialDetail {
     private static String getMessage(final String key, final ApplicationContext context) {
         return context.getMessage(key, null, LocaleContextHolder.getLocale());
     }
+
+    /**
+     * Builds the calculation string.
+     *
+     * @param quantity the quantity
+     * @param coefficient the coefficient
+     * @return the string
+     */
+    private String buildCalc(final double quantity, final double coefficient) {
+
+        String calc = this.getMaterialType().getCalculation();
+
+        calc = StringUtils.replace(calc, "${quantity}", String.valueOf(quantity));
+        calc = StringUtils.replace(calc, "${coefficient}", String.valueOf(coefficient));
+        calc = StringUtils.replace(calc, "${wastage}", String.valueOf(
+                this.getWastagePercent()));
+        calc = StringUtils.replace(calc, "${lifespan}", String.valueOf(
+                this.getLifeYears()));
+
+        return calc;
+    }
+
 }

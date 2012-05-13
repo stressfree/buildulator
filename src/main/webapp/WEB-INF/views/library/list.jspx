@@ -18,8 +18,8 @@
             <th class="materialMaterialType"><spring:message code="label_net_triptech_buildulator_model_materialdetail_materialtype" /></th>
             <th class="materialUnitOfMeasure"><spring:message code="label_net_triptech_buildulator_model_materialdetail_unitofmeasure" /></th>
             <th class="materialLifeYears"><spring:message code="label_net_triptech_buildulator_model_materialdetail_lifeyears" /></th>
-            <th class="materialCarbonPerUnit"><spring:message code="label_net_triptech_buildulator_model_materialdetail_carbonperunit" /></th>
             <th class="materialEnergyPerUnit"><spring:message code="label_net_triptech_buildulator_model_materialdetail_energyperunit" /></th>
+            <th class="materialCarbonPerUnit"><spring:message code="label_net_triptech_buildulator_model_materialdetail_carbonperunit" /></th>
             <th class="materialWastagePercent"><spring:message code="label_net_triptech_buildulator_model_materialdetail_wastagepercent" /></th>
           </tr>
         </thead>
