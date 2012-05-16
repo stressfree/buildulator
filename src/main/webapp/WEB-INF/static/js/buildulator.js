@@ -8,9 +8,12 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+    $('div.newProject button').click(function() {
+        document.location.href = config.projectsNewUrl;
+    });
 
     $('#btnEditProject').click(function() {
-        document.location.href = config.editProjectUrl;
+        document.location.href = config.projectsEditUrl;
     });
 
     $('#formCloneProject').dialog({
@@ -365,11 +368,147 @@ function BuildulatorConfig (config) {
     if (config == undefined) { config = new Array(); }
     this.wysiwygCss = (config.wysiwygCss != undefined) ? config.wysiwygCss : '/static/styles/editor.css';
     this.projectsUrl = (config.projectsUrl != undefined) ? config.projectsUrl : '/projects/';
+    this.projectsNewUrl = (config.projectsNewUrl != undefined) ? config.projectsNewUrl : '/projects/new';
     this.projectsListAll = (config.projectsListAll != undefined) ? config.projectsListAll : 'false';
-    this.editProjectUrl = (config.editProjectUrl != undefined) ? config.editProjectUrl : '/projects/?edit';
+    this.projectsEditUrl = (config.projectsEditUrl != undefined) ? config.projectsEditUrl : '/projects/?edit';
     this.materialLibraryUrl = (config.materialLibraryUrl != undefined) ? config.materialLibraryUrl : '/library/materials/';
     this.adminUsersUrl = (config.adminUsersUrl != undefined) ? config.adminUsersUrl : '/admin/users/';
 }
+
+
+function SustainabilitySummary (config) {
+    if (config == undefined) { config = new Array(); }
+    var _div = (config.div != undefined) ? config.div : 'div#sustainabilitySummary';
+    var _occupants = (config.occupants != undefined) ? parseFloat(config.occupants) : 2.7;
+    var _detailedOperatingElements = 0;
+    var _totalOperatingElements = 0;
+    var _detailedConstructionElements = 0;
+    var _totalConstructionElements = 0;
+    var _totalOperatingEnergy = 0;
+    var _totalOperatingCarbon = 0;
+    var _totalConstructionEnergy = 0;
+    var _totalConstructionCarbon = 0;
+    var _headingText = (config.headingText != undefined) ? config.headingText : 'Sustainability Summary';
+    var _percentageCompleteText = (config.percentageCompleteText != undefined) ? config.percentageCompleteText : '<span>[percentage]</span> detailed';
+    var _operationalCompleteText = (config.operationalCompleteText != undefined) ? config.operationalCompleteText : '<span>[detailed] of [total]</span> energy uses detailed.';
+    var _constructionCompleteText = (config.constructionCompleteText != undefined) ? config.constructionCompleteText : '<span>[detailed] of [total]</span> bill of material items detailed.';
+    var _operationalFootprintText = (config.operationalFootprintText != undefined) ? config.operationalFootprintText : 'Operational Footprint';
+    var _energyText = (config.energyText != undefined) ? config.energyText : 'Energy';
+    var _carbonText = (config.carbonText != undefined) ? config.carbonText : 'Carbon';
+    var _billOfMaterialsText = (config.billOfMaterialsText != undefined) ? config.billOfMaterialsText : 'Bill of Materials';
+    var _totalEnergyText = (config.totalEnergyText != undefined) ? config.totalEnergyText : 'Total Energy';
+    var _perPersonEnergyText = (config.perPersonEnergyText != undefined) ? config.perPersonEnergyText : 'Energy per Person';
+    var _totalCarbonText = (config.totalEnergyText != undefined) ? config.totalEnergyText : 'Total Carbon';
+    var _perPersonCarbonText = (config.perPersonEnergyText != undefined) ? config.perPersonEnergyText : 'Carbon per Person';
+
+    $('<h3/>', { html: _headingText }).appendTo(_div);
+    var contentDiv = $('<div/>', { 'class': 'sSummaryContent' }).appendTo(_div);
+    $('<div/>', { 'class': 'completionSummary' }).appendTo(contentDiv);
+    $('<div/>', { 'class': 'energySummary' }).appendTo(contentDiv);
+    $('<div/>', { 'class': 'carbonSummary' }).appendTo(contentDiv);
+
+
+    this._update = function(type, data) {
+
+        var totalElements = 0;
+        var detailedElements = 0;
+
+        $(data.sections).each(function(index, section) {
+            $(section.elements).each(function(index, element) {
+                totalElements++;
+                if ($(element.materials).length > 0) {
+                    detailedElements++;
+                }
+            });
+        });
+
+        switch(type) {
+            case 'construction':
+                _detailedConstructionElements = detailedElements;
+                _totalConstructionElements = totalElements;
+                _totalConstructionEnergy = parseFloat(data.totalEnergy);
+                _totalConstructionCarbon = parseFloat(data.totalCarbon);
+                break;
+            case 'operating_energy':
+                _detailedOperatingElements = detailedElements;
+                _totalOperatingElements = totalElements;
+                _totalOperatingEnergy = parseFloat(data.totalEnergy);
+                _totalOperatingCarbon = parseFloat(data.totalCarbon);
+                break;
+        }
+        _redraw();
+    };
+
+    function _redraw() {
+
+        var percentage = _formatNumber(
+                (_detailedOperatingElements + _detailedConstructionElements) /
+                (_totalOperatingElements + _totalConstructionElements) * 100
+        ) + '%';
+
+        var completionSummary = $('<div/>');
+
+        $('<h4/>', { 'html': _percentageCompleteText.replace('[percentage]', percentage) })
+            .appendTo(completionSummary);
+
+        var completeUl = $('<ul/>').appendTo(completionSummary);
+
+        $('<li/>', { 'class': 'operationalComplete', 'html':
+            _operationalCompleteText.replace('[detailed]', _detailedOperatingElements)
+                .replace('[total]', _totalOperatingElements)
+        }).appendTo(completeUl);
+
+        $('<li/>', { 'class': 'constructionComplete', 'html':
+            _constructionCompleteText.replace('[detailed]', _detailedConstructionElements)
+                .replace('[total]', _totalConstructionElements)
+        }).appendTo(completeUl);
+
+        $(_div + ' div.completionSummary').html(completionSummary);
+
+        $(_div + ' div.energySummary').html(_renderSummaryTable(
+                _totalOperatingEnergy, _totalConstructionEnergy,
+                _energyText, _totalEnergyText, _perPersonEnergyText));
+
+        $(_div + ' div.carbonSummary').html(_renderSummaryTable(
+                _totalOperatingCarbon, _totalConstructionCarbon,
+                _carbonText, _totalCarbonText, _perPersonCarbonText));
+    }
+
+    function _renderSummaryTable(totalOperating, totalConstruction,
+            headingText, totalText, perPersonText) {
+
+        var summaryTable = '<h4>';
+        summaryTable += headingText;
+        summaryTable += '</h4><table><tbody>';
+        summaryTable += '<tr><td>';
+        summaryTable += _operationalFootprintText;
+        summaryTable += '</td><td class="summaryValue">';
+        summaryTable += _formatNumber(totalOperating);
+        summaryTable += '</td></tr><tr><td>';
+        summaryTable += _billOfMaterialsText;
+        summaryTable += '</td><td class="summaryValue">';
+        summaryTable += _formatNumber(totalConstruction);
+        summaryTable += '</td></tr><tr class="sSummaryTotal"><td>';
+        summaryTable += totalText;
+        summaryTable += '</td><td class="summaryValue">';
+        summaryTable += _formatNumber(totalOperating + totalConstruction);
+        summaryTable += '</td></tr><tr class="sSummaryPerPerson"><td>';
+        summaryTable += perPersonText;
+        summaryTable += '</td><td class="summaryValue">';
+        summaryTable += _formatNumber((totalOperating + totalConstruction) / _occupants);
+        summaryTable += '</td></tr></tbody></table>';
+
+        return summaryTable;
+    }
+
+    function _formatNumber(value) {
+        return (Math.round(value * 10) / 10).toFixed(0);
+    }
+}
+
+SustainabilitySummary.prototype = {
+    update : function(type, data) { this._update(type, data); }
+};
 
 
 function BillOfMaterials (config) {
@@ -377,6 +516,7 @@ function BillOfMaterials (config) {
     var _data = new Array();
     var _materials = new Array();
     var _div = (config.div != undefined) ? config.div : 'div.bomTable';
+    var _summary = (config.summary != undefined) ? config.summary : new SustainabilitySummary();
     var _editing = (config.editing != undefined) ? config.editing : 'true';
     var _type = (config.type != undefined) ? config.type : 'construction';
     var _projectId = (config.projectId != undefined) ? config.projectId : 1;
@@ -397,43 +537,42 @@ function BillOfMaterials (config) {
     var _editStartText = (config.editStartText != undefined) ? config.editStartText : 'Edit table';
     var _editFinishText = (config.editFinishText != undefined) ? config.editFinishText : 'Finish editing';
 
-    this._render = function() {
-        var bomUrl = _projectUrl + _projectId + '/bom.json?type=' + _type.toLowerCase();
-        var materialsUrl = _projectUrl + '/materials.json?type=' + _type.toLowerCase();
+    var bomUrl = _projectUrl + _projectId + '/bom.json?type=' + _type.toLowerCase();
+    var materialsUrl = _projectUrl + '/materials.json?type=' + _type.toLowerCase();
 
-        $.getJSON(materialsUrl, function(data){
-            _materials = data;
+    $.getJSON(materialsUrl, function(data){
+        _materials = data;
+    });
+
+    $.getJSON(bomUrl, function(data){
+        _data = data;
+
+        var sections = [];
+        $(_data.sections).each(function(index, section){
+            sections[index] = _renderSection(section);
         });
 
-        $.getJSON(bomUrl, function(data){
-            _data = data;
+        $('<div/>', {
+            'class': 'bomHeader', html: _renderHeader()
+        }).appendTo(_div);
 
-            var sections = [];
-            $(_data.sections).each(function(index, section){
-                sections[index] = _renderSection(section);
-            });
+        var sectionsCss = 'bomSections';
+        if (_editing == 'false') {
+            sectionsCss += ' bomNotEditing';
+        }
 
-            $('<div/>', {
-                'class': 'bomHeader', html: _renderHeader()
-            }).appendTo(_div);
+        $('<ul/>', {
+            'class': sectionsCss, html: sections.join('')
+            + _renderAddControl('section')
+        }).appendTo(_div);
 
-            var sectionsCss = 'bomSections';
-            if (_editing == 'false') {
-                sectionsCss += ' bomNotEditing';
-            }
+        $('<div/>', {
+            'class': 'bomFooter', html: _renderFooter()
+        }).appendTo(_div);
 
-            $('<ul/>', {
-                'class': sectionsCss, html: sections.join('')
-                + _renderAddControl('section')
-            }).appendTo(_div);
-
-            $('<div/>', {
-                'class': 'bomFooter', html: _renderFooter()
-            }).appendTo(_div);
-
-            _addDefaultHandlers();
-        });
-    };
+        _summary.update(_type, _data);
+        _addDefaultHandlers();
+    });
 
     function _addDefaultHandlers() {
         $(_div + ' div.bomHEdit button').button().click(function () {
@@ -551,6 +690,7 @@ function BillOfMaterials (config) {
             $.ajax({
                 type: 'POST',
                 url: addUrl,
+                async: false,
                 data: params,
                 success: function(data){
                     _data = $.parseJSON(data);
@@ -572,6 +712,7 @@ function BillOfMaterials (config) {
                     }
                     _updateFooterTotals();
                     _addRowHandlers($(addDiv).prev());
+                    _summary.update(_type, _data);
 
                     // Reset the inputs
                     $(addDiv).find('input.bomText').val('').first().focus();
@@ -648,6 +789,7 @@ function BillOfMaterials (config) {
             $.ajax({
                 type: 'POST',
                 url: editUrl,
+                async: false,
                 data: params,
                 success: function(data){
                     _data = $.parseJSON(data);
@@ -667,6 +809,7 @@ function BillOfMaterials (config) {
                     }
                     _updateFooterTotals();
                     _addRowHandlers(parentLi.prev());
+                    _summary.update(_type, _data);
 
                     parentLi.remove();
                 },
@@ -811,11 +954,13 @@ function BillOfMaterials (config) {
             $.ajax({
                 type: 'POST',
                 url: deleteUrl,
+                async: false,
                 data: params,
                 success: function(data) {
                     _data = $.parseJSON(data);
                     $(node).closest('li').remove();
                     _updateFooterTotals();
+                    _summary.update(_type, _data);
                 },
                 error: function(e){
                     alert('Error deleting ' + type + ': ' + data);
@@ -956,8 +1101,4 @@ function BillOfMaterials (config) {
         return returnVal;
     }
 
-}
-
-BillOfMaterials.prototype = {
-    render : function() { this._render(); }
 }

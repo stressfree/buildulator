@@ -36,7 +36,7 @@ public abstract class QuantityBase extends BillOfMaterialsBase {
         String stringValue = "";
 
         if (value != 0) {
-            DecimalFormat df = new DecimalFormat("#.#");
+            DecimalFormat df = new DecimalFormat("#.0");
             stringValue = df.format(value);
         }
         return stringValue;

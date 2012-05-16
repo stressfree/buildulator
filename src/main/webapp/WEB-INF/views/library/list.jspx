@@ -29,7 +29,7 @@
      <form id="formAddMaterial" action="#">
         <p class="field">
             <label for="name"><spring:message code="label_net_triptech_buildulator_model_materialdetail_name" /></label>
-            <input type="text" name="name" class="required longfield" rel="0" />
+            <input type="text" name="name" class="textfield required longfield" rel="0" />
         </p>
         <p class="field">
             <label for="materialType"><spring:message code="label_net_triptech_buildulator_model_materialdetail_materialtype" /></label>
@@ -41,23 +41,23 @@
         </p>
         <p class="field">
             <label for="unitOfMeasure"><spring:message code="label_net_triptech_buildulator_model_materialdetail_unitofmeasure" /></label>
-            <input type="text" name="unitOfMeasure" class="required" rel="2" />
+            <input type="text" name="unitOfMeasure" class="textfield required" rel="2" />
         </p>
         <p class="field">
             <label for="name"><spring:message code="label_net_triptech_buildulator_model_materialdetail_lifeyears" /></label>
-            <input type="text" name="lifeYears" class="number" rel="3" />
+            <input type="text" name="lifeYears" class="textfield number" rel="3" />
         </p>
         <p class="field">
             <label for="carbonPerUnit"><spring:message code="label_net_triptech_buildulator_model_materialdetail_carbonperunit" /></label>
-            <input type="text" name="carbonPerUnit" class="required number" rel="4" />
+            <input type="text" name="carbonPerUnit" class="textfield required number" rel="4" />
         </p>
           <p class="field">
               <label for="energyPerUnit"><spring:message code="label_net_triptech_buildulator_model_materialdetail_energyperunit" /></label>
-              <input type="text" name="energyPerUnit" class="required number" rel="5" />
+              <input type="text" name="energyPerUnit" class="textfield required number" rel="5" />
           </p>
           <p class="field">
               <label for="wastagePercent"><spring:message code="label_net_triptech_buildulator_model_materialdetail_wastagepercent" /></label>
-              <input type="text" name="wastagePercent" class="number" rel="6" />
+              <input type="text" name="wastagePercent" class="textfield number" rel="6" />
           </p>
        </form>
 

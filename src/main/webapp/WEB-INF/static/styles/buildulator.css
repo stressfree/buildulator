@@ -431,16 +431,25 @@ th.materialMaterialType {
   width: 16%!important;
 }
 
+input.textfield {
+  border: 1px solid #ccc;
+}
+
+input.number {
+  text-align: right;
+}
+
 input.error {
   border: 2px solid #ff3333;
 }
 
-.projectInfo div.projectTemplate {
+#body .projectInfo div.projectTemplate {
   margin: 0 10px 0 10px;
   padding: 28px 0 0 0;
   float: left;
 }
-.projectInfo div.projectTemplate span {
+
+#body .projectInfo div.projectTemplate span {
   font-size: 1em;
   color: #fff;
   padding: 0.2em 0.5em;
@@ -455,7 +464,7 @@ input.error {
   font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
-.projectInfo div#sustainabilitySummary {
+#body .projectInfo div#sustainabilitySummary {
   width: 245px;
   background: #8D8574;
   margin: 10px 0;
@@ -466,42 +475,103 @@ input.error {
   -khtml-border-radius: 8px;
   border-radius: 8px;
 }
-.projectInfo div#sustainabilitySummary h3 {
-  margin: 0 5px 0 10px;
+
+#body .projectInfo div#sustainabilitySummary h3,
+#body .projectInfo div#sustainabilitySummary h4 {
   padding: 0;
-  font-size: 18px;
   font-weight: normal;
+}
+
+#body .projectInfo div#sustainabilitySummary h3 {
+  margin: 0 5px 0 10px;
+  font-size: 16px;
+  color: #ccc;
+}
+
+#body .projectInfo div#sustainabilitySummary h4 {
+  margin: 5px 0 2px 10px;
+  font-size: 22px;
   color: #fff;
 }
 
-.projectInfo  div.bomInstructions {
+#body .projectInfo div.completionSummary,
+#body .projectInfo div.energySummary,
+#body .projectInfo div.carbonSummary {
+  font-size: 0.8em;
+  color: #eee;
+}
+
+#body .projectInfo div.completionSummary ul {
+  margin: 0 0 10px 10px;
+}
+
+#body .projectInfo div.completionSummary li {
+  list-style: none;
+  margin: 0;
+}
+
+#body .projectInfo div.completionSummary li span {
+  font-weight: bold;
+}
+
+#body .projectInfo div#sustainabilitySummary table {
+  margin: 0 0 0 10px;
+  width: 220px;
+}
+
+#body .projectInfo div#sustainabilitySummary td {
+  border: none;
+  padding: 0;
+  color: #ccc;
+}
+
+#body .projectInfo div#sustainabilitySummary td.summaryValue {
+  text-align: right;
+}
+
+#body .projectInfo div#sustainabilitySummary tr.sSummaryTotal td {
+  border-top: 1px solid #ccc;
+  color: #fff;
+}
+
+#body .projectInfo div#sustainabilitySummary tr.sSummaryPerPerson td {
+  color: #fff;
+  padding: 0 0 10px 0;
+}
+
+#body .projectInfo div#sustainabilitySummary tr.sSummaryPerPerson td.summaryValue {
+  font-size: 22px;
+  font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+#body .projectInfo  div.bomInstructions {
   font-size: 0.9em;
   margin: 0;
   padding: 10px 0 0 0;
 }
 
-.projectInfo  div.bomInstructions ul.ui-accordion-header {
+#body .projectInfo  div.bomInstructions ul.ui-accordion-header {
   background: #fff;
 }
 
-.projectInfo  div.bomInstructions ul.ui-accordion-header li {
+#body .projectInfo  div.bomInstructions ul.ui-accordion-header li {
   list-style: none!important;
 }
 
-.projectInfo  div.bomInstructions ul.ui-accordion-header li a {
+#body .projectInfo  div.bomInstructions ul.ui-accordion-header li a {
   color: #8D8574!important;
 }
 
-.projectInfo  div.bomInstructions ul.ui-accordion-header li a:hover {
+#body .projectInfo  div.bomInstructions ul.ui-accordion-header li a:hover {
   text-decoration: underline;
   color: #4C3000!important;
 }
 
-.projectInfo  div.bomInstructions h3 {
+#body .projectInfo  div.bomInstructions h3 {
     margin: 0.5em 0 0 10px;
 }
 
-.projectInfo p.projectMetadata {
+#body .projectInfo p.projectMetadata {
     margin: 0 280px 0 15px;
     position: relative;
     top: -5px;
@@ -509,30 +579,32 @@ input.error {
     font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
-.projectInfo div.operatingEnergy,
-.projectInfo div.materialsBreakdown {
+#body .projectInfo div.operatingEnergy,
+#body .projectInfo div.materialsBreakdown {
   clear: left;
 }
-.projectInfo div.operatingEnergy {
+
+#body .projectInfo div.operatingEnergy {
   padding: 0 0 1.6em 0;
 }
-.projectInfo div.projectDescription div.content {
+
+#body .projectInfo div.projectDescription div.content {
   border-bottom: 1px solid #ccc;
   padding: 0 0 0.6em 0;
   margin: 0 0 1.3em 0;
 }
 
-.projectInfo div.operatingEnergy div.contentHeader h3,
-.projectInfo div.materialsBreakdown div.contentHeader h3 {
+#body .projectInfo div.operatingEnergy div.contentHeader h3,
+#body .projectInfo div.materialsBreakdown div.contentHeader h3 {
   margin-top: 0.3em;
 }
 
-.projectInfo div.operatingEnergy div.contentFooter,
-.projectInfo div.materialsBreakdown div.contentFooter {
+#body .projectInfo div.operatingEnergy div.contentFooter,
+#body .projectInfo div.materialsBreakdown div.contentFooter {
   clear: left;
 }
 
-.projectInfo div.materialsBreakdown div.bomImport {
+#body .projectInfo div.materialsBreakdown div.bomImport {
   padding: 1em;
   border: 1px solid #CCC;
   margin: 1em 50px 3em 50px;
@@ -544,12 +616,12 @@ input.error {
   border-radius: 8px;
 }
 
-.projectInfo div.materialsBreakdown div.bomImportButtons {
+#body .projectInfo div.materialsBreakdown div.bomImportButtons {
   text-align: center;
   font-size: 1.5em;
 }
 
-.projectInfo div.bomEmpty {
+#body .projectInfo div.bomEmpty {
   display: none;
 }
 
@@ -678,6 +750,10 @@ div.bomTable {
   -webkit-border-top-left-radius: 8px;
   -khtml-border-top-left-radius: 8px;
   border-top-left-radius: 8px;
+}
+
+div.bomTable input.bomText {
+  border: 1px solid #ccc;
 }
 
 div.bomTable ul {
@@ -884,13 +960,13 @@ div.bomTable div.bomFooter div {
 }
 
 div.bomTable div.bomFooter div.bomFSummary {
-  width: 443px;
+  width: 439px;
   margin: 0 0 0 5px;
 }
 
 div.bomTable div.bomFooter div.bomFEnergy,
 div.bomTable div.bomFooter div.bomFCarbon {
-  width: 100px;
+  width: 104px;
   text-align: right;
 }
 

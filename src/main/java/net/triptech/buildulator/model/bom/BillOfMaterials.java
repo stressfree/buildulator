@@ -125,7 +125,7 @@ public class BillOfMaterials extends SustainabilityBase {
         bomJson.put("sections", ssJson);
 
         bomJson.put("totalEnergy", this.getFormattedTotalEnergy());
-        bomJson.put("totalCarbon", this.getFormattedTotalEnergy());
+        bomJson.put("totalCarbon", this.getFormattedTotalCarbon());
 
         JSONObject jsonObject = JSONObject.fromObject(bomJson);
 

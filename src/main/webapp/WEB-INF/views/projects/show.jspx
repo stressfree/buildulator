@@ -34,12 +34,7 @@
             </div>
         </div>
 
-        <div id="sustainabilitySummary">
-            <h3><spring:message code="projects_sustainability_summary" /></h3>
-            <div id="sustainabilitySummaryContent">
-                <!-- -->
-            </div>
-        </div>
+        <div id="sustainabilitySummary"><!-- --></div>
     </div>
 
     <spring:message code="label_net_triptech_buildulator_model_project_occupants" var="occupants" />
@@ -113,7 +108,7 @@
        <input type="hidden" value="${project.id}" name="projectId" />
        <p class="field longfield">
            <label for="projectName"><spring:message code="label_net_triptech_buildulator_model_project_name" /></label>
-           <input type="text" class="required" name="projectName" />
+           <input type="text" class="textfield required" name="projectName" />
        </p>
        <div class="actionButtons">
            <span class="cancelAction"><a href="#"><spring:message code="button_cancel" /></a></span>
@@ -147,9 +142,16 @@
 
     <script type="text/javascript" charset="utf8">
     $(document).ready(function() {
-        var operatingEnergy = new BillOfMaterials({
+
+        var sustainabilitySummary = new SustainabilitySummary({
+            div: 'div#sustainabilitySummary',
+            headingText: '<spring:message code="projects_sustainability_summary" />'
+        });
+
+        new BillOfMaterials({
             projectId: <c:out value="${project.id}" />,
             projectUrl: config.projectsUrl,
+            summary: sustainabilitySummary,
             div: 'div.operatingEnergy div.bomTable',
             type: 'operating_energy',
             editing: '<c:out value="${operatingEnergyEdit}" />',
@@ -157,11 +159,12 @@
             elementText: '<spring:message code="projects_operatingenergy_element" />',
             materialText: '<spring:message code="projects_operatingenergy_material" />',
             footerSummaryText: '<spring:message code="projects_operatingenergy_footersummary" />'
-        }).render();
+        });
 
-        var materialsBreakdown = new BillOfMaterials({
+        new BillOfMaterials({
             projectId: <c:out value="${project.id}" />,
             projectUrl: config.projectsUrl,
+            summary: sustainabilitySummary,
             div: 'div.materialsBreakdown div.bomTable',
             type: 'construction',
             editing: '<c:out value="${bomEdit}" />',
@@ -169,7 +172,8 @@
             elementText: '<spring:message code="projects_bom_element" />',
             materialText: '<spring:message code="projects_bom_material" />',
             footerSummaryText: '<spring:message code="projects_bom_footersummary" />'
-        }).render();
+        });
+
      });
     </script>
 

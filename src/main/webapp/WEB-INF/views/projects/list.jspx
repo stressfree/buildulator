@@ -7,8 +7,8 @@
   <jsp:directive.page contentType="text/html;charset=UTF-8" />
   <jsp:output omit-xml-declaration="yes" />
 
-  <spring:url value="/projects" var="listProjectsUrl" />
   <spring:url value="/projects/new" var="newProjectUrl" />
+  <spring:url value="/projects" var="listProjectsUrl" />
 
   <spring:message code="projects_list_title" var="listProjectsTitle" />
   <c:if test="${allProjects}">
@@ -18,9 +18,7 @@
   <h1><c:out value="${listProjectsTitle}" /></h1>
   <div class="sidePanel">
     <div class="newProject">
-      <form action="${newProjectUrl}" method="get">
-          <button id="newProject"><spring:message code="projects_new" /></button>
-      </form>
+      <button id="newProject"><spring:message code="projects_new" /></button>
     </div>
   </div>
 
