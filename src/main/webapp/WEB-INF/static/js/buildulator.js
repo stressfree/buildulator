@@ -378,16 +378,10 @@ function BuildulatorConfig (config) {
 
 function SustainabilitySummary (config) {
     if (config == undefined) { config = new Array(); }
+    var _data = new Array();
     var _div = (config.div != undefined) ? config.div : 'div#sustainabilitySummary';
-    var _occupants = (config.occupants != undefined) ? parseFloat(config.occupants) : 2.7;
-    var _detailedOperatingElements = 0;
-    var _totalOperatingElements = 0;
-    var _detailedConstructionElements = 0;
-    var _totalConstructionElements = 0;
-    var _totalOperatingEnergy = 0;
-    var _totalOperatingCarbon = 0;
-    var _totalConstructionEnergy = 0;
-    var _totalConstructionCarbon = 0;
+    var _projectId = (config.projectId != undefined) ? config.projectId : 1;
+    var _projectUrl = (config.projectUrl != undefined) ? config.projectUrl : './projects/';
     var _headingText = (config.headingText != undefined) ? config.headingText : 'Sustainability Summary';
     var _percentageCompleteText = (config.percentageCompleteText != undefined) ? config.percentageCompleteText : '<span>[percentage]</span> detailed';
     var _operationalCompleteText = (config.operationalCompleteText != undefined) ? config.operationalCompleteText : '<span>[detailed] of [total]</span> energy uses detailed.';
@@ -401,81 +395,63 @@ function SustainabilitySummary (config) {
     var _totalCarbonText = (config.totalEnergyText != undefined) ? config.totalEnergyText : 'Total Carbon';
     var _perPersonCarbonText = (config.perPersonEnergyText != undefined) ? config.perPersonEnergyText : 'Carbon per Person';
 
+    var summaryUrl = _projectUrl + _projectId + '/summary.json';
+
     $('<h3/>', { html: _headingText }).appendTo(_div);
     var contentDiv = $('<div/>', { 'class': 'sSummaryContent' }).appendTo(_div);
     $('<div/>', { 'class': 'completionSummary' }).appendTo(contentDiv);
     $('<div/>', { 'class': 'energySummary' }).appendTo(contentDiv);
     $('<div/>', { 'class': 'carbonSummary' }).appendTo(contentDiv);
 
+    _refresh();
 
-    this._update = function(type, data) {
 
-        var totalElements = 0;
-        var detailedElements = 0;
+    this._update = function() {
+        _refresh();
+    };
 
-        $(data.sections).each(function(index, section) {
-            $(section.elements).each(function(index, element) {
-                totalElements++;
-                if ($(element.materials).length > 0) {
-                    detailedElements++;
-                }
-            });
+
+    function _refresh() {
+        $.getJSON(summaryUrl, function(data){
+            _data = data;
+            _redraw();
         });
-
-        switch(type) {
-            case 'construction':
-                _detailedConstructionElements = detailedElements;
-                _totalConstructionElements = totalElements;
-                _totalConstructionEnergy = parseFloat(data.totalEnergy);
-                _totalConstructionCarbon = parseFloat(data.totalCarbon);
-                break;
-            case 'operating_energy':
-                _detailedOperatingElements = detailedElements;
-                _totalOperatingElements = totalElements;
-                _totalOperatingEnergy = parseFloat(data.totalEnergy);
-                _totalOperatingCarbon = parseFloat(data.totalCarbon);
-                break;
-        }
-        _redraw();
     };
 
     function _redraw() {
 
-        var percentage = _formatNumber(
-                (_detailedOperatingElements + _detailedConstructionElements) /
-                (_totalOperatingElements + _totalConstructionElements) * 100
-        ) + '%';
-
         var completionSummary = $('<div/>');
 
-        $('<h4/>', { 'html': _percentageCompleteText.replace('[percentage]', percentage) })
+        $('<h4/>', { 'html': _percentageCompleteText.replace('[percentage]', _data.percentComplete) })
             .appendTo(completionSummary);
 
         var completeUl = $('<ul/>').appendTo(completionSummary);
 
         $('<li/>', { 'class': 'operationalComplete', 'html':
-            _operationalCompleteText.replace('[detailed]', _detailedOperatingElements)
-                .replace('[total]', _totalOperatingElements)
+            _operationalCompleteText.replace('[detailed]', _data.elOperationalDetailed)
+                .replace('[total]', _data.elOperationalTotal)
         }).appendTo(completeUl);
 
         $('<li/>', { 'class': 'constructionComplete', 'html':
-            _constructionCompleteText.replace('[detailed]', _detailedConstructionElements)
-                .replace('[total]', _totalConstructionElements)
+            _constructionCompleteText.replace('[detailed]', _data.elConstructionDetailed)
+                .replace('[total]', _data.elConstructionTotal)
         }).appendTo(completeUl);
 
         $(_div + ' div.completionSummary').html(completionSummary);
 
         $(_div + ' div.energySummary').html(_renderSummaryTable(
-                _totalOperatingEnergy, _totalConstructionEnergy,
+                _data.energyOperational, _data.energyConstruction,
+                _data.energyTotal, _data.energyPerOccupant,
                 _energyText, _totalEnergyText, _perPersonEnergyText));
 
         $(_div + ' div.carbonSummary').html(_renderSummaryTable(
-                _totalOperatingCarbon, _totalConstructionCarbon,
+                _data.carbonOperational, _data.carbonConstruction,
+                _data.carbonTotal, _data.carbonPerOccupant,
                 _carbonText, _totalCarbonText, _perPersonCarbonText));
     }
 
     function _renderSummaryTable(totalOperating, totalConstruction,
-            headingText, totalText, perPersonText) {
+            total, perOccupant, headingText, totalText, perPersonText) {
 
         var summaryTable = '<h4>';
         summaryTable += headingText;
@@ -491,11 +467,11 @@ function SustainabilitySummary (config) {
         summaryTable += '</td></tr><tr class="sSummaryTotal"><td>';
         summaryTable += totalText;
         summaryTable += '</td><td class="summaryValue">';
-        summaryTable += _formatNumber(totalOperating + totalConstruction);
+        summaryTable += _formatNumber(total);
         summaryTable += '</td></tr><tr class="sSummaryPerPerson"><td>';
         summaryTable += perPersonText;
         summaryTable += '</td><td class="summaryValue">';
-        summaryTable += _formatNumber((totalOperating + totalConstruction) / _occupants);
+        summaryTable += _formatNumber(perOccupant);
         summaryTable += '</td></tr></tbody></table>';
 
         return summaryTable;
@@ -507,7 +483,7 @@ function SustainabilitySummary (config) {
 }
 
 SustainabilitySummary.prototype = {
-    update : function(type, data) { this._update(type, data); }
+    update : function() { this._update(); }
 };
 
 
@@ -570,7 +546,6 @@ function BillOfMaterials (config) {
             'class': 'bomFooter', html: _renderFooter()
         }).appendTo(_div);
 
-        _summary.update(_type, _data);
         _addDefaultHandlers();
     });
 
@@ -712,7 +687,7 @@ function BillOfMaterials (config) {
                     }
                     _updateFooterTotals();
                     _addRowHandlers($(addDiv).prev());
-                    _summary.update(_type, _data);
+                    _summary.update();
 
                     // Reset the inputs
                     $(addDiv).find('input.bomText').val('').first().focus();
@@ -809,7 +784,7 @@ function BillOfMaterials (config) {
                     }
                     _updateFooterTotals();
                     _addRowHandlers(parentLi.prev());
-                    _summary.update(_type, _data);
+                    _summary.update();
 
                     parentLi.remove();
                 },
@@ -960,7 +935,7 @@ function BillOfMaterials (config) {
                     _data = $.parseJSON(data);
                     $(node).closest('li').remove();
                     _updateFooterTotals();
-                    _summary.update(_type, _data);
+                    _summary.update();
                 },
                 error: function(e){
                     alert('Error deleting ' + type + ': ' + data);

@@ -22,6 +22,10 @@ import javax.validation.constraints.NotNull;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import net.triptech.buildulator.DataParser;
+import net.triptech.buildulator.model.bom.BillOfMaterials;
+import net.triptech.buildulator.model.bom.Element;
+import net.triptech.buildulator.model.bom.Section;
+import net.triptech.buildulator.model.bom.SustainabilitySummary;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Index;
@@ -107,6 +111,8 @@ public class Project {
         Map<String, String> parsedData = this.parseData();
 
         parsedData.put(key, dataString);
+
+        this.recalculateTotals(parsedData);
 
         JSONObject jsonObject = JSONObject.fromObject(parsedData);
 
@@ -378,5 +384,76 @@ public class Project {
             }
         }
         return parsedData;
+    }
+
+    /**
+     * Recalculate the totals for the project.
+     *
+     * @param parsedData the parsed data
+     */
+    private void recalculateTotals(final Map<String, String> parsedData) {
+
+        BillOfMaterials oe = new BillOfMaterials();
+        BillOfMaterials bom = new BillOfMaterials();
+        SustainabilitySummary summary = new SustainabilitySummary();
+
+        // Get the operating energy BOM
+        if (parsedData.containsKey("operating_energy")) {
+            oe = BillOfMaterials.parseJson(parsedData.get("operating_energy"));
+        }
+
+        // Get the construction BOM
+        if (parsedData.containsKey("construction")) {
+            bom = BillOfMaterials.parseJson(parsedData.get("construction"));
+        }
+
+        // Get the summary object
+        if (parsedData.containsKey("summary")) {
+            summary = SustainabilitySummary.parseJson(parsedData.get("summary"));
+        }
+
+        // Recalculate the summaries
+        int[] oeDetailedTotals = this.getDetailedElements(oe);
+        int[] bomDetailedTotals = this.getDetailedElements(bom);
+
+        summary.setElOperationalDetailed(oeDetailedTotals[0]);
+        summary.setElOperationalTotal(oeDetailedTotals[1]);
+        summary.setElConstructionDetailed(bomDetailedTotals[0]);
+        summary.setElConstructionTotal(bomDetailedTotals[1]);
+        summary.setOccupants(this.getOccupants());
+        summary.setEnergyOperational(oe.getTotalEnergy());
+        summary.setEnergyConstruction(bom.getTotalEnergy());
+        summary.setCarbonOperational(oe.getTotalCarbon());
+        summary.setCarbonConstruction(bom.getTotalCarbon());
+
+        summary.getTotalEnergyChange().add(summary.getEnergyTotal());
+        summary.getTotalCarbonChange().add(summary.getEnergyTotal());
+
+        parsedData.put("summary", summary.toJson());
+    }
+
+    /**
+     * Gets the detailed elements.
+     *
+     * @param bom the bom
+     * @return the detailed elements
+     */
+    private int[] getDetailedElements(final BillOfMaterials bom) {
+
+        int detailed = 0, total = 0;
+
+        if (bom.getSections() != null) {
+            for (Section section : bom.getSections()) {
+                if (section.getElements() != null) {
+                    for (Element el : section.getElements()) {
+                        total++;
+                        if (el.getMaterials() != null && el.getMaterials().size() > 0) {
+                            detailed++;
+                        }
+                    }
+                }
+            }
+        }
+        return new int[] { detailed, total };
     }
 }

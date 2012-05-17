@@ -29,6 +29,7 @@ import net.triptech.buildulator.model.bom.BillOfMaterials;
 import net.triptech.buildulator.model.bom.Section;
 import net.triptech.buildulator.model.bom.Element;
 import net.triptech.buildulator.model.bom.Material;
+import net.triptech.buildulator.model.bom.SustainabilitySummary;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -553,6 +554,34 @@ public class ProjectController extends BaseController {
         if (checkProjectPermission(project, request)) {
             BillOfMaterials bom = BillOfMaterials.parseJson(project.getDataField(type));
             result = bom.toJson();
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        return result;
+    }
+
+    /**
+     * Returns the project's summary if the user has the rights to view it.
+     * Otherwise a 404 error is returned.
+     *
+     * @param id the id
+     * @param uiModel the ui model
+     * @param request the request
+     * @param response the response
+     * @return the string
+     */
+    @RequestMapping(value = "/{id}/summary.json", method = RequestMethod.GET)
+    public @ResponseBody String jsonSummary(@PathVariable("id") Long id,
+            HttpServletRequest request, final HttpServletResponse response) {
+
+        String result = "";
+
+        Project project = Project.findProject(id);
+
+        if (checkProjectPermission(project, request)) {
+            SustainabilitySummary ss = SustainabilitySummary.parseJson(
+                    project.getDataField("summary"));
+            result = ss.toJson();
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
