@@ -5,6 +5,7 @@
   </c:set>
 
   <spring:url value="/static/styles/buildulator.css" var="buildulator_css_url" />
+  <spring:url value="/static/js/excanvas.min.js" var="excanvas_js_url" />
   <spring:url value="/static/images/favicon.ico" var="favicon" />
 
   <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/reset-fonts-grids/reset-fonts-grids.css" />
@@ -18,5 +19,8 @@
     <c:out value="${pageContext.response.locale}" default="en" />
   </c:set>
   <script type="text/javascript" charset="utf8" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"><!-- required for FF3 and Opera --></script>
+  <![CDATA[ <!--[if lte IE 8]> ]]>
+  <script type="text/javascript" charset="utf8" src="${excanvas_js_url}"><!-- required for FF3 and Opera --></script>
+  <![CDATA[ <![endif]--> ]]>
 
 </jsp:root>

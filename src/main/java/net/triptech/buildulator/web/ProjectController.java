@@ -54,6 +54,15 @@ public class ProjectController extends BaseController {
     /** The logger. */
     private static Logger logger = Logger.getLogger(ProjectController.class);
 
+    /** The operating energy JSON key. */
+    private static String OEN = "operating_energy";
+
+    /** The construction JSON key. */
+    private static String CNST = "construction";
+
+    /** The summary JSON key. */
+    private static String SUM = "summary";
+
     /**
      * Index.
      *
@@ -127,10 +136,10 @@ public class ProjectController extends BaseController {
         if (checkProjectPermission(project, request)) {
             boolean noOperatingEnergyData = false;
             boolean noBOMData = false;
-            if (testIfEmptyJson(project.getDataField("operating_energy"))) {
+            if (testIfEmptyJson(project.getDataField(OEN))) {
                 noOperatingEnergyData = true;
             }
-            if (testIfEmptyJson(project.getDataField("construction"))) {
+            if (testIfEmptyJson(project.getDataField(CNST))) {
                 noBOMData = true;
             }
 
@@ -190,11 +199,13 @@ public class ProjectController extends BaseController {
         }
 
         if (templateId != null && templateId > 0) {
-            // Try loading the template and assigning the data to the new project.
+            // Try loading the template and assigning the operating energy data
+            // to the new project.
             try {
                 Project template = Project.findProject(templateId);
                 if (template != null && template.isTemplate()) {
-                    project.setData(template.getData());
+                    // Set the operating energy data for the new project
+                    project.setDataField(OEN, template.getDataField(OEN));
                 }
             } catch (Exception e) {
                 logger.error("Error loading template (" + templateId + "): "
@@ -358,7 +369,7 @@ public class ProjectController extends BaseController {
 
         Project project = Project.findProject(id);
 
-        String type = "construction";
+        String type = CNST;
         if (StringUtils.isNotBlank(typeVal)) {
             type = typeVal.toLowerCase();
         }
@@ -404,7 +415,7 @@ public class ProjectController extends BaseController {
 
         Project project = Project.findProject(id);
 
-        String type = "construction";
+        String type = CNST;
         if (StringUtils.isNotBlank(typeVal)) {
             type = typeVal.toLowerCase();
         }
@@ -449,7 +460,7 @@ public class ProjectController extends BaseController {
 
         Project project = Project.findProject(id);
 
-        String type = "construction";
+        String type = CNST;
         if (StringUtils.isNotBlank(typeVal)) {
             type = typeVal.toLowerCase();
         }
@@ -525,7 +536,7 @@ public class ProjectController extends BaseController {
 
         MaterialType mt = MaterialType.CONSTRUCTION;
 
-        if (StringUtils.equalsIgnoreCase(type, "operating_energy")) {
+        if (StringUtils.equalsIgnoreCase(type, OEN)) {
             mt = MaterialType.ENERGY_SOURCE;
         }
         return MaterialDetail.toJson(MaterialDetail.findMaterialDetails(mt));
@@ -580,7 +591,7 @@ public class ProjectController extends BaseController {
 
         if (checkProjectPermission(project, request)) {
             SustainabilitySummary ss = SustainabilitySummary.parseJson(
-                    project.getDataField("summary"));
+                    project.getDataField(SUM));
             result = ss.toJson();
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -612,7 +623,7 @@ public class ProjectController extends BaseController {
             String message = getMessage("projects_bom_import_nodata");
 
             if (StringUtils.isNotBlank(data)) {
-                project.setDataField("construction", parseBillOfMaterials(data).toJson());
+                project.setDataField(CNST, parseBillOfMaterials(data).toJson());
 
                 project.merge();
                 project.flush();

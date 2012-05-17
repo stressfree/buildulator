@@ -444,10 +444,22 @@ function SustainabilitySummary (config) {
                 _data.energyTotal, _data.energyPerOccupant,
                 _energyText, _totalEnergyText, _perPersonEnergyText));
 
+        var chartOptions = {
+                grid: { borderWidth: 1 },
+                yaxis: { tickFormatter: function() { return ""; }},
+                xaxis: { tickFormatter: function() { return ""; }}
+        };
+
+        $.plot($(_div + ' div.energySummary div.summaryTotalChange'),
+                [_data.totalEnergyChange], chartOptions);
+
         $(_div + ' div.carbonSummary').html(_renderSummaryTable(
                 _data.carbonOperational, _data.carbonConstruction,
                 _data.carbonTotal, _data.carbonPerOccupant,
                 _carbonText, _totalCarbonText, _perPersonCarbonText));
+
+        $.plot($(_div + ' div.carbonSummary div.summaryTotalChange'),
+                [_data.totalCarbonChange], chartOptions);
     }
 
     function _renderSummaryTable(totalOperating, totalConstruction,
@@ -473,6 +485,7 @@ function SustainabilitySummary (config) {
         summaryTable += '</td><td class="summaryValue">';
         summaryTable += _formatNumber(perOccupant);
         summaryTable += '</td></tr></tbody></table>';
+        summaryTable += '<div class="summaryTotalChange"></div>';
 
         return summaryTable;
     }

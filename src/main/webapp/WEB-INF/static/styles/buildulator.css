@@ -544,6 +544,12 @@ input.error {
   font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
+#body .projectInfo div#sustainabilitySummary div.summaryTotalChange {
+    height: 80px;
+    width: 230px;
+    margin: 0 0 10px 5px;
+}
+
 #body .projectInfo  div.bomInstructions {
   font-size: 0.9em;
   margin: 0;

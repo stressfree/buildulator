@@ -140,6 +140,8 @@
         <c:set var="bomEdit" value="true" />
     </c:if>
 
+    <spring:url value="/static/js/jquery.flot.min.js" var="flot_js_url" />
+    <script type="text/javascript" charset="utf8" src="${flot_js_url}"><!-- required for FF3 and Opera --></script>
     <script type="text/javascript" charset="utf8">
     $(document).ready(function() {
 

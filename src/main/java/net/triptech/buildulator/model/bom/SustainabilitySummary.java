@@ -227,9 +227,9 @@ public class SustainabilitySummary {
      * @param array the array
      * @return the change array
      */
-    private List<Double> getChangeArray(final List<Double> array) {
+    private List<Double[]> getChangeArray(final List<Double> array) {
 
-        List<Double> changeArray = new ArrayList<Double>();
+        List<Double[]> changeArray = new ArrayList<Double[]>();
 
         if (array != null) {
             int index = 0;
@@ -237,10 +237,13 @@ public class SustainabilitySummary {
                 index = array.size() - 8;
             }
 
+            double key = 0;
+
             while (index < array.size()) {
                 double value = array.get(index);
-                changeArray.add(value);
+                changeArray.add(new Double[] { key, value });
                 index++;
+                key++;
             }
         }
         return changeArray;
@@ -324,7 +327,9 @@ public class SustainabilitySummary {
                     JSONArray jsonArray = obj.getJSONArray(key);
 
                     for (int i = 0; i < jsonArray.size(); i++) {
-                        array.add(jsonArray.getDouble(i));
+                        JSONArray doubleArray = jsonArray.getJSONArray(i);
+
+                        array.add(doubleArray.getDouble(1));
                     }
                 } catch (JSONException je) {
                     logger.debug("Error casting to a JSONArray: " + je.getMessage());
