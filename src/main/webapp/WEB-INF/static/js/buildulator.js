@@ -385,22 +385,18 @@ function SustainabilitySummary (config) {
     var _headingText = (config.headingText != undefined) ? config.headingText : 'Sustainability Summary';
     var _percentageCompleteText = (config.percentageCompleteText != undefined) ? config.percentageCompleteText : '<span>[percentage]</span> detailed';
     var _operationalCompleteText = (config.operationalCompleteText != undefined) ? config.operationalCompleteText : '<span>[detailed] of [total]</span> energy uses detailed.';
-    var _constructionCompleteText = (config.constructionCompleteText != undefined) ? config.constructionCompleteText : '<span>[detailed] of [total]</span> bill of material items detailed.';
-    var _operationalFootprintText = (config.operationalFootprintText != undefined) ? config.operationalFootprintText : 'Operational Footprint';
-    var _energyText = (config.energyText != undefined) ? config.energyText : 'Energy';
+    var _constructionCompleteText = (config.constructionCompleteText != undefined) ? config.constructionCompleteText : '<span>[detailed] of [total]</span> elements detailed.';
+    var _operationalFootprintText = (config.operationalFootprintText != undefined) ? config.operationalFootprintText : 'Operational';
     var _carbonText = (config.carbonText != undefined) ? config.carbonText : 'Carbon';
-    var _billOfMaterialsText = (config.billOfMaterialsText != undefined) ? config.billOfMaterialsText : 'Bill of Materials';
-    var _totalEnergyText = (config.totalEnergyText != undefined) ? config.totalEnergyText : 'Total Energy';
-    var _perPersonEnergyText = (config.perPersonEnergyText != undefined) ? config.perPersonEnergyText : 'Energy per Person';
-    var _totalCarbonText = (config.totalEnergyText != undefined) ? config.totalEnergyText : 'Total Carbon';
-    var _perPersonCarbonText = (config.perPersonEnergyText != undefined) ? config.perPersonEnergyText : 'Carbon per Person';
+    var _billOfMaterialsText = (config.billOfMaterialsText != undefined) ? config.billOfMaterialsText : 'Embodied';
+    var _totalCarbonText = (config.totalCarbonText != undefined) ? config.totalCarbonText : 'Total';
+    var _perPersonCarbonText = (config.perPersonCarbonText != undefined) ? config.perPersonCarbonText : 'Per Person';
 
     var summaryUrl = _projectUrl + _projectId + '/summary.json';
 
     $('<h3/>', { html: _headingText }).appendTo(_div);
     var contentDiv = $('<div/>', { 'class': 'sSummaryContent' }).appendTo(_div);
     $('<div/>', { 'class': 'completionSummary' }).appendTo(contentDiv);
-    $('<div/>', { 'class': 'energySummary' }).appendTo(contentDiv);
     $('<div/>', { 'class': 'carbonSummary' }).appendTo(contentDiv);
 
     _refresh();
@@ -439,19 +435,11 @@ function SustainabilitySummary (config) {
 
         $(_div + ' div.completionSummary').html(completionSummary);
 
-        $(_div + ' div.energySummary').html(_renderSummaryTable(
-                _data.energyOperational, _data.energyConstruction,
-                _data.energyTotal, _data.energyPerOccupant,
-                _energyText, _totalEnergyText, _perPersonEnergyText));
-
         var chartOptions = {
                 grid: { borderWidth: 1 },
                 yaxis: { tickFormatter: function() { return ""; }},
                 xaxis: { tickFormatter: function() { return ""; }}
         };
-
-        $.plot($(_div + ' div.energySummary div.summaryTotalChange'),
-                [_data.totalEnergyChange], chartOptions);
 
         $(_div + ' div.carbonSummary').html(_renderSummaryTable(
                 _data.carbonOperational, _data.carbonConstruction,
@@ -511,7 +499,7 @@ function BillOfMaterials (config) {
     var _projectId = (config.projectId != undefined) ? config.projectId : 1;
     var _projectUrl = (config.projectUrl != undefined) ? config.projectUrl : './projects/';
     var _addText = (config.addText != undefined) ? config.addText : 'Add';
-    var _editText = (config.editText != undefined) ? config.editText : 'Update';
+    var _editText = (config.editText != undefined) ? config.editText : 'OK';
     var _cancelText = (config.cancelText != undefined) ? config.cancelText : 'Cancel';
     var _sectionText = (config.sectionText != undefined) ? config.sectionText : 'section';
     var _elementText = (config.elementText != undefined) ? config.elementText : 'element';
@@ -520,9 +508,8 @@ function BillOfMaterials (config) {
     var _deleteConfirmText = (config.deleteConfirmText != undefined) ? config.deleteConfirmText : 'Are you sure you want to delete this';
     var _headerNameText = (config.headerNameText != undefined) ? config.headerNameText : '';
     var _headerQuantityText = (config.headerQuantityText != undefined) ? config.headerQuantityText : 'Quantity';
-    var _headerEnergyText = (config.headerEnergyText != undefined) ? config.headerEnergyText : 'Energy';
     var _headerCarbonText = (config.headerCarbonText != undefined) ? config.headerCarbonText : 'Carbon';
-    var _footerSummaryText = (config.footerSummaryText != undefined) ? config.footerSummaryText : 'Total material energy/carbon footprint';
+    var _footerSummaryText = (config.footerSummaryText != undefined) ? config.footerSummaryText : 'Total embodied carbon';
     var _editStartText = (config.editStartText != undefined) ? config.editStartText : 'Edit table';
     var _editFinishText = (config.editFinishText != undefined) ? config.editFinishText : 'Finish editing';
 
@@ -863,7 +850,7 @@ function BillOfMaterials (config) {
                     materialOptions[index] = '<option value="' + material.name + '" ' + selected + '>' + material.name + '</option>';
                 });
                 $(this).html(materialOptions.join(''));
-                $(this).selectmenu({width: '295px'}).change(function() {
+                $(this).selectmenu({width: '371px'}).change(function() {
                     var selected = $(this).val();
                     $(_materials).each(function(index, material) {
                         if (material.name == selected) {
@@ -961,7 +948,6 @@ function BillOfMaterials (config) {
         var html = '<li class="bomSection"><div class="bomEditable"><div class="deleteFromBOM"><a>';
         html += _deleteText + '</a></div><div class="bomSName">';
         html += _readValue(section.name);
-        html += '</div><div class="bomSEnergy">';
         html += '</div><div class="bomSCarbon">';
         html += '</div></div><ul class="bomElements">';
 
@@ -984,7 +970,6 @@ function BillOfMaterials (config) {
         html += _readValue(element.quantity);
         html += '</div><div class="bomEUnits">';
         html += _readValue(element.units);
-        html += '</div><div class="bomEEnergy">';
         html += '</div><div class="bomECarbon">';
         html += '</div></div><ul class="bomMaterials">';
 
@@ -1007,8 +992,6 @@ function BillOfMaterials (config) {
         html += _readValue(material.quantity);
         html += '</div><div class="bomMUnits">';
         html += _readValue(material.units);
-        html += '</div><div class="bomMEnergy">';
-        html += _readValue(material.totalEnergy);
         html += '</div><div class="bomMCarbon">';
         html += _readValue(material.totalCarbon);
         html += '</div></div></li>';
@@ -1027,8 +1010,6 @@ function BillOfMaterials (config) {
         html += _headerNameText;
         html += '</div><div class="bomHQuantity">';
         html += _headerQuantityText;
-        html += '</div><div class="bomHEnergy">';
-        html += _headerEnergyText;
         html += '</div><div class="bomHCarbon">';
         html += _headerCarbonText;
         html += '</div><div class="bomHClear"></div>';
@@ -1039,8 +1020,6 @@ function BillOfMaterials (config) {
     function _renderFooter() {
         html = '<div class="bomFSummary">';
         html += _footerSummaryText;
-        html += '</div><div class="bomFEnergy">';
-        html += _data.totalEnergy;
         html += '</div><div class="bomFCarbon">';
         html += _data.totalCarbon;
         html += '</div><div class="bomFClear"></div>';
@@ -1049,7 +1028,6 @@ function BillOfMaterials (config) {
     }
 
     function _updateFooterTotals() {
-        $(_div + ' div.bomFEnergy').html(_data.totalEnergy);
         $(_div + ' div.bomFCarbon').html(_data.totalCarbon);
     }
 

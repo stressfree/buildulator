@@ -484,20 +484,19 @@ input.error {
 
 #body .projectInfo div#sustainabilitySummary h3 {
   margin: 0 5px 0 10px;
-  font-size: 16px;
+  font-size: 18px;
   color: #ccc;
 }
 
 #body .projectInfo div#sustainabilitySummary h4 {
-  margin: 5px 0 2px 10px;
-  font-size: 22px;
+  margin: 15px 0 2px 10px;
+  font-size: 24px;
   color: #fff;
 }
 
 #body .projectInfo div.completionSummary,
-#body .projectInfo div.energySummary,
 #body .projectInfo div.carbonSummary {
-  font-size: 0.8em;
+  font-size: 1em;
   color: #eee;
 }
 
@@ -540,7 +539,7 @@ input.error {
 }
 
 #body .projectInfo div#sustainabilitySummary tr.sSummaryPerPerson td.summaryValue {
-  font-size: 22px;
+  font-size: 30px;
   font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
@@ -859,21 +858,20 @@ div.bomTable div.bomSName, div.bomTable div.bomEName, div.bomTable div.bomMName 
 }
 
 div.bomTable div.bomSName {
-  width: 415px;
+  width: 495px;
   font-weight: bold;
 }
 
 div.bomTable div.bomEName {
-  width: 300px;
+  width: 376px;
 }
 
 div.bomTable div.bomMName {
-  width: 280px;
+  width: 357px;
 }
 
 div.bomTable div.bomAUnits, div.bomTable div.bomMUnits,
 div.bomTable div.bomAQuantity, div.bomTable div.bomMQuantity,
-div.bomTable div.bomSEnergy, div.bomTable div.bomAEnergy, div.bomTable div.bomMEnergy,
 div.bomTable div.bomSCarbon, div.bomTable div.bomACarbon, div.bomTable div.bomMCarbon {
     height: 1.4em;
     overflow: hidden;
@@ -888,9 +886,8 @@ div.bomTable div.bomEQuantity, div.bomTable div.bomMQuantity {
     text-align: right;
 }
 
-div.bomTable div.bomSEnergy, div.bomTable div.bomAEnergy, div.bomTable div.bomMEnergy,
 div.bomTable div.bomSCarbon, div.bomTable div.bomACarbon, div.bomTable div.bomMCarbon {
-    width: 100px;
+    width: 125px;
     text-align: right;
 }
 
@@ -932,7 +929,7 @@ div.bomTable div.bomHeader div.bomHEdit {
 
 
 div.bomTable div.bomHeader div.bomHName {
-  width: 138px;
+  width: 204px;
   margin: 0 0 0 5px;
 }
 
@@ -940,8 +937,8 @@ div.bomTable div.bomHeader div.bomHQuantity {
   width: 160px;
 }
 
-div.bomTable div.bomHeader div.bomHEnergy, div.bomTable div.bomHeader div.bomHCarbon {
-  width: 100px;
+div.bomTable div.bomHeader div.bomHCarbon {
+  width: 135px;
 }
 
 div.bomTable div.bomHeader div.bomHClear {
@@ -966,13 +963,12 @@ div.bomTable div.bomFooter div {
 }
 
 div.bomTable div.bomFooter div.bomFSummary {
-  width: 439px;
+  width: 510px;
   margin: 0 0 0 5px;
 }
 
-div.bomTable div.bomFooter div.bomFEnergy,
 div.bomTable div.bomFooter div.bomFCarbon {
-  width: 104px;
+  width: 134px;
   text-align: right;
 }
 
@@ -983,11 +979,11 @@ div.bomTable div.bomFooter div.bomFClear {
 }
 
 div.bomTable div.bomAddSubmitCancelOptions {
-  margin: 0 0 0 455px;
+  margin: 0 0 0 528px;
   float: none;
 }
 div.bomTable ul.bomMaterials div.bomAddSubmitCancelOptions {
-  margin: 0 0 0 435px;
+  margin: 0 0 0 508px;
 }
 
 div.bomTable div.bomSectionNameInput,
@@ -1008,15 +1004,15 @@ div.bomTable input.bomSelectValue {
 }
 
 div.bomTable div.bomSectionNameInput input {
-  width: 425px;
+  width: 505px;
 }
 
 div.bomTable div.bomElementNameInput input {
-  width: 313px;
+  width: 390px;
 }
 
 div.bomTable div.bomMaterialNameInput input {
-  width: 280px;
+  width: 320px;
 }
 
 div.bomTable div.bomElementQuantityInput,
@@ -1061,15 +1057,15 @@ div.bomTable ul.bomNotEditing .addToBOM, div.bomTable ul.bomNotEditing .deleteFr
 
 
 div.bomTable ul.bomNotEditing div.bomSName {
-  width: 425px;
+  width: 505px;
 }
 
 div.bomTable ul.bomNotEditing div.bomEName {
-  width: 320px;
+  width: 395px;
 }
 
 div.bomTable ul.bomNotEditing div.bomMName {
-  width: 300px;
+  width: 376px;
 }
 
 
