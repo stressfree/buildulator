@@ -20,6 +20,7 @@
             <field:input field="name" id="c_net_triptech_buildulator_model_Project_name" required="true" z="user-managed" extraClasses="longfield" />
             <sec:authorize ifAnyGranted="ROLE_EDITOR,ROLE_ADMIN">
             <field:checkbox field="template" id="c_net_triptech_buildulator_model_Project_template" z="user-managed" />
+            <field:checkbox field="comparable" id="c_net_triptech_buildulator_model_Project_comparable" z="user-managed" />
             </sec:authorize>
             <field:input field="location" id="c_net_triptech_buildulator_model_Project_location" required="false" z="user-managed" extraClasses="longfield" />
             <field:input field="occupants" id="c_net_triptech_buildulator_model_Project_occupants" required="true" validationType="number" z="user-managed" />

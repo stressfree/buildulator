@@ -13,6 +13,10 @@ body {
   color: #333;
 }
 
+sub {
+    font-size: 0.6em;
+}
+
 #header {
   height: 93px;
   margin: 2px;
@@ -286,6 +290,18 @@ p.field label {
   font-size: 0.9em;
 }
 
+p.checkbox input {
+    margin: 0 0.7em 0 195px;
+}
+
+p.checkbox label {
+    width: auto;
+    float: none;
+    text-align: left;
+    padding: 0;
+    color: inherit;
+}
+
 p.field label.rteditorLabel {
   position: absolute;
   text-align: left;
@@ -443,19 +459,24 @@ input.error {
   border: 2px solid #ff3333;
 }
 
-#body .projectInfo div.projectTemplate {
+#body .projectInfo div.projectTemplate,
+#body .projectInfo div.projectComparable {
   margin: 0 10px 0 10px;
   padding: 28px 0 0 0;
   float: left;
 }
 
-#body .projectInfo div.projectTemplate span {
+#body .projectInfo div.isComparable {
+  margin-right: 0;
+}
+
+#body .projectInfo div.projectTemplate span,
+#body .projectInfo div.projectComparable span {
   font-size: 1em;
   color: #fff;
   padding: 0.2em 0.5em;
   margin: 0;
   display: block;
-  background: #ccc;
   border: 1px solid #D4D4D3;
   -moz-border-radius: 8px;
   -webkit-border-radius: 8px;
@@ -464,7 +485,15 @@ input.error {
   font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
-#body .projectInfo div#sustainabilitySummary {
+#body .projectInfo div.projectTemplate span {
+  background: #ccc;
+}
+
+#body .projectInfo div.projectComparable span {
+  background: #bbd7e5;
+}
+
+#body .projectInfo div.sSummaryContent {
   width: 245px;
   background: #8D8574;
   margin: 10px 0;
@@ -476,77 +505,82 @@ input.error {
   border-radius: 8px;
 }
 
-#body .projectInfo div#sustainabilitySummary h3,
-#body .projectInfo div#sustainabilitySummary h4 {
+#body .projectInfo div.sSummaryContent h3,
+#body .projectInfo div.sSummaryContent h4 {
   padding: 0;
   font-weight: normal;
 }
 
-#body .projectInfo div#sustainabilitySummary h3 {
+#body .projectInfo div.sSummaryContent h3 {
   margin: 0 5px 0 10px;
   font-size: 18px;
   color: #ccc;
 }
 
-#body .projectInfo div#sustainabilitySummary h4 {
+#body .projectInfo div.sSummaryContent h4 {
   margin: 15px 0 2px 10px;
   font-size: 24px;
   color: #fff;
 }
 
-#body .projectInfo div.completionSummary,
-#body .projectInfo div.carbonSummary {
+#body .projectInfo div.sSummaryContent div.completionSummary,
+#body .projectInfo div.sSummaryContent div.carbonSummary {
   font-size: 1em;
   color: #eee;
 }
 
-#body .projectInfo div.completionSummary ul {
+#body .projectInfo div.sSummaryContent div.completionSummary ul {
   margin: 0 0 10px 10px;
 }
 
-#body .projectInfo div.completionSummary li {
+#body .projectInfo div.sSummaryContent div.completionSummary li {
   list-style: none;
   margin: 0;
 }
 
-#body .projectInfo div.completionSummary li span {
+#body .projectInfo div.sSummaryContent div.completionSummary li span {
   font-weight: bold;
 }
 
-#body .projectInfo div#sustainabilitySummary table {
+#body .projectInfo div.sSummaryContent table {
   margin: 0 0 0 10px;
   width: 220px;
 }
 
-#body .projectInfo div#sustainabilitySummary td {
+#body .projectInfo div.sSummaryContent td {
   border: none;
   padding: 0;
   color: #ccc;
 }
 
-#body .projectInfo div#sustainabilitySummary td.summaryValue {
+#body .projectInfo div.sSummaryContent td.summaryValue {
   text-align: right;
 }
 
-#body .projectInfo div#sustainabilitySummary tr.sSummaryTotal td {
+#body .projectInfo div.sSummaryContent tr.sSummaryTotal td {
   border-top: 1px solid #ccc;
   color: #fff;
 }
 
-#body .projectInfo div#sustainabilitySummary tr.sSummaryPerPerson td {
+#body .projectInfo div.sSummaryContent tr.sSummaryPerPerson td {
   color: #fff;
   padding: 0 0 10px 0;
 }
 
-#body .projectInfo div#sustainabilitySummary tr.sSummaryPerPerson td.summaryValue {
+#body .projectInfo div.sSummaryContent tr.sSummaryPerPerson td.summaryValue {
   font-size: 30px;
+  padding-top: 10px;
   font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
-#body .projectInfo div#sustainabilitySummary div.summaryTotalChange {
+#body .projectInfo div.sSummaryContent div.summaryTotalChange {
     height: 80px;
     width: 230px;
     margin: 0 0 10px 5px;
+}
+
+#body .projectInfo div.summaryFixed {
+  position: fixed;
 }
 
 #body .projectInfo  div.bomInstructions {
@@ -1008,21 +1042,21 @@ div.bomTable div.bomSectionNameInput input {
 }
 
 div.bomTable div.bomElementNameInput input {
-  width: 390px;
+  width: 370px;
 }
 
 div.bomTable div.bomMaterialNameInput input {
-  width: 320px;
+  width: 300px;
 }
 
 div.bomTable div.bomElementQuantityInput,
 div.bomTable div.bomMaterialQuantityInput {
  padding: 4px 0 0.2em 0;
-  width: 58px;
+  width: 78px;
 }
 div.bomTable div.bomElementQuantityInput input,
 div.bomTable div.bomMaterialQuantityInput input {
-  width: 50px;
+  width: 70px;
 }
 
 div.bomTable div.bomElementUnitsInput {
@@ -1045,6 +1079,11 @@ div.bomTable label.error {
   font-size: 0.9em;
   color: #FF3333;
   font-weight: normal;
+}
+
+div.bomTable input.bomHelpText {
+  color: #999;
+  font-style: italic;
 }
 
 div.bomTable .bomHidden {

@@ -14,11 +14,13 @@ import javax.persistence.Column;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import net.triptech.buildulator.DataParser;
@@ -45,6 +47,9 @@ public class Project {
 
     /** A flag as to whether the project is a template. */
     private boolean template;
+
+    /** A flag as to whether the project can be compared with others. */
+    private boolean comparable;
 
     /** The location. */
     private String location;
@@ -76,11 +81,24 @@ public class Project {
 
 
     /**
-     * The on create actions.
+     * The on-create actions.
      */
     @PrePersist
     protected void onCreate() {
         created = new Date();
+        if (StringUtils.isNotBlank(this.getData())) {
+            this.recalculateTotals();
+        }
+    }
+
+    /**
+     * The pre-update actions.
+     */
+    @PreUpdate
+    protected void preUpdate() {
+        if (StringUtils.isNotBlank(this.getData())) {
+            this.recalculateTotals();
+        }
     }
 
 
@@ -111,8 +129,6 @@ public class Project {
         Map<String, String> parsedData = this.parseData();
 
         parsedData.put(key, dataString);
-
-        this.recalculateTotals(parsedData);
 
         JSONObject jsonObject = JSONObject.fromObject(parsedData);
 
@@ -160,6 +176,7 @@ public class Project {
     public final void update(final Project project) {
         this.setName(project.getName());
         this.setTemplate(project.isTemplate());
+        this.setComparable(project.isComparable());
         this.setLocation(project.getLocation());
         this.setOccupants(project.getOccupants());
         this.setDescription(project.getDescription());
@@ -226,6 +243,7 @@ public class Project {
             mJson.put("4", order.format(project.getCreated()));
             mJson.put("5", author.toString());
             mJson.put("6", project.isTemplate());
+            mJson.put("7", project.isComparable());
 
             projectsJson.add(mJson);
         }
@@ -257,6 +275,21 @@ public class Project {
     }
 
     /**
+     * Find all of the comparable projects.
+     *
+     * @return the list
+     */
+    public static List<Project> findComparableProjects() {
+
+        TypedQuery<Project> q = entityManager().createQuery("SELECT p FROM Project AS p"
+                + " WHERE p.comparable = :comparable ORDER BY p.name",
+                Project.class);
+        q.setParameter("comparable", true);
+
+        return q.getResultList();
+    }
+
+    /**
      * Find all of the projects for a user in alphabetical order.
      *
      * @param user the user
@@ -264,21 +297,22 @@ public class Project {
      */
     public static List<Project> findAllProjects(final Person user) {
 
-        boolean viewTemplates = canViewOrEditTemplates(user);
+        boolean viewExtras = canViewOrEditTemplatesOrComparables(user);
 
         StringBuilder hql = new StringBuilder();
         hql.append("SELECT p FROM Project AS p JOIN p.person AS u");
         hql.append(" WHERE u.id = :userId");
-        if (viewTemplates) {
-            hql.append(" OR p.template = :template");
+        if (viewExtras) {
+            hql.append(" OR p.template = :template OR p.comparable = :comparable");
         }
         hql.append(" ORDER BY p.name");
 
         TypedQuery<Project> q = entityManager().createQuery(hql.toString(),
                 Project.class);
         q.setParameter("userId", user.getId());
-        if (viewTemplates) {
+        if (viewExtras) {
             q.setParameter("template", true);
+            q.setParameter("comparable", true);
         }
 
         return q.getResultList();
@@ -292,19 +326,20 @@ public class Project {
      */
     public static long countProjects(final Person user) {
 
-        boolean viewTemplates = canViewOrEditTemplates(user);
+        boolean viewExtras = canViewOrEditTemplatesOrComparables(user);
 
         StringBuilder hql = new StringBuilder();
         hql.append("SELECT COUNT(p) FROM Project p JOIN p.person AS u");
         hql.append(" WHERE u.id = :userId");
-        if (viewTemplates) {
-            hql.append(" OR p.template = :template");
+        if (viewExtras) {
+            hql.append(" OR p.template = :template OR p.comparable = :comparable");
         }
 
         TypedQuery<Long> q = entityManager().createQuery(hql.toString(), Long.class);
         q.setParameter("userId", user.getId());
-        if (viewTemplates) {
+        if (viewExtras) {
             q.setParameter("template", true);
+            q.setParameter("comparable", true);
         }
 
         return q.getSingleResult();
@@ -341,12 +376,12 @@ public class Project {
     }
 
     /**
-     * Can view or edit templates.
+     * Can view or edit templates or comparable projects.
      *
      * @param user the user
      * @return true, if successful
      */
-    public static boolean canViewOrEditTemplates(final Person user) {
+    public static boolean canViewOrEditTemplatesOrComparables(final Person user) {
         boolean allowed = false;
 
         if (user != null && user.getUserRole() != null) {
@@ -381,6 +416,8 @@ public class Project {
                 }
             } catch (ClassCastException ce) {
                 // Error parsing the data
+            } catch (JSONException je) {
+                // Error parsing JSON string
             }
         }
         return parsedData;
@@ -391,7 +428,9 @@ public class Project {
      *
      * @param parsedData the parsed data
      */
-    private void recalculateTotals(final Map<String, String> parsedData) {
+    private void recalculateTotals() {
+
+        Map<String, String> parsedData = this.parseData();
 
         BillOfMaterials oe = new BillOfMaterials();
         BillOfMaterials bom = new BillOfMaterials();
@@ -416,6 +455,7 @@ public class Project {
         int[] oeDetailedTotals = this.getDetailedElements(oe);
         int[] bomDetailedTotals = this.getDetailedElements(bom);
 
+        summary.setName(this.getName());
         summary.setElOperationalDetailed(oeDetailedTotals[0]);
         summary.setElOperationalTotal(oeDetailedTotals[1]);
         summary.setElConstructionDetailed(bomDetailedTotals[0]);
@@ -427,9 +467,16 @@ public class Project {
         summary.setCarbonConstruction(bom.getTotalCarbon());
 
         summary.getTotalEnergyChange().add(summary.getEnergyTotal());
-        summary.getTotalCarbonChange().add(summary.getEnergyTotal());
+        summary.getTotalCarbonChange().add(summary.getCarbonTotal());
+
+        summary.getPerOccupantEnergyChange().add(summary.getEnergyPerOccupant());
+        summary.getPerOccupantCarbonChange().add(summary.getCarbonPerOccupant());
 
         parsedData.put("summary", summary.toJson());
+
+        JSONObject jsonObject = JSONObject.fromObject(parsedData);
+
+        this.setData(jsonObject.toString());
     }
 
     /**

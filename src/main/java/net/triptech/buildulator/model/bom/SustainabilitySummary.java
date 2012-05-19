@@ -24,6 +24,9 @@ public class SustainabilitySummary {
     /** The logger. */
     private static Logger logger = Logger.getLogger(SustainabilitySummary.class);
 
+    /** The name. */
+    private String name;
+
     /** The detailed operational elements. */
     private int elOperationalDetailed;
 
@@ -56,6 +59,12 @@ public class SustainabilitySummary {
 
     /** The total carbon change. */
     private List<Double> totalCarbonChange = new ArrayList<Double>();
+
+    /** The per occupant energy change. */
+    private List<Double> perOccupantEnergyChange = new ArrayList<Double>();
+
+    /** The per occupant carbon change. */
+    private List<Double> perOccupantCarbonChange = new ArrayList<Double>();
 
 
     /**
@@ -126,7 +135,7 @@ public class SustainabilitySummary {
     public final double getCarbonPerOccupant() {
         double value = 0;
         if (this.getOccupants() > 0) {
-            value = this.getCarbonTotal() / this.getOccupants();
+            value = (this.getCarbonTotal() / this.getOccupants()) / (double) 1000;
         }
         return value;
     }
@@ -139,6 +148,8 @@ public class SustainabilitySummary {
     public final String toJson() {
 
         Map<String, Object> ssJson = new LinkedHashMap<String, Object>();
+
+        ssJson.put("name", this.getName());
 
         ssJson.put("occupants", formatValue(this.getOccupants()));
 
@@ -160,6 +171,11 @@ public class SustainabilitySummary {
 
         ssJson.put("totalEnergyChange", getChangeArray(this.getTotalEnergyChange()));
         ssJson.put("totalCarbonChange", getChangeArray(this.getTotalCarbonChange()));
+
+        ssJson.put("perOccupantEnergyChange", getChangeArray(
+                this.getPerOccupantEnergyChange()));
+        ssJson.put("perOccupantCarbonChange", getChangeArray(
+                this.getPerOccupantCarbonChange()));
 
         JSONObject jsonObject = JSONObject.fromObject(ssJson);
 
@@ -201,6 +217,8 @@ public class SustainabilitySummary {
 
         SustainabilitySummary ss = new SustainabilitySummary();
 
+        ss.setName(getString(ssJson, "name"));
+
         ss.setElOperationalDetailed(getInt(ssJson, "elOperationalDetailed"));
         ss.setElOperationalTotal(getInt(ssJson, "elOperationalTotal"));
 
@@ -217,6 +235,9 @@ public class SustainabilitySummary {
 
         ss.setTotalEnergyChange(getDoubleArray(ssJson, "totalEnergyChange"));
         ss.setTotalCarbonChange(getDoubleArray(ssJson, "totalCarbonChange"));
+
+        ss.setPerOccupantEnergyChange(getDoubleArray(ssJson, "perOccupantEnergyChange"));
+        ss.setPerOccupantCarbonChange(getDoubleArray(ssJson, "perOccupantCarbonChange"));
 
         return ss;
     }
@@ -239,14 +260,48 @@ public class SustainabilitySummary {
 
             double key = 0;
 
+            int extraRows = 8 - array.size();
+
+
             while (index < array.size()) {
+
                 double value = array.get(index);
+
+                while (extraRows > 0) {
+                    changeArray.add(new Double[] { key, value });
+                    extraRows--;
+                    key++;
+                }
+
                 changeArray.add(new Double[] { key, value });
                 index++;
                 key++;
             }
         }
         return changeArray;
+    }
+
+    /**
+     * Gets the string from the JSON object.
+     *
+     * @param obj the obj
+     * @param key the key
+     * @return the jSON array
+     */
+    private static String getString(final JSONObject obj, final String key) {
+
+        String value = "";
+
+        if (obj != null) {
+            if (obj.containsKey(key)) {
+                try {
+                    value = obj.getString(key);
+                } catch (JSONException je) {
+                    logger.debug("Error casting to a string: " + je.getMessage());
+                }
+            }
+        }
+        return value;
     }
 
     /**

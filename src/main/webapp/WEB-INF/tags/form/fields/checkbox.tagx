@@ -16,10 +16,7 @@
       <spring:escapeBody javaScriptEscape="true">${field}</spring:escapeBody>
     </c:set>
 
-    <p class="field" id="_${sec_id}_id">
-      <label for="_${sec_field}_id">
-        <c:out value="${fn:escapeXml(label)}" />:
-      </label>
+    <p class="field checkbox" id="_${sec_id}_id">
       <c:choose>
         <c:when test="${disableFormBinding}">
           <input id="_${sec_field}_id" name="${sec_field}" type="checkbox"/>
@@ -28,6 +25,9 @@
           <form:checkbox id="_${sec_field}_id" path="${sec_field}"/>
         </c:otherwise>
       </c:choose>
+      <label for="_${sec_field}_id">
+        <c:out value="${fn:escapeXml(label)}" />
+      </label>
     </p>
   </c:if>
 </jsp:root>

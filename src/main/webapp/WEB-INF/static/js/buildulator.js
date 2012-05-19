@@ -379,27 +379,56 @@ function BuildulatorConfig (config) {
 function SustainabilitySummary (config) {
     if (config == undefined) { config = new Array(); }
     var _data = new Array();
+    var _target;
     var _div = (config.div != undefined) ? config.div : 'div#sustainabilitySummary';
     var _projectId = (config.projectId != undefined) ? config.projectId : 1;
+    var _targetId = (config.targetId != undefined) ? config.targetId : 0;
     var _projectUrl = (config.projectUrl != undefined) ? config.projectUrl : './projects/';
     var _headingText = (config.headingText != undefined) ? config.headingText : 'Sustainability Summary';
     var _percentageCompleteText = (config.percentageCompleteText != undefined) ? config.percentageCompleteText : '<span>[percentage]</span> detailed';
     var _operationalCompleteText = (config.operationalCompleteText != undefined) ? config.operationalCompleteText : '<span>[detailed] of [total]</span> energy uses detailed.';
     var _constructionCompleteText = (config.constructionCompleteText != undefined) ? config.constructionCompleteText : '<span>[detailed] of [total]</span> elements detailed.';
     var _operationalFootprintText = (config.operationalFootprintText != undefined) ? config.operationalFootprintText : 'Operational';
-    var _carbonText = (config.carbonText != undefined) ? config.carbonText : 'Carbon';
+    var _carbonText = (config.carbonText != undefined) ? config.carbonText : 'Carbon (CO<sub>2</sub>)';
     var _billOfMaterialsText = (config.billOfMaterialsText != undefined) ? config.billOfMaterialsText : 'Embodied';
     var _totalCarbonText = (config.totalCarbonText != undefined) ? config.totalCarbonText : 'Total';
     var _perPersonCarbonText = (config.perPersonCarbonText != undefined) ? config.perPersonCarbonText : 'Per Person';
+    var _carbonUnitsText = (config.carbonUnitsText != undefined) ? config.carbonUnitsText : 'g';
+    var _carbonPerPersonUnitsText = (config.carbonPerPersonUnitsText != undefined) ? config.carbonPerPersonUnitsText : 'kg';
 
     var summaryUrl = _projectUrl + _projectId + '/summary.json';
+    var targetUrl = _projectUrl + _targetId + '/summary.json';
 
-    $('<h3/>', { html: _headingText }).appendTo(_div);
     var contentDiv = $('<div/>', { 'class': 'sSummaryContent' }).appendTo(_div);
+    $('<h3/>', { html: _headingText }).appendTo(contentDiv);
     $('<div/>', { 'class': 'completionSummary' }).appendTo(contentDiv);
     $('<div/>', { 'class': 'carbonSummary' }).appendTo(contentDiv);
 
-    _refresh();
+    var top = 0;
+    $(window).scroll(function (event) {
+        top = $(_div).offset().top - parseFloat($(_div).css('marginTop').replace(/auto/,0));
+
+        var y = $(this).scrollTop();
+
+        if (y >= top) {
+          if (!$(_div + ' div.sSummaryContent').hasClass('summaryFixed')) {
+              $(_div + ' div.sSummaryContent').addClass('summaryFixed');
+              $(_div + ' div.sSummaryContent').css('top', '0px');
+          }
+
+        } else {
+          $(_div + ' div.sSummaryContent').removeClass('summaryFixed');
+        }
+    });
+
+    if (_targetId > 0) {
+        $.getJSON(targetUrl, function(data){
+            _target = data;
+            _refresh();
+        });
+    } else {
+        _refresh();
+    }
 
 
     this._update = function() {
@@ -437,21 +466,28 @@ function SustainabilitySummary (config) {
 
         var chartOptions = {
                 grid: { borderWidth: 1 },
-                yaxis: { tickFormatter: function() { return ""; }},
                 xaxis: { tickFormatter: function() { return ""; }}
         };
 
         $(_div + ' div.carbonSummary').html(_renderSummaryTable(
                 _data.carbonOperational, _data.carbonConstruction,
                 _data.carbonTotal, _data.carbonPerOccupant,
-                _carbonText, _totalCarbonText, _perPersonCarbonText));
+                _carbonText, _totalCarbonText, _perPersonCarbonText,
+                _carbonUnitsText, _carbonPerPersonUnitsText));
 
-        $.plot($(_div + ' div.carbonSummary div.summaryTotalChange'),
-                [_data.totalCarbonChange], chartOptions);
+        if (_target.perOccupantCarbonChange == undefined) {
+            $.plot($(_div + ' div.carbonSummary div.summaryTotalChange'),
+                    [_data.perOccupantCarbonChange], chartOptions);
+        } else {
+            $.plot($(_div + ' div.carbonSummary div.summaryTotalChange'),
+                    [_data.perOccupantCarbonChange, _target.perOccupantCarbonChange],
+                    chartOptions);
+        }
     }
 
     function _renderSummaryTable(totalOperating, totalConstruction,
-            total, perOccupant, headingText, totalText, perPersonText) {
+            total, perOccupant, headingText, totalText, perPersonText,
+            unitsText, perPersonUnitsText) {
 
         var summaryTable = '<h4>';
         summaryTable += headingText;
@@ -460,18 +496,30 @@ function SustainabilitySummary (config) {
         summaryTable += _operationalFootprintText;
         summaryTable += '</td><td class="summaryValue">';
         summaryTable += _formatNumber(totalOperating);
+        if (unitsText != '') {
+            summaryTable += ' ' + unitsText;
+        }
         summaryTable += '</td></tr><tr><td>';
         summaryTable += _billOfMaterialsText;
         summaryTable += '</td><td class="summaryValue">';
         summaryTable += _formatNumber(totalConstruction);
+        if (unitsText != '') {
+            summaryTable += ' ' + unitsText;
+        }
         summaryTable += '</td></tr><tr class="sSummaryTotal"><td>';
         summaryTable += totalText;
         summaryTable += '</td><td class="summaryValue">';
         summaryTable += _formatNumber(total);
+        if (unitsText != '') {
+            summaryTable += ' ' + unitsText;
+        }
         summaryTable += '</td></tr><tr class="sSummaryPerPerson"><td>';
         summaryTable += perPersonText;
         summaryTable += '</td><td class="summaryValue">';
         summaryTable += _formatNumber(perOccupant);
+        if (perPersonUnitsText != '') {
+            summaryTable += ' ' + perPersonUnitsText;
+        }
         summaryTable += '</td></tr></tbody></table>';
         summaryTable += '<div class="summaryTotalChange"></div>';
 
@@ -479,7 +527,7 @@ function SustainabilitySummary (config) {
     }
 
     function _formatNumber(value) {
-        return (Math.round(value * 10) / 10).toFixed(0);
+        return (Math.round(value * 10) / 10).toFixed(1);
     }
 }
 
@@ -508,10 +556,12 @@ function BillOfMaterials (config) {
     var _deleteConfirmText = (config.deleteConfirmText != undefined) ? config.deleteConfirmText : 'Are you sure you want to delete this';
     var _headerNameText = (config.headerNameText != undefined) ? config.headerNameText : '';
     var _headerQuantityText = (config.headerQuantityText != undefined) ? config.headerQuantityText : 'Quantity';
-    var _headerCarbonText = (config.headerCarbonText != undefined) ? config.headerCarbonText : 'Carbon';
-    var _footerSummaryText = (config.footerSummaryText != undefined) ? config.footerSummaryText : 'Total embodied carbon';
+    var _headerCarbonText = (config.headerCarbonText != undefined) ? config.headerCarbonText : 'Carbon (g CO<sub>2</sub>)';
+    var _footerSummaryText = (config.footerSummaryText != undefined) ? config.footerSummaryText : 'Total embodied carbon (g)';
     var _editStartText = (config.editStartText != undefined) ? config.editStartText : 'Edit table';
     var _editFinishText = (config.editFinishText != undefined) ? config.editFinishText : 'Finish editing';
+    var _quantityText = (config.quantityText != undefined) ? config.quantityText : 'Quantity';
+    var _unitsText = (config.unitsText != undefined) ? config.unitsText : 'Units';
 
     var bomUrl = _projectUrl + _projectId + '/bom.json?type=' + _type.toLowerCase();
     var materialsUrl = _projectUrl + '/materials.json?type=' + _type.toLowerCase();
@@ -610,6 +660,10 @@ function BillOfMaterials (config) {
     function _assignAddSubmitCancelOptionEventHandlers(addDiv) {
         var type = _getType(addDiv);
 
+        $(addDiv).find('input.bomHelpText').bind('focus.bomHelpText', function(e) {
+            $(this).removeClass('bomHelpText').val('').unbind('focus.bomHelpText');
+        });
+
         $(addDiv).find('input.bomSubmit').button().click(function(e) {
             e.preventDefault();
             $(this).closest('form').submit();
@@ -701,6 +755,10 @@ function BillOfMaterials (config) {
 
     function _assignEditSubmitCancelOptionEventHandlers(editDiv) {
         var type = _getType(editDiv);
+
+        $(editDiv).find('input.bomHelpText').bind('focus.bomHelpText', function(e) {
+            $(this).removeClass('bomHelpText').val('').unbind('focus.bomHelpText');
+        });
 
         $(editDiv).find('input.bomSubmit').button().click(function(e) {
             e.preventDefault();
@@ -850,7 +908,7 @@ function BillOfMaterials (config) {
                     materialOptions[index] = '<option value="' + material.name + '" ' + selected + '>' + material.name + '</option>';
                 });
                 $(this).html(materialOptions.join(''));
-                $(this).selectmenu({width: '371px'}).change(function() {
+                $(this).selectmenu({width: '351px'}).change(function() {
                     var selected = $(this).val();
                     $(_materials).each(function(index, material) {
                         if (material.name == selected) {
@@ -875,7 +933,18 @@ function BillOfMaterials (config) {
     }
 
     function _renderFormInputs(node, field) {
-        if (field == undefined) { field = new Array(); }
+        var helperCss = '';
+        if (field == undefined) {
+            field = new Array();
+            if (_quantityText != '') {
+                field.quantity = _quantityText;
+                helperCss = 'bomHelpText';
+            }
+            if (_unitsText != '') {
+                field.units = _unitsText;
+                helperCss = 'bomHelpText';
+            }
+        }
 
         var name = (field.name != undefined) ? field.name : '';
         var units = (field.units != undefined) ? field.units : '';
@@ -886,15 +955,15 @@ function BillOfMaterials (config) {
             case "element":
                 var sid = $(node).closest('li.bomSection').index();
                 html += '<div class="bomElementNameInput"><input type="text" class="bomText required" id="bomS' + sid + 'ElementName" value="' + name + '" /></div>';
-                html += '<div class="bomElementQuantityInput"><input type="text" class="bomText required number" id="bomS' + sid + 'ElementQuantity" value="' + quantity + '" /></div>';
-                html += '<div class="bomElementUnitsInput"><input type="text" class="bomText" id="bomS' + sid + 'ElementUnits" value="' + units + '" /></div>';
+                html += '<div class="bomElementQuantityInput"><input type="text" class="bomText required number ' + helperCss + '" id="bomS' + sid + 'ElementQuantity" value="' + quantity + '" /></div>';
+                html += '<div class="bomElementUnitsInput"><input type="text" class="bomText ' + helperCss + '" id="bomS' + sid + 'ElementUnits" value="' + units + '" /></div>';
                 break;
             case "material":
                 var sid = $(node).closest('li.bomSection').index();
                 var eid = $(node).closest('li.bomElement').index();
                 html = '<div class="bomMaterialNameInput"><input type="text" class="bomSelectValue" id="bomS' + sid + 'E' + eid + 'MaterialName" value="' + name + '" />';
                 html += '<select type="text" class="bomSelect" id="bomS' + sid + 'E' + eid + 'MaterialSelect" value="' + name + '" /></div>';
-                html += '<div class="bomMaterialQuantityInput"><input type="text" class="bomText required number" id="bomS' + sid + 'E' + eid + 'MaterialQuantity" value="' + quantity + '" />';
+                html += '<div class="bomMaterialQuantityInput"><input type="text" class="bomText required number ' + helperCss + '" id="bomS' + sid + 'E' + eid + 'MaterialQuantity" value="' + quantity + '" />';
                 html += '</div><div class="bomMUnits"></div>';
                 break;
             default:

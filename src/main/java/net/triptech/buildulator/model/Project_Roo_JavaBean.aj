@@ -25,6 +25,14 @@ privileged aspect Project_Roo_JavaBean {
         this.template = template;
     }
     
+    public boolean Project.isComparable() {
+        return this.comparable;
+    }
+    
+    public void Project.setComparable(boolean comparable) {
+        this.comparable = comparable;
+    }
+    
     public String Project.getLocation() {
         return this.location;
     }

@@ -33,6 +33,7 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     
     public Project ProjectDataOnDemand.getNewTransientProject(int index) {
         Project obj = new Project();
+        setComparable(obj, index);
         setCreated(obj, index);
         setData(obj, index);
         setDescription(obj, index);
@@ -43,6 +44,11 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
         setSession(obj, index);
         setTemplate(obj, index);
         return obj;
+    }
+    
+    public void ProjectDataOnDemand.setComparable(Project obj, int index) {
+        Boolean comparable = true;
+        obj.setComparable(comparable);
     }
     
     public void ProjectDataOnDemand.setCreated(Project obj, int index) {

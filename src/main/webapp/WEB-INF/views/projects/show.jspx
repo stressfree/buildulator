@@ -14,8 +14,15 @@
 
 
     <c:if test="${project.template}">
-        <div class="projectTemplate"><span><spring:message code="projects_template" /></span></div>
+        <c:if test="${project.comparable}">
+            <c:set var="isComparable" value="isComparable" />
+        </c:if>
+        <div class="projectTemplate ${isComparable}"><span><spring:message code="projects_template" /></span></div>
     </c:if>
+    <c:if test="${project.comparable}">
+        <div class="projectComparable"><span><spring:message code="projects_comparable" /></span></div>
+    </c:if>
+
     <h1><c:out value="${project.name}" /></h1>
 
     <div class="sidePanel">
@@ -148,6 +155,7 @@
         var sustainabilitySummary = new SustainabilitySummary({
             div: 'div#sustainabilitySummary',
             projectId: <c:out value="${project.id}" />,
+            targetId: 1,
             projectUrl: config.projectsUrl,
             headingText: '<spring:message code="projects_sustainability_summary" />'
         });
@@ -162,7 +170,7 @@
             sectionText: '<spring:message code="projects_operatingenergy_section" />',
             elementText: '<spring:message code="projects_operatingenergy_element" />',
             materialText: '<spring:message code="projects_operatingenergy_material" />',
-            footerSummaryText: '<spring:message code="projects_operatingenergy_footersummary" />'
+            footerSummaryText: '<spring:message code="projects_operatingenergy_footersummary" htmlEscape="false" />'
         });
 
         new BillOfMaterials({
@@ -175,7 +183,7 @@
             sectionText: '<spring:message code="projects_bom_section" />',
             elementText: '<spring:message code="projects_bom_element" />',
             materialText: '<spring:message code="projects_bom_material" />',
-            footerSummaryText: '<spring:message code="projects_bom_footersummary" />'
+            footerSummaryText: '<spring:message code="projects_bom_footersummary" htmlEscape="false" />'
         });
 
      });

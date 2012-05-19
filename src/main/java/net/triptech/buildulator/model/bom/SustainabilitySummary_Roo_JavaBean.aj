@@ -8,6 +8,14 @@ import net.triptech.buildulator.model.bom.SustainabilitySummary;
 
 privileged aspect SustainabilitySummary_Roo_JavaBean {
     
+    public String SustainabilitySummary.getName() {
+        return this.name;
+    }
+    
+    public void SustainabilitySummary.setName(String name) {
+        this.name = name;
+    }
+    
     public int SustainabilitySummary.getElOperationalDetailed() {
         return this.elOperationalDetailed;
     }
@@ -94,6 +102,22 @@ privileged aspect SustainabilitySummary_Roo_JavaBean {
     
     public void SustainabilitySummary.setTotalCarbonChange(List<Double> totalCarbonChange) {
         this.totalCarbonChange = totalCarbonChange;
+    }
+    
+    public List<Double> SustainabilitySummary.getPerOccupantEnergyChange() {
+        return this.perOccupantEnergyChange;
+    }
+    
+    public void SustainabilitySummary.setPerOccupantEnergyChange(List<Double> perOccupantEnergyChange) {
+        this.perOccupantEnergyChange = perOccupantEnergyChange;
+    }
+    
+    public List<Double> SustainabilitySummary.getPerOccupantCarbonChange() {
+        return this.perOccupantCarbonChange;
+    }
+    
+    public void SustainabilitySummary.setPerOccupantCarbonChange(List<Double> perOccupantCarbonChange) {
+        this.perOccupantCarbonChange = perOccupantCarbonChange;
     }
     
 }

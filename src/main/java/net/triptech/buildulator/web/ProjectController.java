@@ -192,9 +192,10 @@ public class ProjectController extends BaseController {
         }
 
         // Check the privileges for the template functionality
-        if (project.isTemplate()) {
-            if (!Project.canViewOrEditTemplates(user)) {
+        if (project.isTemplate() || project.isComparable()) {
+            if (!Project.canViewOrEditTemplatesOrComparables(user)) {
                 project.setTemplate(false);
+                project.setComparable(false);
             }
         }
 
@@ -589,7 +590,7 @@ public class ProjectController extends BaseController {
 
         Project project = Project.findProject(id);
 
-        if (checkProjectPermission(project, request)) {
+        if (project.isComparable() || checkProjectPermission(project, request)) {
             SustainabilitySummary ss = SustainabilitySummary.parseJson(
                     project.getDataField(SUM));
             result = ss.toJson();
