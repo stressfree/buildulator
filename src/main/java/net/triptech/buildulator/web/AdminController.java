@@ -61,6 +61,8 @@ public class AdminController extends BaseController {
             preferences.persist();
             preferences.flush();
         }
+        request.getSession().getServletContext().setAttribute("Preferences", preferences);
+
         FlashScope.appendMessage(getMessage("preferences_edited"), request);
 
         return "redirect:/admin";
@@ -68,8 +70,8 @@ public class AdminController extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String updateForm(Model uiModel) {
-        uiModel.addAttribute("preferences", this.getPreferences());
+    public String updateForm(final Model uiModel, final HttpServletRequest request) {
+        uiModel.addAttribute("preferences", this.getPreferences(request));
         return "admin/update";
     }
 

@@ -117,7 +117,13 @@ public abstract class BaseController {
     }
 
     @ModelAttribute("preferences")
-    public Preferences getPreferences() {
+    public Preferences getPreferences(final HttpServletRequest request) {
+        Preferences prefs = (Preferences) request.getSession()
+                .getServletContext().getAttribute("Preferences");
+        if (prefs == null) {
+            prefs = Preferences.load();
+            request.getSession().getServletContext().setAttribute("Preferences", prefs);
+        }
         return Preferences.load();
     }
 

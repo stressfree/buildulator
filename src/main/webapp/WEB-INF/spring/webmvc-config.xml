@@ -22,7 +22,7 @@
 
 
     <!-- Handles HTTP GET requests for /static/** by efficiently serving up static resources -->
-    <mvc:resources location="/WEB-INF/static/" mapping="/static/**" cache-period="3600" />
+    <mvc:resources location="/WEB-INF/static/" mapping="/static/**" cache-period="28800" />
 
     <!-- Allows for mapping the DispatcherServlet to "/" by forwarding static resource
     requests to the container's default Servlet -->

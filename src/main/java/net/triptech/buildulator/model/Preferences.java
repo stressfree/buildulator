@@ -40,6 +40,9 @@ public class Preferences {
     /** The google tracking id. */
     private String googleTrackingId;
 
+    /** The debug mode flag. */
+    private boolean debugMode;
+
 
     /**
      * Load the preferences.

@@ -24,12 +24,18 @@ privileged aspect PreferencesDataOnDemand_Roo_DataOnDemand {
     
     public Preferences PreferencesDataOnDemand.getNewTransientPreferences(int index) {
         Preferences obj = new Preferences();
+        setDebugMode(obj, index);
         setGoogleTrackingId(obj, index);
         setHomepageContent(obj, index);
         setHomepageTitle(obj, index);
         setName(obj, index);
         setUrl(obj, index);
         return obj;
+    }
+    
+    public void PreferencesDataOnDemand.setDebugMode(Preferences obj, int index) {
+        Boolean debugMode = true;
+        obj.setDebugMode(debugMode);
     }
     
     public void PreferencesDataOnDemand.setGoogleTrackingId(Preferences obj, int index) {
