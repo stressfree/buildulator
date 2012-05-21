@@ -29,6 +29,7 @@ privileged aspect PreferencesDataOnDemand_Roo_DataOnDemand {
         setHomepageContent(obj, index);
         setHomepageTitle(obj, index);
         setName(obj, index);
+        setTargetProjectId(obj, index);
         setUrl(obj, index);
         return obj;
     }
@@ -62,6 +63,11 @@ privileged aspect PreferencesDataOnDemand_Roo_DataOnDemand {
             name = name.substring(0, 100);
         }
         obj.setName(name);
+    }
+    
+    public void PreferencesDataOnDemand.setTargetProjectId(Preferences obj, int index) {
+        Long targetProjectId = new Integer(index).longValue();
+        obj.setTargetProjectId(targetProjectId);
     }
     
     public void PreferencesDataOnDemand.setUrl(Preferences obj, int index) {

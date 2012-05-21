@@ -17,14 +17,22 @@ function SustainabilitySummary (config) {
     var _perPersonCarbonText = (config.perPersonCarbonText != undefined) ? config.perPersonCarbonText : 'Per Person';
     var _carbonUnitsText = (config.carbonUnitsText != undefined) ? config.carbonUnitsText : 'g';
     var _carbonPerPersonUnitsText = (config.carbonPerPersonUnitsText != undefined) ? config.carbonPerPersonUnitsText : 'kg';
+    var _compareButtonText = (config.compareButtonText != undefined) ? config.compareButtonText : 'Compare to other projects';
 
     var summaryUrl = _projectUrl + _projectId + '/summary.json';
     var targetUrl = _projectUrl + _targetId + '/summary.json';
 
     var contentDiv = $('<div/>', { 'class': 'sSummaryContent' }).appendTo(_div);
     $('<h3/>', { html: _headingText }).appendTo(contentDiv);
+    $('<div/>', { 'class': 'summaryCompare', 'html':
+        '<button>' + _compareButtonText + '</button>'
+    }).appendTo(contentDiv);
     $('<div/>', { 'class': 'completionSummary' }).appendTo(contentDiv);
     $('<div/>', { 'class': 'carbonSummary' }).appendTo(contentDiv);
+
+    $(_div + ' div.summaryCompare button').button().click(function() {
+       alert('Compare project');
+    });
 
     var top = 0;
     $(window).scroll(function (event) {
@@ -69,8 +77,8 @@ function SustainabilitySummary (config) {
 
         var completionSummary = $('<div/>');
 
-        $('<h4/>', { 'html': _percentageCompleteText.replace('[percentage]', _data.percentComplete) })
-            .appendTo(completionSummary);
+        $('<h4/>', { 'html': _percentageCompleteText.replace('[percentage]',
+                _data.percentComplete) }).appendTo(completionSummary);
 
         var completeUl = $('<ul/>').appendTo(completionSummary);
 
@@ -86,9 +94,23 @@ function SustainabilitySummary (config) {
 
         $(_div + ' div.completionSummary').html(completionSummary);
 
+        // Set the minimum value - default to zero
+        var min = _findMinValue(_data.perOccupantCarbonChange, 0);
+        min = _findMinValue(_target.perOccupantCarbonChange, min);
+
         var chartOptions = {
                 grid: { borderWidth: 1 },
-                xaxis: { tickFormatter: function() { return ""; }}
+                xaxis: {
+                    tickFormatter: function() { return ""; }
+                },
+                yaxis: {
+                    min: min
+                },
+                legend: {
+                    display: true,
+                    labelBoxBorderColor: null,
+                    container: _div + ' div.carbonSummary div.summaryTotalLegend'
+                }
         };
 
         $(_div + ' div.carbonSummary').html(_renderSummaryTable(
@@ -97,13 +119,29 @@ function SustainabilitySummary (config) {
                 _carbonText, _totalCarbonText, _perPersonCarbonText,
                 _carbonUnitsText, _carbonPerPersonUnitsText));
 
+        var chartData = {
+                data: _data.perOccupantCarbonChange,
+                label: _data.name
+        }
+
         if (_target.perOccupantCarbonChange == undefined) {
             $.plot($(_div + ' div.carbonSummary div.summaryTotalChange'),
-                    [_data.perOccupantCarbonChange], chartOptions);
+                    [ chartData ], chartOptions);
         } else {
+            var target = new Array();
+            var counter = 0;
+            $(_data.perOccupantCarbonChange).each(function(index, changeValue) {
+                target[counter] = [counter, _target.carbonPerOccupant];
+                counter++;
+            });
+
+            var targetData = {
+                    data: target,
+                    label: _target.name
+            }
+
             $.plot($(_div + ' div.carbonSummary div.summaryTotalChange'),
-                    [_data.perOccupantCarbonChange, _target.perOccupantCarbonChange],
-                    chartOptions);
+                    [ chartData, targetData ], chartOptions);
         }
     }
 
@@ -144,12 +182,28 @@ function SustainabilitySummary (config) {
         }
         summaryTable += '</td></tr></tbody></table>';
         summaryTable += '<div class="summaryTotalChange"></div>';
+        summaryTable += '<div class="summaryTotalLegend"></div>';
 
         return summaryTable;
     }
 
     function _formatNumber(value) {
         return (Math.round(value * 10) / 10).toFixed(1);
+    }
+
+    function _findMinValue(data, min) {
+        if (min == undefined) {
+            min = 0;
+        }
+        if (data != undefined) {
+            $(data).each(function(index, changeValue){
+                var parsedValue = parseFloat(changeValue);
+                if (parsedValue < min) {
+                    min = parsedValue;
+                }
+            });
+        }
+        return min;
     }
 }
 

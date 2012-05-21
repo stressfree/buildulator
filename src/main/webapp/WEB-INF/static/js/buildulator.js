@@ -163,10 +163,24 @@ $(document).ready(function() {
                 var name = '<strong>' + sVal + '</strong>';
                 var address = oObj.aData[1];
                 var template = oObj.aData[6];
+                var comparable = oObj.aData[7];
 
-                if (template) {
-                    name += ' (Template)';
+                if (template || comparable) {
+                    name += ' <em>(';
                 }
+                if (template) {
+                    name += 'Template';
+                }
+                if (template && comparable) {
+                    name += ' &amp; ';
+                }
+                if (comparable) {
+                    name += 'Comparable';
+                }
+                if (template || comparable) {
+                    name += ')</em>';
+                }
+
                 if (address != '') {
                     name += '<br/>' + address;
                 }
@@ -342,6 +356,7 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     $('#project select').selectmenu({width: '320px'});
+    $('#preferences select').selectmenu({width: '320px'});
 });
 
 $(document).ready(function() {

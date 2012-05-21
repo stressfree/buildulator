@@ -17,7 +17,7 @@
 
     <p id="_${fn:escapeXml(id)}_id" class="field">
       <label for="_${fn:escapeXml(field)}_id">
-        <c:out value="${fn:escapeXml(label)}" />:
+        <c:out value="${fn:escapeXml(label)}" />
       </label>
       <spring:url value="${path}" var="create_url">
         <spring:param name="form" />

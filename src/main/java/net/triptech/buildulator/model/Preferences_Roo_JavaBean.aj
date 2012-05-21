@@ -47,6 +47,14 @@ privileged aspect Preferences_Roo_JavaBean {
         this.googleTrackingId = googleTrackingId;
     }
     
+    public long Preferences.getTargetProjectId() {
+        return this.targetProjectId;
+    }
+    
+    public void Preferences.setTargetProjectId(long targetProjectId) {
+        this.targetProjectId = targetProjectId;
+    }
+    
     public boolean Preferences.isDebugMode() {
         return this.debugMode;
     }

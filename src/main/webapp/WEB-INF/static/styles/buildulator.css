@@ -523,6 +523,11 @@ input.error {
   color: #fff;
 }
 
+#body .projectInfo div.sSummaryContent div.summaryCompare {
+  margin: 10px 0 0 0;
+  text-align: center;
+}
+
 #body .projectInfo div.sSummaryContent div.completionSummary,
 #body .projectInfo div.sSummaryContent div.carbonSummary {
   font-size: 1em;
@@ -543,7 +548,7 @@ input.error {
 }
 
 #body .projectInfo div.sSummaryContent table {
-  margin: 0 0 0 10px;
+  margin: 0 0 10px 10px;
   width: 220px;
 }
 
@@ -574,9 +579,25 @@ input.error {
 }
 
 #body .projectInfo div.sSummaryContent div.summaryTotalChange {
-    height: 80px;
+    height: 70px;
     width: 230px;
-    margin: 0 0 10px 5px;
+    margin: 0 0 0 5px;
+}
+
+#body .projectInfo div.sSummaryContent div.summaryTotalLegend {
+  margin: 0 0 0 15px;
+}
+#body .projectInfo div.sSummaryContent div.summaryTotalLegend td {
+    height: 1.2em;
+    font-size: 1em;
+}
+
+#body .projectInfo div.sSummaryContent div.summaryTotalLegend td.legendColorBox {
+    width: 5px;
+}
+
+#body .projectInfo div.sSummaryContent div.summaryTotalLegend td.legendLabel {
+    padding-left: 5px;
 }
 
 #body .projectInfo div.summaryFixed {
@@ -1109,7 +1130,7 @@ div.bomTable ul.bomNotEditing div.bomMName {
 
 /** JQuery SelectMenu customisations CSS **/
 a.ui-selectmenu {
-  font-size: 0.8em;
+  font-size: 0.8em!important;
   color: #4C3000!important;
 }
 .ui-selectmenu-menu {

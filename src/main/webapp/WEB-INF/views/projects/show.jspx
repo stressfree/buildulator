@@ -153,7 +153,7 @@
         var sustainabilitySummary = new SustainabilitySummary({
             div: 'div#sustainabilitySummary',
             projectId: <c:out value="${project.id}" />,
-            targetId: 1,
+            targetId: <c:out value="${preferences.targetProjectId}" />,
             projectUrl: config.projectsUrl,
             headingText: '<spring:message code="projects_sustainability_summary" />'
         });

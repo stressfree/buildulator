@@ -17,14 +17,9 @@
         <sec:authorize ifAllGranted="ROLE_ADMIN">
             <menu:item id="f_administration" url="/admin" z="user-managed" />
         </sec:authorize>
-        <c:choose>
-            <c:when test="${pageContext['request'].userPrincipal != null}">
-                <menu:item id="f_userdetails" url="/user" z="user-managed" />
-                <menu:item id="f_logout" url="/resources/j_spring_security_logout" z="user-managed" />
-            </c:when>
-            <c:otherwise>
-                <menu:item id="f_login" url="/login" z="user-managed" />
-            </c:otherwise>
-        </c:choose>
+        <c:if test="${pageContext['request'].userPrincipal != null}">
+            <menu:item id="f_userdetails" url="/user" z="user-managed" />
+            <menu:item id="f_logout" url="/resources/j_spring_security_logout" z="user-managed" />
+        </c:if>
     </menu:menu>
 </div>

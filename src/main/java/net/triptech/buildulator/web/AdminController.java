@@ -21,6 +21,7 @@ import net.sf.json.JSONObject;
 import net.triptech.buildulator.FlashScope;
 import net.triptech.buildulator.model.Person;
 import net.triptech.buildulator.model.Preferences;
+import net.triptech.buildulator.model.Project;
 import net.triptech.buildulator.model.UserRole;
 import net.triptech.buildulator.model.UserStatus;
 
@@ -71,6 +72,9 @@ public class AdminController extends BaseController {
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String updateForm(final Model uiModel, final HttpServletRequest request) {
+
+        uiModel.addAttribute("comparables", Project.findComparableProjects());
+
         uiModel.addAttribute("preferences", this.getPreferences(request));
         return "admin/update";
     }
