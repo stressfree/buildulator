@@ -40,7 +40,10 @@ function SustainabilitySummary (config) {
         href: _div + ' div.comparisonContent',
         inline: true,
         width: '99%',
-        height: '99%'
+        height: '99%',
+        onComplete: function() {
+            _refreshComparison();
+        }
     });
 
     var top = 0;
@@ -83,7 +86,6 @@ function SustainabilitySummary (config) {
         $.getJSON(summaryUrl, function(data){
             _data = data;
             _redraw();
-            _refreshComparison();
         });
     };
 
@@ -136,7 +138,7 @@ function SustainabilitySummary (config) {
         var chartData = {
                 data: _data.perOccupantCarbonChange,
                 label: _data.name
-        }
+        };
 
         if (_target.perOccupantCarbonChange == undefined) {
             $.plot($(_div + ' div.carbonSummary div.summaryTotalChange'),
@@ -152,7 +154,7 @@ function SustainabilitySummary (config) {
             var targetData = {
                     data: target,
                     label: _target.name
-            }
+            };
 
             $.plot($(_div + ' div.carbonSummary div.summaryTotalChange'),
                     [ chartData, targetData ], chartOptions);
@@ -204,9 +206,9 @@ function SustainabilitySummary (config) {
     function _renderComparison(projects, comparisonDiv) {
 
         var html = '<div class="comparisonContent">';
-        html += '<div class="comparisonProjects"><h3>';
+        html += '<div class="comparisonProjects"><h4>';
         html += _comparisonProjectsText;
-        html += '</h3>';
+        html += '</h4>';
 
         if (projects.project.id != undefined) {
             html += '<ul class="currentProject">';
@@ -251,7 +253,9 @@ function SustainabilitySummary (config) {
         }
 
         html += '</div><div class="comparisonGraphs">';
+        html += '<h2>' + _perPersonCarbonText + ' ' + _carbonText + '</h2>';
         html += '<div class="comparisonPerOccupantCarbon"></div>';
+        html += '<h2>' + _totalCarbonText + ' ' + _carbonText + '</h2>';
         html += '<div class="comparisonTotalCarbon"></div>';
         html += '</div></div>';
 
@@ -260,7 +264,6 @@ function SustainabilitySummary (config) {
         $(_div + ' div.comparableInput input').change(function() {
             var key = $(this).val();
             var id = key.substring(key.lastIndexOf('_') + 1, key.length);
-            alert(id);
 
             if ($(this).is(':checked')) {
                 var url = _projectUrl + id + '/summary.json';
@@ -360,9 +363,6 @@ function SustainabilitySummary (config) {
         operationalData[maxIndex] = [ maxTicker, null];
         embodiedData[maxIndex] = [ maxTicker, null];
 
-
-        var stack = 0, bars = true, lines = false, steps = false;
-
         var chartOptions = {
                 grid: { borderWidth: 1 },
                 xaxis: {
@@ -371,18 +371,30 @@ function SustainabilitySummary (config) {
                     tickLength: 4
                 },
                 yaxis: {
-                    min: min
+                    min: min,
+                    tickFormatter: function (v) {
+                        return v + ' ' + _carbonPerPersonUnitsText;
+                    }
                 },
                 legend: {
                     display: true,
                     labelBoxBorderColor: null
                 },
                 series: {
-                    stack: stack,
-                    bars: { show: bars, barWidth: 0.6, align: 'center' }
+                    stack: 0,
+                    bars: { show: true, barWidth: 0.7, align: 'center' }
                 }
         };
-        $.plot(div, [operationalData, embodiedData], chartOptions);
+
+        var width = $(div).parent('div').width() - 50;
+        var height = ($(div).parent('div').height() / 2) - 45;
+
+        $(div).width(width + 'px');
+        $(div).height(height + 'px');
+
+        $.plot(div, [{ label: _operationalFootprintText, data: operationalData },
+                     { label: _billOfMaterialsText, data: embodiedData }],
+                     chartOptions);
     }
 
     function _keys(obj) {

@@ -604,9 +604,37 @@ input.error {
   position: fixed;
 }
 
-div.comparisonPerOccupantCarbon, div.comparisonTotalCarbon {
-  width: 300px;
-  height: 300px;
+div.comparisonContent {
+    width: 99%;
+    height: 99%;
+    text-align: left;
+}
+
+div.comparisonContent h2, div.comparisonContent h4 {
+    margin: 0;
+    padding: 0;
+    font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: normal;
+}
+div.comparisonContent h2 {
+    margin: 15px 0 0 0;
+    text-align: center;
+    font-size; 16px;
+}
+
+div.comparisonContent div.comparisonProjects {
+    width: 300px;
+    float: left;
+}
+
+div.comparisonContent div.comparisonGraphs {
+    margin-left: 305px;
+    height: 100%;
+}
+
+div.comparisonContent div.comparisonPerOccupantCarbon,
+div.comparisonContent div.comparisonTotalCarbon {
+  margin: 0 0 0 10px;
 }
 
 #body .projectInfo  div.bomInstructions {
