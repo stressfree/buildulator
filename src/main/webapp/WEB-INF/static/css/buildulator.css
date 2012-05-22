@@ -604,6 +604,11 @@ input.error {
   position: fixed;
 }
 
+div.comparisonPerOccupantCarbon, div.comparisonTotalCarbon {
+  width: 300px;
+  height: 300px;
+}
+
 #body .projectInfo  div.bomInstructions {
   font-size: 0.9em;
   margin: 0;

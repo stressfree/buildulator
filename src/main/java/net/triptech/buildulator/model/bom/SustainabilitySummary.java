@@ -119,6 +119,32 @@ public class SustainabilitySummary {
     }
 
     /**
+     * Gets the operational energy per occupant.
+     *
+     * @return the operational energy per occupant
+     */
+    public final double getEnergyPerOccupantOperational() {
+        double value = 0;
+        if (this.getOccupants() > 0) {
+            value = this.getEnergyOperational() / this.getOccupants();
+        }
+        return value;
+    }
+
+    /**
+     * Gets the construction energy per occupant.
+     *
+     * @return the construction energy per occupant
+     */
+    public final double getEnergyPerOccupantConstruction() {
+        double value = 0;
+        if (this.getOccupants() > 0) {
+            value = this.getEnergyConstruction() / this.getOccupants();
+        }
+        return value;
+    }
+
+    /**
      * Gets the carbon total.
      *
      * @return the carbon total
@@ -136,6 +162,32 @@ public class SustainabilitySummary {
         double value = 0;
         if (this.getOccupants() > 0) {
             value = (this.getCarbonTotal() / this.getOccupants()) / (double) 1000;
+        }
+        return value;
+    }
+
+    /**
+     * Gets the operational carbon per occupant.
+     *
+     * @return the operational carbon per occupant
+     */
+    public final double getCarbonPerOccupantOperational() {
+        double value = 0;
+        if (this.getOccupants() > 0) {
+            value = (this.getCarbonOperational() / this.getOccupants()) / (double) 1000;
+        }
+        return value;
+    }
+
+    /**
+     * Gets the construction carbon per occupant.
+     *
+     * @return the construction carbon per occupant
+     */
+    public final double getCarbonPerOccupantConstruction() {
+        double value = 0;
+        if (this.getOccupants() > 0) {
+            value = (this.getCarbonConstruction() / this.getOccupants()) / (double) 1000;
         }
         return value;
     }
@@ -163,11 +215,19 @@ public class SustainabilitySummary {
         ssJson.put("energyConstruction", formatValue(this.getEnergyConstruction()));
         ssJson.put("energyTotal", formatValue(this.getEnergyTotal()));
         ssJson.put("energyPerOccupant", formatValue(this.getEnergyPerOccupant()));
+        ssJson.put("energyPerOccupantOperational",
+                formatValue(this.getEnergyPerOccupantOperational()));
+        ssJson.put("energyPerOccupantConstruction",
+                formatValue(this.getEnergyPerOccupantConstruction()));
 
         ssJson.put("carbonOperational", formatValue(this.getCarbonOperational()));
         ssJson.put("carbonConstruction", formatValue(this.getCarbonConstruction()));
         ssJson.put("carbonTotal", formatValue(this.getCarbonTotal()));
         ssJson.put("carbonPerOccupant", formatValue(this.getCarbonPerOccupant()));
+        ssJson.put("carbonPerOccupantOperational",
+                formatValue(this.getCarbonPerOccupantOperational()));
+        ssJson.put("carbonPerOccupantConstruction",
+                formatValue(this.getCarbonPerOccupantConstruction()));
 
         ssJson.put("totalEnergyChange", getChangeArray(this.getTotalEnergyChange()));
         ssJson.put("totalCarbonChange", getChangeArray(this.getTotalCarbonChange()));

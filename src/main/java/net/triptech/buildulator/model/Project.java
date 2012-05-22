@@ -260,6 +260,86 @@ public class Project {
     }
 
     /**
+     * Returns a JSON string for the comparable projects.
+     *
+     * @param project the project
+     * @param userProjects the user projects
+     * @return the string
+     */
+    public static final String toJson(final Project project,
+            final List<Project> userProjects) {
+
+        List<Project> comparableProjects = Project.findComparableProjects();
+
+        if (comparableProjects == null) {
+            comparableProjects = new ArrayList<Project>();
+        }
+
+        // Remove the current project from the user projects if it exists.
+        if (userProjects != null) {
+            List<Integer> removeIndexes = new ArrayList<Integer>();
+
+            int index = 0;
+            for (Project userProject : userProjects) {
+                if (project.getId() == userProject.getId()) {
+                    removeIndexes.add(index);
+                } else {
+                   for (Project compareableProject : comparableProjects) {
+                        if (userProject.getId() == compareableProject.getId()) {
+                            removeIndexes.add(index);
+                        }
+                    }
+                }
+                index++;
+            }
+
+            int removeCount = 0;
+            for (int removeIndex : removeIndexes) {
+                userProjects.remove(removeIndex - removeCount);
+
+                removeCount++;
+            }
+        }
+
+        Map<String, Object> projectJson = new LinkedHashMap<String, Object>();
+        projectJson.put("id", project.getId());
+        projectJson.put("name", project.getName());
+
+        List<Map<String, Object>> comparableJson = new ArrayList<Map<String, Object>>();
+
+        for (Project comparableProject : comparableProjects) {
+            Map<String, Object> pjtJson = new LinkedHashMap<String, Object>();
+            pjtJson.put("id", comparableProject.getId());
+            pjtJson.put("name", comparableProject.getName());
+
+            comparableJson.add(pjtJson);
+        }
+
+        List<Map<String, Object>> userJson = new ArrayList<Map<String, Object>>();
+
+        if (userProjects != null) {
+            for (Project userProject : userProjects) {
+                Map<String, Object> pjtJson = new LinkedHashMap<String, Object>();
+                pjtJson.put("id", userProject.getId());
+                pjtJson.put("name", userProject.getName());
+
+                userJson.add(pjtJson);
+            }
+        }
+
+        Map<String, Object> jsonMap = new LinkedHashMap<String, Object>();
+        jsonMap.put("project", projectJson);
+        jsonMap.put("comparable", comparableJson);
+        jsonMap.put("user", userJson);
+
+        JSONObject jsonObject = JSONObject.fromObject(jsonMap);
+
+        return jsonObject.toString();
+    }
+
+
+
+    /**
      * Find all of the project templates.
      *
      * @return the list

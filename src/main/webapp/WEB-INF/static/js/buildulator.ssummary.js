@@ -2,6 +2,7 @@ function SustainabilitySummary (config) {
     if (config == undefined) { config = new Array(); }
     var _data = new Array();
     var _target = new Array();
+    var _comparisonData = new Object();
     var _div = (config.div != undefined) ? config.div : 'div#sustainabilitySummary';
     var _projectId = (config.projectId != undefined) ? config.projectId : 1;
     var _targetId = (config.targetId != undefined) ? config.targetId : 0;
@@ -18,8 +19,10 @@ function SustainabilitySummary (config) {
     var _carbonUnitsText = (config.carbonUnitsText != undefined) ? config.carbonUnitsText : 'g';
     var _carbonPerPersonUnitsText = (config.carbonPerPersonUnitsText != undefined) ? config.carbonPerPersonUnitsText : 'kg';
     var _compareButtonText = (config.compareButtonText != undefined) ? config.compareButtonText : 'Compare to other projects';
+    var _comparisonProjectsText = (config.comparisonProjectsText != undefined) ? config.comparisonProjectsText : 'Select the projects to compare to';
 
     var summaryUrl = _projectUrl + _projectId + '/summary.json';
+    var comparisonUrl = _projectUrl + _projectId + '/comparisons.json';
     var targetUrl = _projectUrl + _targetId + '/summary.json';
 
     var contentDiv = $('<div/>', { 'class': 'sSummaryContent' }).appendTo(_div);
@@ -30,8 +33,14 @@ function SustainabilitySummary (config) {
     $('<div/>', { 'class': 'completionSummary' }).appendTo(contentDiv);
     $('<div/>', { 'class': 'carbonSummary' }).appendTo(contentDiv);
 
-    $(_div + ' div.summaryCompare button').button().click(function() {
-       alert('Compare project');
+    var comparisonDiv = $('<div/>', { 'class': 'comparison', 'style': 'display: none;' })
+        .appendTo(contentDiv);
+
+    $(_div + ' div.summaryCompare button').button().colorbox({
+        href: _div + ' div.comparisonContent',
+        inline: true,
+        width: '99%',
+        height: '99%'
     });
 
     var top = 0;
@@ -49,6 +58,10 @@ function SustainabilitySummary (config) {
         } else {
           $(_div + ' div.sSummaryContent').removeClass('summaryFixed');
         }
+    });
+
+    $.getJSON(comparisonUrl, function(data){
+        _renderComparison(data, comparisonDiv);
     });
 
     if (_targetId > 0) {
@@ -70,6 +83,7 @@ function SustainabilitySummary (config) {
         $.getJSON(summaryUrl, function(data){
             _data = data;
             _redraw();
+            _refreshComparison();
         });
     };
 
@@ -185,6 +199,211 @@ function SustainabilitySummary (config) {
         summaryTable += '<div class="summaryTotalLegend"></div>';
 
         return summaryTable;
+    }
+
+    function _renderComparison(projects, comparisonDiv) {
+
+        var html = '<div class="comparisonContent">';
+        html += '<div class="comparisonProjects"><h3>';
+        html += _comparisonProjectsText;
+        html += '</h3>';
+
+        if (projects.project.id != undefined) {
+            html += '<ul class="currentProject">';
+            html += '<li><label>' + projects.project.name + '</label></li>';
+            html += '</ul>';
+        }
+
+        if (projects.comparable != undefined) {
+            var cHtml = '';
+            $(projects.comparable).each(function(index, comparableProject) {
+                cHtml += '<li><div class="comparableInput">';
+                cHtml += '<input type="checkbox" value="c_' + _pad(index, 5)
+                    + '_' + comparableProject.id + '" />';
+                cHtml += '</div><label>';
+                cHtml += comparableProject.name;
+                cHtml += '</label></li>';
+            });
+
+            if (cHtml != '') {
+                html += '<ul class="comparableProjects">';
+                html += cHtml;
+                html += '</ul>';
+            }
+        }
+
+        if (projects.user != undefined) {
+            var uHtml = '';
+            $(projects.user).each(function(index, userProject) {
+                uHtml += '<li><div class="comparableInput">';
+                uHtml += '<input type="checkbox" value="u_' + _pad(index, 5)
+                    + '_' + userProject.id + '" />';
+                uHtml += '</div><label>';
+                uHtml += userProject.name;
+                uHtml += '</label></li>';
+            });
+
+            if (uHtml != '') {
+                html += '<ul class="userProjects">';
+                html += uHtml;
+                html += '</ul>';
+            }
+        }
+
+        html += '</div><div class="comparisonGraphs">';
+        html += '<div class="comparisonPerOccupantCarbon"></div>';
+        html += '<div class="comparisonTotalCarbon"></div>';
+        html += '</div></div>';
+
+        $(comparisonDiv).html(html);
+
+        $(_div + ' div.comparableInput input').change(function() {
+            var key = $(this).val();
+            var id = key.substring(key.lastIndexOf('_') + 1, key.length);
+            alert(id);
+
+            if ($(this).is(':checked')) {
+                var url = _projectUrl + id + '/summary.json';
+                $.getJSON(url, function(data){
+                    _comparisonData[key] = data;
+                    _refreshComparison();
+                });
+            } else {
+                delete _comparisonData[key];
+                _refreshComparison();
+            }
+        });
+    }
+
+    function _refreshComparison() {
+        _drawComparisonGraph('perOccupant', 'div.comparisonPerOccupantCarbon');
+        _drawComparisonGraph('total', 'div.comparisonTotalCarbon');
+    }
+
+    function _drawComparisonGraph(type, div) {
+
+        var operationalData = new Array();
+        var embodiedData = new Array();
+        var ticks = new Array();
+        var min = 0;
+
+        ticks[0] = [0, ''];
+        ticks[1] = [1, _data.name];
+
+        switch (type) {
+            case 'perOccupant':
+                var operational = parseFloat(_data.carbonPerOccupantOperational);
+                var embodied = parseFloat(_data.carbonPerOccupantConstruction);
+
+                if (operational + embodied < min) {
+                    min = operational + embodied;
+                }
+
+                operationalData[0] = [ 1, operational];
+                embodiedData[0] = [ 1, embodied];
+                break;
+            case 'total':
+                var operational = parseFloat(_data.carbonOperational) / 1000;
+                var embodied = parseFloat(_data.carbonConstruction) / 1000;
+
+                if (operational + embodied < min) {
+                    min = operational + embodied;
+                }
+                operationalData[0] = [ 1, operational];
+                embodiedData[0] = [ 1, embodied];
+                break;
+        }
+
+
+        var orderedKeys = _keys(_comparisonData);
+
+        $(orderedKeys).each(function(index, key) {
+
+            var data = _comparisonData[key];
+            var index = operationalData.length;
+            var ticker = index + 1;
+
+            if (data != undefined) {
+
+                ticks[ticker] = [ticker, data.name];
+
+                switch (type) {
+                    case 'perOccupant':
+                        var operational = parseFloat(data.carbonPerOccupantOperational);
+                        var embodied = parseFloat(data.carbonPerOccupantConstruction);
+
+                        if (operational + embodied < min) {
+                            min = operational + embodied;
+                        }
+
+                        operationalData[index] = [ ticker, operational];
+                        embodiedData[index] = [ ticker, embodied];
+                        break;
+                    case 'total':
+                        var operational = parseFloat(data.carbonOperational) / 1000;
+                        var embodied = parseFloat(data.carbonConstruction) / 1000;
+
+                        if (operational + embodied < min) {
+                            min = operational + embodied;
+                        }
+                        operationalData[index] = [ ticker, operational];
+                        embodiedData[index] = [ ticker, embodied];
+                        break;
+                }
+            }
+        });
+
+        var maxIndex = operationalData.length;
+        var maxTicker = maxIndex + 1;
+
+        ticks[maxTicker] = [maxTicker, ''];
+        operationalData[maxIndex] = [ maxTicker, null];
+        embodiedData[maxIndex] = [ maxTicker, null];
+
+
+        var stack = 0, bars = true, lines = false, steps = false;
+
+        var chartOptions = {
+                grid: { borderWidth: 1 },
+                xaxis: {
+                    min: 0,
+                    ticks: ticks,
+                    tickLength: 4
+                },
+                yaxis: {
+                    min: min
+                },
+                legend: {
+                    display: true,
+                    labelBoxBorderColor: null
+                },
+                series: {
+                    stack: stack,
+                    bars: { show: bars, barWidth: 0.6, align: 'center' }
+                }
+        };
+        $.plot(div, [operationalData, embodiedData], chartOptions);
+    }
+
+    function _keys(obj) {
+        var keys = [];
+
+        for(var key in obj) {
+            if(obj.hasOwnProperty(key)) {
+                keys.push(key);
+            }
+        }
+        return keys.sort();
+    }
+
+    function _pad(number, length) {
+
+        var str = '' + number;
+        while (str.length < length) {
+            str = '0' + str;
+        }
+        return str;
+
     }
 
     function _formatNumber(value) {

@@ -6,12 +6,13 @@
 
   <c:choose>
     <c:when test="${preferences.debugMode}">
-        <spring:url value="/static/styles/reset-fonts-grids.css" var="reset_fonts_css_url" />
-        <spring:url value="/static/styles/base-min.css" var="base_css_url" />
-        <spring:url value="/static/styles/buildulator.css" var="buildulator_css_url" />
-        <spring:url value="/static/styles/wysiwyg.css" var="wysiwyg_css_url" />
-        <spring:url value="/static/styles/gritter.css" var="gritter_css_url" />
-        <spring:url value="/static/styles/selectmenu.css" var="selectmenu_css_url" />
+        <spring:url value="/static/css/reset-fonts-grids.css" var="reset_fonts_css_url" />
+        <spring:url value="/static/css/base-min.css" var="base_css_url" />
+        <spring:url value="/static/css/buildulator.css" var="buildulator_css_url" />
+        <spring:url value="/static/css/wysiwyg.css" var="wysiwyg_css_url" />
+        <spring:url value="/static/css/gritter.css" var="gritter_css_url" />
+        <spring:url value="/static/css/selectmenu.css" var="selectmenu_css_url" />
+        <spring:url value="/static/css/colorbox.css" var="colorbox_css_url" />
 
         <link rel="stylesheet" type="text/css" href="${reset_fonts_css_url}" />
         <link rel="stylesheet" type="text/css" href="${base_css_url}" />
@@ -19,9 +20,10 @@
         <link rel="stylesheet" type="text/css" href="${wysiwyg_css_url}" />
         <link rel="stylesheet" type="text/css" href="${gritter_css_url}" />
         <link rel="stylesheet" type="text/css" href="${selectmenu_css_url}" />
+        <link rel="stylesheet" type="text/css" href="${colorbox_css_url}" />
     </c:when>
     <c:otherwise>
-        <spring:url value="/static/styles/style.min.css" var="styles_css" />
+        <spring:url value="/static/css/style.min.css" var="styles_css" />
 
         <link rel="stylesheet" type="text/css" href="${styles_css}" />
     </c:otherwise>

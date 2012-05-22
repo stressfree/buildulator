@@ -601,6 +601,43 @@ public class ProjectController extends BaseController {
     }
 
     /**
+     * Returns the projects that this project can be compared to based on the user.
+     * If the user is not allowed to view this project a 404 error is returned.
+     *
+     * @param id the id
+     * @param uiModel the ui model
+     * @param request the request
+     * @param response the response
+     * @return the string
+     */
+    @RequestMapping(value = "/{id}/comparisons.json", method = RequestMethod.GET)
+    public @ResponseBody String jsonComparisons(@PathVariable("id") Long id,
+            HttpServletRequest request, final HttpServletResponse response) {
+
+        String result = "";
+
+        Project project = Project.findProject(id);
+
+        if (checkProjectPermission(project, request)) {
+
+            Person user = getUser(request);
+
+            List<Project> userProjects = new ArrayList<Project>();
+
+            if (user == null) {
+                userProjects = Project.findAllProjects(request.getSession().getId());
+            } else {
+                userProjects = Project.findAllProjects(user);
+            }
+            result = Project.toJson(project, userProjects);
+
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        return result;
+    }
+
+    /**
      * Import the bill of materials.
      *
      * @param id the id

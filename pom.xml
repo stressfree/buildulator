@@ -544,7 +544,7 @@
                         <id>default-minify</id>
                         <phase>process-resources</phase>
                         <configuration>
-                            <cssSourceDir>WEB-INF/static/styles</cssSourceDir>
+                            <cssSourceDir>WEB-INF/static/css</cssSourceDir>
                             <cssSourceFiles>
                                 <cssSourceFile>reset-fonts-grids.css</cssSourceFile>
                                 <cssSourceFile>base-min.css</cssSourceFile>
@@ -552,8 +552,9 @@
                                 <cssSourceFile>wysiwyg.css</cssSourceFile>
                                 <cssSourceFile>gritter.css</cssSourceFile>
                                 <cssSourceFile>selectmenu.css</cssSourceFile>
+                                <cssSourceFile>colorbox.css</cssSourceFile>
                             </cssSourceFiles>
-                            <cssTargetDir>WEB-INF/static/styles</cssTargetDir>
+                            <cssTargetDir>WEB-INF/static/css</cssTargetDir>
                             <cssFinalFile>style.css</cssFinalFile>
                             <jsSourceDir>WEB-INF/static/js</jsSourceDir>
                             <jsSourceFiles>
@@ -563,6 +564,8 @@
                                 <jsSourceFile>jquery.ui.selectmenu.js</jsSourceFile>
                                 <jsSourceFile>jquery.gritter.min.js</jsSourceFile>
                                 <jsSourceFile>jquery.flot.min.js</jsSourceFile>
+                                <jsSourceFile>jquery.flot.stack.min.js</jsSourceFile>
+                                <jsSourceFile>jquery.colorbox.min.js</jsSourceFile>
                                 <jsSourceFile>buildulator.js</jsSourceFile>
                                 <jsSourceFile>buildulator.config.js</jsSourceFile>
                                 <jsSourceFile>buildulator.ssummary.js</jsSourceFile>

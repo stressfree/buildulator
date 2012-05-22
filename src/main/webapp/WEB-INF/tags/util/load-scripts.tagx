@@ -22,6 +22,8 @@
         <spring:url value="/static/js/jquery.ui.selectmenu.js" var="selectmenu_js_url" />
         <spring:url value="/static/js/jquery.gritter.min.js" var="gritter_js_url" />
         <spring:url value="/static/js/jquery.flot.min.js" var="flot_js_url" />
+        <spring:url value="/static/js/jquery.flot.stack.min.js" var="flot_stack_js_url" />
+        <spring:url value="/static/js/jquery.colorbox.min.js" var="colorbox_js_url" />
         <spring:url value="/static/js/buildulator.js" var="buildulator_js_url" />
         <spring:url value="/static/js/buildulator.config.js" var="buildulator_config_js_url" />
         <spring:url value="/static/js/buildulator.ssummary.js" var="buildulator_ssummary_js_url" />
@@ -33,6 +35,8 @@
         <script type="text/javascript" charset="utf8" src="${selectmenu_js_url}"><!-- required for FF3 and Opera --></script>
         <script type="text/javascript" charset="utf8" src="${gritter_js_url}"><!-- required for FF3 and Opera --></script>
         <script type="text/javascript" charset="utf8" src="${flot_js_url}"><!-- required for FF3 and Opera --></script>
+        <script type="text/javascript" charset="utf8" src="${flot_stack_js_url}"><!-- required for FF3 and Opera --></script>
+        <script type="text/javascript" charset="utf8" src="${colorbox_js_url}"><!-- required for FF3 and Opera --></script>
         <script type="text/javascript" charset="utf8" src="${buildulator_js_url}"><!-- required for FF3 and Opera --></script>
         <script type="text/javascript" charset="utf8" src="${buildulator_config_js_url}"><!-- required for FF3 and Opera --></script>
         <script type="text/javascript" charset="utf8" src="${buildulator_ssummary_js_url}"><!-- required for FF3 and Opera --></script>
@@ -45,7 +49,7 @@
     </c:otherwise>
   </c:choose>
 
-  <spring:url value="/static/styles/editor.css" var="wysiwyg_css_url" />
+  <spring:url value="/static/css/editor.css" var="wysiwyg_css_url" />
   <spring:url value="/projects/" var="projects_url" />
   <spring:url value="/projects/new" var="new_project_url" />
   <spring:url value="/projects/${project.id}?edit" var="edit_project_url" />

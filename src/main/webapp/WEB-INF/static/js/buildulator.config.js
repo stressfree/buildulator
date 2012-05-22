@@ -1,6 +1,6 @@
 function BuildulatorConfig (config) {
     if (config == undefined) { config = new Array(); }
-    this.wysiwygCss = (config.wysiwygCss != undefined) ? config.wysiwygCss : '/static/styles/editor.css';
+    this.wysiwygCss = (config.wysiwygCss != undefined) ? config.wysiwygCss : '/static/css/editor.css';
     this.projectsUrl = (config.projectsUrl != undefined) ? config.projectsUrl : '/projects/';
     this.projectsNewUrl = (config.projectsNewUrl != undefined) ? config.projectsNewUrl : '/projects/new';
     this.projectsListAll = (config.projectsListAll != undefined) ? config.projectsListAll : 'false';
