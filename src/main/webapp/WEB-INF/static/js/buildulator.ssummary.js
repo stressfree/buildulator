@@ -18,8 +18,9 @@ function SustainabilitySummary (config) {
     var _perPersonCarbonText = (config.perPersonCarbonText != undefined) ? config.perPersonCarbonText : 'Per Person';
     var _carbonUnitsText = (config.carbonUnitsText != undefined) ? config.carbonUnitsText : 'g';
     var _carbonPerPersonUnitsText = (config.carbonPerPersonUnitsText != undefined) ? config.carbonPerPersonUnitsText : 'kg';
+    var _perPersonCarbonGraphText = (config.perPersonCarbonGraphText != undefined) ? config.perPersonCarbonGraphText : 'Per Person Carbon History';
     var _compareButtonText = (config.compareButtonText != undefined) ? config.compareButtonText : 'Compare to other projects';
-    var _comparisonProjectsText = (config.comparisonProjectsText != undefined) ? config.comparisonProjectsText : 'Select the projects to compare to';
+    var _comparisonProjectsText = (config.comparisonProjectsText != undefined) ? config.comparisonProjectsText : 'Select the projects to compare to:';
 
     var summaryUrl = _projectUrl + _projectId + '/summary.json';
     var comparisonUrl = _projectUrl + _projectId + '/comparisons.json';
@@ -120,7 +121,10 @@ function SustainabilitySummary (config) {
                     tickFormatter: function() { return ""; }
                 },
                 yaxis: {
-                    min: min
+                    min: min,
+                    tickFormatter: function (v) {
+                        return v + ' ' + _carbonPerPersonUnitsText;
+                    }
                 },
                 legend: {
                     display: true,
@@ -153,7 +157,8 @@ function SustainabilitySummary (config) {
 
             var targetData = {
                     data: target,
-                    label: _target.name
+                    label: _target.name + ' (' + _target.carbonPerOccupant
+                        + ' ' + _carbonPerPersonUnitsText + ')'
             };
 
             $.plot($(_div + ' div.carbonSummary div.summaryTotalChange'),
@@ -197,6 +202,7 @@ function SustainabilitySummary (config) {
             summaryTable += ' ' + perPersonUnitsText;
         }
         summaryTable += '</td></tr></tbody></table>';
+        summaryTable += '<h5>' + _perPersonCarbonGraphText + '</h5>';
         summaryTable += '<div class="summaryTotalChange"></div>';
         summaryTable += '<div class="summaryTotalLegend"></div>';
 

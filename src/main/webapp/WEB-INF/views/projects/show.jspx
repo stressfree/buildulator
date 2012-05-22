@@ -104,8 +104,8 @@
     <form id="formDeleteProject" action="${projectDeleteUrl}" method="post">
        <p><spring:message code="projects_delete_confirm" /></p>
        <div class="actionButtons">
-           <span class="cancelAction"><a href="#"><spring:message code="button_cancel" /></a></span>
            <button type="submit"><spring:message code="button_delete" /></button>
+           <span class="cancelAction"><a href="#"><spring:message code="button_cancel" /></a></span>
        </div>
     </form>
 
@@ -118,8 +118,8 @@
            <input type="text" class="textfield required" name="projectName" />
        </p>
        <div class="actionButtons">
-           <span class="cancelAction"><a href="#"><spring:message code="button_cancel" /></a></span>
            <button type="submit"><spring:message code="button_clone" /></button>
+           <span class="cancelAction"><a href="#"><spring:message code="button_cancel" /></a></span>
        </div>
     </form>
 

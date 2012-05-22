@@ -1,4 +1,33 @@
 $(document).ready(function() {
+    $('#body button, #body input:submit, div.actionButtons button,  div.actionButtons input:submit').button();
+
+    $('div.userWarning a').click(function(e) {
+        e.preventDefault();
+        $('#googleSignInForm').submit();
+
+    });
+    $('#usermenu button').hover(function() {
+        $(this).addClass('hoverButton');
+    }, function() {
+        $(this).removeClass('hoverButton');
+    });
+
+    $('body span.cancelAction').each(function() {
+        var text = $(this).find('a').html();
+        var link = $(this).find('a').attr('href');
+
+       $(this).html('<input type="button" value="' + text + '" />');
+
+       $(this).find('input').button();
+       if (link != '' && link != '#') {
+           $(this).find('input').click(function(e) {
+               document.location.href = link;
+           });
+       }
+    });
+
+    $("form").validate();
+
     if ($('#flashMessage p.flashMessageContent').html() != null) {
         $.gritter.add({
             title: $('#flashMessage p.flashMessageTitle').html(),
@@ -26,7 +55,7 @@ $(document).ready(function() {
         $('#formCloneProject').dialog('open');
     });
 
-    $('#formCloneProject .cancelAction a').click(function() {
+    $('#formCloneProject .cancelAction input').click(function() {
         $('#formCloneProject').dialog('close');
     });
 
@@ -40,7 +69,7 @@ $(document).ready(function() {
         $('#formDeleteProject').dialog('open');
     });
 
-    $('#formDeleteProject .cancelAction a').click(function() {
+    $('#formDeleteProject .cancelAction input').click(function() {
         $('#formDeleteProject').dialog('close');
     });
 });
@@ -115,6 +144,10 @@ $(document).ready(function() {
     });
     $('#btnBulkAddMaterials').removeAttr("disabled").click(function() {
         $('#formBulkAddMaterials').dialog('open');
+    });
+
+    $('#formBulkAddMaterials .cancelAction input').click(function() {
+        $('#formBulkAddMaterials').dialog('close');
     });
 });
 
@@ -262,23 +295,6 @@ $(document).ready(function() {
             event: "click"
         } ]
     });
-});
-
-$(document).ready(function() {
-    $('#body button, #body input:submit, div.actionButtons button,  div.actionButtons input:submit').button();
-
-    $('div.userWarning a').click(function(e) {
-        e.preventDefault();
-        $('#googleSignInForm').submit();
-
-    });
-    $('#usermenu button').hover(function() {
-        $(this).addClass('hoverButton');
-    }, function() {
-        $(this).removeClass('hoverButton');
-    });
-
-    $("form").validate();
 });
 
 $(document).ready(function() {

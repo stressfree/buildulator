@@ -34,12 +34,12 @@
         </c:if>
         <jsp:doBody />
         <div class="actionButtons" id="${fn:escapeXml(id)}_submit">
+          <spring:message code="button_save" var="save_button" htmlEscape="false" />
+          <input id="proceed" type="submit" value="${fn:escapeXml(save_button)}"/>
           <c:if test="${not empty cancelAction}">
             <spring:url value="${cancelAction}" var="cancelActionUrl" />
             <span class="cancelAction"><a href="${cancelActionUrl}"><spring:message code="button_cancel" /></a></span>
           </c:if>
-          <spring:message code="button_save" var="save_button" htmlEscape="false" />
-          <input id="proceed" type="submit" value="${fn:escapeXml(save_button)}"/>
         </div>
       </form:form>
       <c:if test="${not empty title}">

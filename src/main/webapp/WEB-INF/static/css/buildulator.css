@@ -522,6 +522,11 @@ input.error {
   font-size: 24px;
   color: #fff;
 }
+#body .projectInfo div.sSummaryContent h5 {
+  font-weight: normal;
+  margin: 15px 0 2px 10px;
+  font-size: 16px;
+}
 
 #body .projectInfo div.sSummaryContent div.summaryCompare {
   margin: 10px 0 0 0;
@@ -580,16 +585,17 @@ input.error {
 
 #body .projectInfo div.sSummaryContent div.summaryTotalChange {
     height: 70px;
-    width: 230px;
-    margin: 0 0 0 5px;
+    width: 225px;
+    margin: 0 0 0 10px;
 }
 
 #body .projectInfo div.sSummaryContent div.summaryTotalLegend {
-  margin: 0 0 0 15px;
+  margin: 5px 0 0 0;
 }
 #body .projectInfo div.sSummaryContent div.summaryTotalLegend td {
     height: 1.2em;
     font-size: 1em;
+    line-height: 1.3em;
 }
 
 #body .projectInfo div.sSummaryContent div.summaryTotalLegend td.legendColorBox {
@@ -621,10 +627,41 @@ div.comparisonContent h2 {
     text-align: center;
     font-size; 16px;
 }
+div.comparisonContent h4 {
+    margin: 0 0 18px 0;
+  font-size: 16px;
+}
 
 div.comparisonContent div.comparisonProjects {
     width: 300px;
     float: left;
+    margin: 0 0 0 15px;
+}
+
+div.comparisonContent div.comparisonProjects ul {
+  border-top: 1px solid #999;
+  margin: 0 20px 0 0;
+}
+
+div.comparisonContent div.comparisonProjects ul.currentProject {
+  border-top: none;
+  font-weight: bold;
+  color: #666;
+}
+
+div.comparisonContent div.comparisonProjects li {
+    font-size: 0.9em;
+    clear: left;
+    border-top: 1px solid #eee;
+    padding: 0.5em 0;
+}
+
+div.comparisonContent div.comparisonProjects div.comparableInput {
+    float: left;
+    margin: 0 0 0 5px;
+}
+div.comparisonContent div.comparisonProjects label {
+    margin: 0 0 0 10px;
 }
 
 div.comparisonContent div.comparisonGraphs {
@@ -636,6 +673,21 @@ div.comparisonContent div.comparisonPerOccupantCarbon,
 div.comparisonContent div.comparisonTotalCarbon {
   margin: 0 0 0 10px;
 }
+
+div.comparisonContent div.legend table {
+    margin: 0.1em 0.3em;
+}
+
+div.comparisonContent div.legend td {
+  border: 0 none;
+  padding: 0.1em 0.3em;
+  background: #faf5f7;
+}
+
+div.comparisonContent div.legend td.legendLabel {
+  padding: 0.1em 1em 0.1em 0.3em;
+}
+
 
 #body .projectInfo  div.bomInstructions {
   font-size: 0.9em;
@@ -719,17 +771,26 @@ div.comparisonContent div.comparisonTotalCarbon {
 }
 
 body div.actionButtons {
-  width: 500px;
+  width: 100%;
   text-align: right;
   border-width: 1px 0 0 0;
   border-style: solid;
   border-color: #948462;
-  margin: .5em 0 0 0;
+  margin: 1em 0 0 0;
   padding: .3em 1em .5em .4em;
 }
 
+
+#body div.actionButtons {
+  width: 550px;
+}
+
+body div.actionButtons input {
+    margin-left: 0.4em;
+}
+
 body div.actionButtons span.cancelAction a {
-  margin: 0 1em 0 0;
+  margin: 0 0 0 1em;
 }
 
 body div.actionButtons span.cancelAction a:hover {
@@ -739,6 +800,10 @@ body div.actionButtons span.cancelAction a:hover {
 
 body .ui-button {
   font-size: 0.8em !important;
+}
+
+body .ui-button .ui-button-text {
+  line-height: inherit;
 }
 
 body .ui-dialog {

@@ -284,7 +284,7 @@ public class Project {
                 if (project.getId() == userProject.getId()) {
                     removeIndexes.add(index);
                 } else {
-                   for (Project compareableProject : comparableProjects) {
+                    for (Project compareableProject : comparableProjects) {
                         if (userProject.getId() == compareableProject.getId()) {
                             removeIndexes.add(index);
                         }
@@ -296,8 +296,20 @@ public class Project {
             int removeCount = 0;
             for (int removeIndex : removeIndexes) {
                 userProjects.remove(removeIndex - removeCount);
-
                 removeCount++;
+            }
+
+            int removeComparable = -1;
+            int comparableIndex = 0;
+            for (Project comparableProject : comparableProjects) {
+                if (project.getId() == comparableProject.getId()) {
+                    removeComparable = comparableIndex;
+                    comparableIndex++;
+                }
+            }
+
+            if (removeComparable > -1) {
+                comparableProjects.remove(removeComparable);
             }
         }
 

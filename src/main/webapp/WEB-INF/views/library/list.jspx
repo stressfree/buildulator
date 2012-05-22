@@ -70,6 +70,7 @@
           </p>
           <div class="actionButtons">
               <button type="submit"><spring:message code="button_submit" /></button>
+              <span class="cancelAction"><a href="#"><spring:message code="button_cancel" /></a></span>
           </div>
        </form>
     </div>

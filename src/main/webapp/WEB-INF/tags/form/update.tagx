@@ -38,12 +38,12 @@
        <form:errors cssClass="errors" delimiter="&lt;p/&gt;" />
        <jsp:doBody />
        <div class="actionButtons" id="${fn:escapeXml(id)}_submit">
+         <spring:message code="button_save" var="save_button" htmlEscape="false" />
+         <input id="proceed" type="submit" value="${fn:escapeXml(save_button)}" />
          <c:if test="${not empty cancelAction}">
             <spring:url value="${cancelAction}" var="cancelActionUrl" />
             <span class="cancelAction"><a href="${cancelActionUrl}"><spring:message code="button_cancel" /></a></span>
          </c:if>
-         <spring:message code="button_save" var="save_button" htmlEscape="false" />
-         <input id="proceed" type="submit" value="${fn:escapeXml(save_button)}" />
        </div>
        <form:hidden id="_${fn:escapeXml(idField)}_id" path="${fn:escapeXml(idField)}" />
        <c:if test="${versionField ne 'none'}">
