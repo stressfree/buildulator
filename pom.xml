@@ -558,14 +558,14 @@
                             <cssFinalFile>style.css</cssFinalFile>
                             <jsSourceDir>WEB-INF/static/js</jsSourceDir>
                             <jsSourceFiles>
-                                <jsSourceFile>jquery.jeditable-min.js</jsSourceFile>
-                                <jsSourceFile>jquery.datatables.editable-min.js</jsSourceFile>
+                                <jsSourceFile>jquery.jeditable.js</jsSourceFile>
+                                <jsSourceFile>jquery.datatables.editable.js</jsSourceFile>
                                 <jsSourceFile>jquery.wysiwyg.js</jsSourceFile>
                                 <jsSourceFile>jquery.ui.selectmenu.js</jsSourceFile>
-                                <jsSourceFile>jquery.gritter.min.js</jsSourceFile>
-                                <jsSourceFile>jquery.flot.min.js</jsSourceFile>
-                                <jsSourceFile>jquery.flot.stack.min.js</jsSourceFile>
-                                <jsSourceFile>jquery.colorbox.min.js</jsSourceFile>
+                                <jsSourceFile>jquery.gritter.js</jsSourceFile>
+                                <jsSourceFile>jquery.flot.js</jsSourceFile>
+                                <jsSourceFile>jquery.flot.stack.js</jsSourceFile>
+                                <jsSourceFile>jquery.colorbox.js</jsSourceFile>
                                 <jsSourceFile>buildulator.js</jsSourceFile>
                                 <jsSourceFile>buildulator.config.js</jsSourceFile>
                                 <jsSourceFile>buildulator.ssummary.js</jsSourceFile>

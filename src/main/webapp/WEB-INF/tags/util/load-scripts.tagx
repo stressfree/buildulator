@@ -16,14 +16,14 @@
 
   <c:choose>
     <c:when test="${preferences.debugMode}">
-        <spring:url value="/static/js/jquery.jeditable-min.js" var="jeditable_js_url" />
-        <spring:url value="/static/js/jquery.datatables.editable-min.js" var="datatables_editable_js_url" />
+        <spring:url value="/static/js/jquery.jeditable.js" var="jeditable_js_url" />
+        <spring:url value="/static/js/jquery.datatables.editable.js" var="datatables_editable_js_url" />
         <spring:url value="/static/js/jquery.wysiwyg.js" var="wysiwyg_js_url" />
         <spring:url value="/static/js/jquery.ui.selectmenu.js" var="selectmenu_js_url" />
-        <spring:url value="/static/js/jquery.gritter.min.js" var="gritter_js_url" />
-        <spring:url value="/static/js/jquery.flot.min.js" var="flot_js_url" />
-        <spring:url value="/static/js/jquery.flot.stack.min.js" var="flot_stack_js_url" />
-        <spring:url value="/static/js/jquery.colorbox.min.js" var="colorbox_js_url" />
+        <spring:url value="/static/js/jquery.gritter.js" var="gritter_js_url" />
+        <spring:url value="/static/js/jquery.flot.js" var="flot_js_url" />
+        <spring:url value="/static/js/jquery.flot.stack.js" var="flot_stack_js_url" />
+        <spring:url value="/static/js/jquery.colorbox.js" var="colorbox_js_url" />
         <spring:url value="/static/js/buildulator.js" var="buildulator_js_url" />
         <spring:url value="/static/js/buildulator.config.js" var="buildulator_config_js_url" />
         <spring:url value="/static/js/buildulator.ssummary.js" var="buildulator_ssummary_js_url" />
