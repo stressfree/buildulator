@@ -393,7 +393,7 @@ function SustainabilitySummary (config) {
         };
 
         var width = $(div).parent('div').width() - 50;
-        var height = ($(div).parent('div').height() / 2) - 50;
+        var height = ($(div).parent('div').height() / 2) - 45;
 
         $(div).width(width + 'px');
         $(div).height(height + 'px');

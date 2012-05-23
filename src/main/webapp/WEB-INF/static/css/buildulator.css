@@ -1237,3 +1237,9 @@ a.ui-selectmenu {
   text-align: left;
 }
 
+/** Colorbox customisations **/
+
+#cboxLoadedContent{
+  overflow: hidden!important;
+}
+
