@@ -59,6 +59,14 @@ privileged aspect Person_Roo_JavaBean {
         this.emailAddress = emailAddress;
     }
     
+    public boolean Person.isTocAccepted() {
+        return this.tocAccepted;
+    }
+    
+    public void Person.setTocAccepted(boolean tocAccepted) {
+        this.tocAccepted = tocAccepted;
+    }
+    
     public List<Project> Person.getProjects() {
         return this.projects;
     }

@@ -57,7 +57,7 @@ public class UserController extends BaseController {
             FlashScope.appendMessage(getMessage("buildulator_user_updated"), request);
         }
 
-        return "redirect:/";
+        return "redirect:/projects";
     }
 
     @RequestMapping(method = RequestMethod.GET)

@@ -37,14 +37,23 @@ public class Preferences {
     @Lob
     private String homepageContent;
 
+    /** The flag to indicate whether terms and conditions are enabled. */
+    private boolean tocEnabled;
+
+    /** The terms and conditions title. */
+    @NotNull
+    @Size(min = 2, max = 200)
+    private String tocTitle;
+
+    /** The terms and conditions content. */
+    @Lob
+    private String tocContent;
+
     /** The google tracking id. */
     private String googleTrackingId;
 
     /** The target project id. */
     private long targetProjectId;
-
-    /** The debug mode flag. */
-    private boolean debugMode;
 
 
     /**

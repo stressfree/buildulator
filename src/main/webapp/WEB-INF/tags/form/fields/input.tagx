@@ -69,7 +69,7 @@
         <c:otherwise>
           <c:choose>
             <c:when test="${type eq 'password'}">
-              <form:password id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" cssClass="${requiredCss} ${validationTypeCss}" minlength="${validationMin}" maxlength="${validationMax}" />
+              <form:password id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" cssClass="textfield ${requiredCss} ${validationTypeCss}" minlength="${validationMin}" maxlength="${validationMax}" />
             </c:when>
             <c:otherwise>
               <form:input id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" cssClass="textfield ${requiredCss} ${validationTypeCss}" minlength="${validationMin}" maxlength="${validationMax}" />

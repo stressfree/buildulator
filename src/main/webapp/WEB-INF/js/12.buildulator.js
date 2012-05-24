@@ -26,7 +26,9 @@ $(document).ready(function() {
        }
     });
 
-    $("form").validate();
+    $("form").each(function() {
+        $(this).validate();
+    });
 
     if ($('#flashMessage p.flashMessageContent').html() != null) {
         $.gritter.add({

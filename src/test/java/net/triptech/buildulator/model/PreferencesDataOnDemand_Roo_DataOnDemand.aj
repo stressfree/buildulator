@@ -24,19 +24,16 @@ privileged aspect PreferencesDataOnDemand_Roo_DataOnDemand {
     
     public Preferences PreferencesDataOnDemand.getNewTransientPreferences(int index) {
         Preferences obj = new Preferences();
-        setDebugMode(obj, index);
         setGoogleTrackingId(obj, index);
         setHomepageContent(obj, index);
         setHomepageTitle(obj, index);
         setName(obj, index);
         setTargetProjectId(obj, index);
+        setTocContent(obj, index);
+        setTocEnabled(obj, index);
+        setTocTitle(obj, index);
         setUrl(obj, index);
         return obj;
-    }
-    
-    public void PreferencesDataOnDemand.setDebugMode(Preferences obj, int index) {
-        Boolean debugMode = true;
-        obj.setDebugMode(debugMode);
     }
     
     public void PreferencesDataOnDemand.setGoogleTrackingId(Preferences obj, int index) {
@@ -68,6 +65,24 @@ privileged aspect PreferencesDataOnDemand_Roo_DataOnDemand {
     public void PreferencesDataOnDemand.setTargetProjectId(Preferences obj, int index) {
         Long targetProjectId = new Integer(index).longValue();
         obj.setTargetProjectId(targetProjectId);
+    }
+    
+    public void PreferencesDataOnDemand.setTocContent(Preferences obj, int index) {
+        String tocContent = "tocContent_" + index;
+        obj.setTocContent(tocContent);
+    }
+    
+    public void PreferencesDataOnDemand.setTocEnabled(Preferences obj, int index) {
+        Boolean tocEnabled = true;
+        obj.setTocEnabled(tocEnabled);
+    }
+    
+    public void PreferencesDataOnDemand.setTocTitle(Preferences obj, int index) {
+        String tocTitle = "tocTitle_" + index;
+        if (tocTitle.length() > 200) {
+            tocTitle = tocTitle.substring(0, 200);
+        }
+        obj.setTocTitle(tocTitle);
     }
     
     public void PreferencesDataOnDemand.setUrl(Preferences obj, int index) {

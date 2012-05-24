@@ -8,6 +8,12 @@
     <put-attribute name="pageUrl" value="_" />
   </definition>
 
+  <definition extends="default" name="terms">
+    <put-attribute name="body" value="/WEB-INF/views/terms.jspx" />
+    <put-attribute name="title" value="" />
+    <put-attribute name="pageUrl" value="_terms" />
+  </definition>
+
   <definition extends="default" name="dataAccessFailure">
     <put-attribute name="body" value="/WEB-INF/views/dataAccessFailure.jspx" />
     <put-attribute name="title" value="pagetitle_dataaccessfailure" />

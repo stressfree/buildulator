@@ -17,13 +17,18 @@
                 <field:input field="homepageTitle" id="c_net_triptech_buildulator_model_Preferences_homepageTitle" z="user-managed" required="true" min="2" max="200" extraClasses="longfield" />
                 <field:editor field="homepageContent" id="c_net_triptech_buildulator_model_Preferences_homepageContent" z="user-managed" />
             </div>
+            <h3><a href="#"><spring:message code="label_net_triptech_buildulator_model_preferences_toc" /></a></h3>
+            <div style="height: 420px;">
+                <field:checkbox field="tocEnabled" id="c_net_triptech_buildulator_model_Preferences_tocEnabled" z="user-managed" />
+                <field:input field="tocTitle" id="c_net_triptech_buildulator_model_Preferences_tocTitle" z="user-managed" required="true" min="2" max="200" extraClasses="longfield" />
+                <field:editor field="tocContent" id="c_net_triptech_buildulator_model_Preferences_tocContent" z="user-managed" />
+            </div>
             <h3><a href="#"><spring:message code="label_net_triptech_buildulator_model_preferences_details" /></a></h3>
             <div>
                 <field:input field="name" id="c_net_triptech_buildulator_model_Preferences_name" required="true" min="10" max="100" extraClasses="longfield" />
                 <field:input field="url" id="c_net_triptech_buildulator_model_Preferences_url" required="true" validationType="url" min="10" max="200" extraClasses="longfield" />
                 <field:input field="googleTrackingId" id="c_net_triptech_buildulator_model_Preferences_googleTrackingId" z="user-managed" />
                 <field:select field="targetProjectId" id="c_net_triptech_buildulator_model_Preferences_targetProjectId" path="projects" itemLabel="name" itemValue="id" items="${comparables}" z="user-managed" />
-                <field:checkbox field="debugMode" id="c_net_triptech_buildulator_model_Preferences_debugMode" z="user-managed" />
             </div>
         </div>
       </form:update>

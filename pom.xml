@@ -535,51 +535,6 @@
                     </webAppConfig>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.samaxes.maven</groupId>
-                <artifactId>maven-minify-plugin</artifactId>
-                <version>1.3.5</version>
-                <executions>
-                    <execution>
-                        <id>default-minify</id>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <cssSourceDir>WEB-INF/static/css</cssSourceDir>
-                            <cssSourceFiles>
-                                <cssSourceFile>reset-fonts-grids.css</cssSourceFile>
-                                <cssSourceFile>base-min.css</cssSourceFile>
-                                <cssSourceFile>buildulator.css</cssSourceFile>
-                                <cssSourceFile>wysiwyg.css</cssSourceFile>
-                                <cssSourceFile>gritter.css</cssSourceFile>
-                                <cssSourceFile>selectmenu.css</cssSourceFile>
-                                <cssSourceFile>colorbox.css</cssSourceFile>
-                            </cssSourceFiles>
-                            <cssTargetDir>WEB-INF/static/css</cssTargetDir>
-                            <cssFinalFile>style.css</cssFinalFile>
-                            <jsSourceDir>WEB-INF/static/js</jsSourceDir>
-                            <jsSourceFiles>
-                                <jsSourceFile>jquery.jeditable.js</jsSourceFile>
-                                <jsSourceFile>jquery.datatables.editable.js</jsSourceFile>
-                                <jsSourceFile>jquery.wysiwyg.js</jsSourceFile>
-                                <jsSourceFile>jquery.ui.selectmenu.js</jsSourceFile>
-                                <jsSourceFile>jquery.gritter.js</jsSourceFile>
-                                <jsSourceFile>jquery.flot.js</jsSourceFile>
-                                <jsSourceFile>jquery.flot.stack.js</jsSourceFile>
-                                <jsSourceFile>jquery.colorbox.js</jsSourceFile>
-                                <jsSourceFile>buildulator.js</jsSourceFile>
-                                <jsSourceFile>buildulator.config.js</jsSourceFile>
-                                <jsSourceFile>buildulator.ssummary.js</jsSourceFile>
-                                <jsSourceFile>buildulator.billofmaterials.js</jsSourceFile>
-                            </jsSourceFiles>
-                            <jsTargetDir>WEB-INF/static/js</jsTargetDir>
-                            <jsFinalFile>script.js</jsFinalFile>
-                        </configuration>
-                        <goals>
-                            <goal>minify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>

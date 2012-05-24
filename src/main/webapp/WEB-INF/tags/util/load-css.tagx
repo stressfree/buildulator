@@ -4,37 +4,14 @@
     <c:out value="${pageContext.response.locale}" default="en" />
   </c:set>
 
-  <c:choose>
-    <c:when test="${preferences.debugMode}">
-        <spring:url value="/static/css/reset-fonts-grids.css" var="reset_fonts_css_url" />
-        <spring:url value="/static/css/base-min.css" var="base_css_url" />
-        <spring:url value="/static/css/buildulator.css" var="buildulator_css_url" />
-        <spring:url value="/static/css/wysiwyg.css" var="wysiwyg_css_url" />
-        <spring:url value="/static/css/gritter.css" var="gritter_css_url" />
-        <spring:url value="/static/css/selectmenu.css" var="selectmenu_css_url" />
-        <spring:url value="/static/css/colorbox.css" var="colorbox_css_url" />
-
-        <link rel="stylesheet" type="text/css" href="${reset_fonts_css_url}" />
-        <link rel="stylesheet" type="text/css" href="${base_css_url}" />
-        <link rel="stylesheet" type="text/css" href="${buildulator_css_url}" />
-        <link rel="stylesheet" type="text/css" href="${wysiwyg_css_url}" />
-        <link rel="stylesheet" type="text/css" href="${gritter_css_url}" />
-        <link rel="stylesheet" type="text/css" href="${selectmenu_css_url}" />
-        <link rel="stylesheet" type="text/css" href="${colorbox_css_url}" />
-    </c:when>
-    <c:otherwise>
-        <spring:url value="/static/css/style.min.css" var="styles_css" />
-
-        <link rel="stylesheet" type="text/css" href="${styles_css}" />
-    </c:otherwise>
-  </c:choose>
-
+  <spring:url value="/static/css/style.min.css" var="styles_css" />
   <spring:url value="/static/js/excanvas.min.js" var="excanvas_js_url" />
   <spring:url value="/static/images/favicon.ico" var="favicon" />
 
   <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/sunny/jquery-ui.css" />
   <link rel="stylesheet" type="text/css" href="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables.css" />
   <link rel="stylesheet" type="text/css" href="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables_themeroller.css" />
+  <link rel="stylesheet" type="text/css" href="${styles_css}" />
   <link rel="SHORTCUT ICON" href="${favicon}" />
   <c:set var="userLocale">
     <c:out value="${pageContext.response.locale}" default="en" />

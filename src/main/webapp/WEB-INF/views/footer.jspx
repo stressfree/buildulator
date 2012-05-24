@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <div id="footer" xmlns:menu="urn:jsptagdir:/WEB-INF/tags/menu"
         xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
         xmlns:spring="http://www.springframework.org/tags"
         xmlns:sec="http://www.springframework.org/security/tags"
         xmlns:jsp="http://java.sun.com/JSP/Page"
@@ -11,6 +12,11 @@
     <menu:menu id="footermenu" z="user-managed">
         <menu:item id="f_home" url="/" z="user-managed" />
         <menu:item id="f_projects" url="/projects" z="user-managed" />
+
+        <c:if test="${preferences.tocEnabled}">
+            <menu:item id="f_toc" url="/terms" label="${fn:escapeXml(preferences.tocTitle)}" z="user-managed" />
+        </c:if>
+
         <sec:authorize ifAnyGranted="ROLE_EDITOR,ROLE_ADMIN">
             <menu:item id="f_library" url="/library" z="user-managed" />
         </sec:authorize>

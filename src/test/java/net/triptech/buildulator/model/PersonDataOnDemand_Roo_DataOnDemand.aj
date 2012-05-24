@@ -30,6 +30,7 @@ privileged aspect PersonDataOnDemand_Roo_DataOnDemand {
         setFirstName(obj, index);
         setLastName(obj, index);
         setOpenIdIdentifier(obj, index);
+        setTocAccepted(obj, index);
         setUserRole(obj, index);
         setUserStatus(obj, index);
         return obj;
@@ -53,6 +54,11 @@ privileged aspect PersonDataOnDemand_Roo_DataOnDemand {
     public void PersonDataOnDemand.setOpenIdIdentifier(Person obj, int index) {
         String openIdIdentifier = "openIdIdentifier_" + index;
         obj.setOpenIdIdentifier(openIdIdentifier);
+    }
+    
+    public void PersonDataOnDemand.setTocAccepted(Person obj, int index) {
+        Boolean tocAccepted = true;
+        obj.setTocAccepted(tocAccepted);
     }
     
     public void PersonDataOnDemand.setUserRole(Person obj, int index) {

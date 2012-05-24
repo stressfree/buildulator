@@ -14,42 +14,10 @@
   <script type="text/javascript" charset="utf8" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"><!-- required for FF3 and Opera --></script>
   <script type="text/javascript" charset="utf8" src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/jquery.dataTables.min.js"><!-- required for FF3 and Opera --></script>
 
-  <c:choose>
-    <c:when test="${preferences.debugMode}">
-        <spring:url value="/static/js/jquery.jeditable.js" var="jeditable_js_url" />
-        <spring:url value="/static/js/jquery.datatables.editable.js" var="datatables_editable_js_url" />
-        <spring:url value="/static/js/jquery.wysiwyg.js" var="wysiwyg_js_url" />
-        <spring:url value="/static/js/jquery.ui.selectmenu.js" var="selectmenu_js_url" />
-        <spring:url value="/static/js/jquery.gritter.js" var="gritter_js_url" />
-        <spring:url value="/static/js/jquery.flot.js" var="flot_js_url" />
-        <spring:url value="/static/js/jquery.flot.stack.js" var="flot_stack_js_url" />
-        <spring:url value="/static/js/jquery.colorbox.js" var="colorbox_js_url" />
-        <spring:url value="/static/js/buildulator.js" var="buildulator_js_url" />
-        <spring:url value="/static/js/buildulator.config.js" var="buildulator_config_js_url" />
-        <spring:url value="/static/js/buildulator.ssummary.js" var="buildulator_ssummary_js_url" />
-        <spring:url value="/static/js/buildulator.billofmaterials.js" var="buildlator_billofmaterials_js_url" />
+  <spring:url value="/static/js/script.min.js" var="script_js_url" />
+  <script type="text/javascript" charset="utf8" src="${script_js_url}"><!-- required for FF3 and Opera --></script>
 
-        <script type="text/javascript" charset="utf8" src="${jeditable_js_url}"><!-- required for FF3 and Opera --></script>
-        <script type="text/javascript" charset="utf8" src="${datatables_editable_js_url}"><!-- required for FF3 and Opera --></script>
-        <script type="text/javascript" charset="utf8" src="${wysiwyg_js_url}"><!-- required for FF3 and Opera --></script>
-        <script type="text/javascript" charset="utf8" src="${selectmenu_js_url}"><!-- required for FF3 and Opera --></script>
-        <script type="text/javascript" charset="utf8" src="${gritter_js_url}"><!-- required for FF3 and Opera --></script>
-        <script type="text/javascript" charset="utf8" src="${flot_js_url}"><!-- required for FF3 and Opera --></script>
-        <script type="text/javascript" charset="utf8" src="${flot_stack_js_url}"><!-- required for FF3 and Opera --></script>
-        <script type="text/javascript" charset="utf8" src="${colorbox_js_url}"><!-- required for FF3 and Opera --></script>
-        <script type="text/javascript" charset="utf8" src="${buildulator_js_url}"><!-- required for FF3 and Opera --></script>
-        <script type="text/javascript" charset="utf8" src="${buildulator_config_js_url}"><!-- required for FF3 and Opera --></script>
-        <script type="text/javascript" charset="utf8" src="${buildulator_ssummary_js_url}"><!-- required for FF3 and Opera --></script>
-        <script type="text/javascript" charset="utf8" src="${buildlator_billofmaterials_js_url}"><!-- required for FF3 and Opera --></script>
-    </c:when>
-    <c:otherwise>
-        <spring:url value="/static/js/script.min.js" var="script_js_url" />
-
-        <script type="text/javascript" charset="utf8" src="${script_js_url}"><!-- required for FF3 and Opera --></script>
-    </c:otherwise>
-  </c:choose>
-
-  <spring:url value="/static/css/editor.css" var="wysiwyg_css_url" />
+  <spring:url value="/static/css/editor.min.css" var="wysiwyg_css_url" />
   <spring:url value="/projects/" var="projects_url" />
   <spring:url value="/projects/new" var="new_project_url" />
   <spring:url value="/projects/${project.id}?edit" var="edit_project_url" />

@@ -22,6 +22,7 @@ import net.triptech.buildulator.FlashScope;
 import net.triptech.buildulator.model.DataGrid;
 import net.triptech.buildulator.model.MaterialDetail;
 import net.triptech.buildulator.model.MaterialType;
+import net.triptech.buildulator.model.Preferences;
 import net.triptech.buildulator.model.Project;
 import net.triptech.buildulator.model.Person;
 import net.triptech.buildulator.model.UserRole;
@@ -83,8 +84,14 @@ public class ProjectController extends BaseController {
         } else {
             Person user = getUser(request);
 
-            boolean allProjects = canViewAllProjects(allProjectsVal, user);
-            uiModel.addAttribute("allProjects", allProjects);
+            Preferences preferences = this.getPreferences(request);
+            if (user != null && !user.isTocAccepted() && preferences.isTocEnabled()) {
+                // Redirect to the user details screen as they need to accept the TOC.
+                page = "redirect:/user";
+            } else {
+                boolean allProjects = canViewAllProjects(allProjectsVal, user);
+                uiModel.addAttribute("allProjects", allProjects);
+            }
         }
         return page;
     }

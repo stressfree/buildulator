@@ -1,29 +1,29 @@
 function BillOfMaterials (config) {
-    if (config == undefined) { config = new Array(); }
-    var _data = new Array();
-    var _materials = new Array();
-    var _div = (config.div != undefined) ? config.div : 'div.bomTable';
-    var _summary = (config.summary != undefined) ? config.summary : new SustainabilitySummary();
-    var _editing = (config.editing != undefined) ? config.editing : 'true';
-    var _type = (config.type != undefined) ? config.type : 'construction';
-    var _projectId = (config.projectId != undefined) ? config.projectId : 1;
-    var _projectUrl = (config.projectUrl != undefined) ? config.projectUrl : './projects/';
-    var _addText = (config.addText != undefined) ? config.addText : 'Add';
-    var _editText = (config.editText != undefined) ? config.editText : 'OK';
-    var _cancelText = (config.cancelText != undefined) ? config.cancelText : 'Cancel';
-    var _sectionText = (config.sectionText != undefined) ? config.sectionText : 'section';
-    var _elementText = (config.elementText != undefined) ? config.elementText : 'element';
-    var _materialText = (config.materialText != undefined) ? config.materialText : 'material';
-    var _deleteText = (config.deleteText != undefined) ? config.deleteText : 'Delete';
-    var _deleteConfirmText = (config.deleteConfirmText != undefined) ? config.deleteConfirmText : 'Are you sure you want to delete this';
-    var _headerNameText = (config.headerNameText != undefined) ? config.headerNameText : '';
-    var _headerQuantityText = (config.headerQuantityText != undefined) ? config.headerQuantityText : 'Quantity';
-    var _headerCarbonText = (config.headerCarbonText != undefined) ? config.headerCarbonText : 'Carbon (g CO<sub>2</sub>)';
-    var _footerSummaryText = (config.footerSummaryText != undefined) ? config.footerSummaryText : 'Total embodied carbon (g)';
-    var _editStartText = (config.editStartText != undefined) ? config.editStartText : 'Edit table';
-    var _editFinishText = (config.editFinishText != undefined) ? config.editFinishText : 'Finish editing';
-    var _quantityText = (config.quantityText != undefined) ? config.quantityText : 'Quantity';
-    var _unitsText = (config.unitsText != undefined) ? config.unitsText : 'Units';
+    if (config === undefined) { config = []; }
+    var _data = [];
+    var _materials = [];
+    var _div = (config.div !== undefined) ? config.div : 'div.bomTable';
+    var _summary = (config.summary !== undefined) ? config.summary : new SustainabilitySummary();
+    var _editing = (config.editing !== undefined) ? config.editing : 'true';
+    var _type = (config.type !== undefined) ? config.type : 'construction';
+    var _projectId = (config.projectId !== undefined) ? config.projectId : 1;
+    var _projectUrl = (config.projectUrl !== undefined) ? config.projectUrl : './projects/';
+    var _addText = (config.addText !== undefined) ? config.addText : 'Add';
+    var _editText = (config.editText !== undefined) ? config.editText : 'OK';
+    var _cancelText = (config.cancelText !== undefined) ? config.cancelText : 'Cancel';
+    var _sectionText = (config.sectionText !== undefined) ? config.sectionText : 'section';
+    var _elementText = (config.elementText !== undefined) ? config.elementText : 'element';
+    var _materialText = (config.materialText !== undefined) ? config.materialText : 'material';
+    var _deleteText = (config.deleteText !== undefined) ? config.deleteText : 'Delete';
+    var _deleteConfirmText = (config.deleteConfirmText !== undefined) ? config.deleteConfirmText : 'Are you sure you want to delete this';
+    var _headerNameText = (config.headerNameText !== undefined) ? config.headerNameText : '';
+    var _headerQuantityText = (config.headerQuantityText !== undefined) ? config.headerQuantityText : 'Quantity';
+    var _headerCarbonText = (config.headerCarbonText !== undefined) ? config.headerCarbonText : 'Carbon (g CO<sub>2</sub>)';
+    var _footerSummaryText = (config.footerSummaryText !== undefined) ? config.footerSummaryText : 'Total embodied carbon (g)';
+    var _editStartText = (config.editStartText !== undefined) ? config.editStartText : 'Edit table';
+    var _editFinishText = (config.editFinishText !== undefined) ? config.editFinishText : 'Finish editing';
+    var _quantityText = (config.quantityText !== undefined) ? config.quantityText : 'Quantity';
+    var _unitsText = (config.unitsText !== undefined) ? config.unitsText : 'Units';
 
     var bomUrl = _projectUrl + _projectId + '/bom.json?type=' + _type.toLowerCase();
     var materialsUrl = _projectUrl + '/materials.json?type=' + _type.toLowerCase();
@@ -45,13 +45,13 @@ function BillOfMaterials (config) {
         }).appendTo(_div);
 
         var sectionsCss = 'bomSections';
-        if (_editing == 'false') {
+        if (_editing === 'false') {
             sectionsCss += ' bomNotEditing';
         }
 
         $('<ul/>', {
-            'class': sectionsCss, html: sections.join('')
-            + _renderAddControl('section')
+            'class': sectionsCss, html: sections.join('') +
+                _renderAddControl('section')
         }).appendTo(_div);
 
         $('<div/>', {
@@ -84,7 +84,7 @@ function BillOfMaterials (config) {
             }
         });
 
-        if (_editing != 'false') {
+        if (_editing !== 'false') {
             _addDefaultEditHandlers();
         }
     }
@@ -175,8 +175,8 @@ function BillOfMaterials (config) {
                     break;
             }
 
-            var params = 'type=' + _type + '&name=' + name + '&quantity=' + quantity
-                    + '&units=' + units + '&sid=' + sid + '&eid=' + eid;
+            var params = 'type=' + _type + '&name=' + name + '&quantity=' + quantity +
+                    '&units=' + units + '&sid=' + sid + '&eid=' + eid;
             var addUrl = _projectUrl + _projectId + '/newitem';
             $.ajax({
                 type: 'POST',
@@ -185,19 +185,20 @@ function BillOfMaterials (config) {
                 data: params,
                 success: function(data){
                     _data = $.parseJSON(data);
+                    var lastId = '';
                     switch (type) {
                         case 'section':
-                            var lastId = _data.sections.length - 1;
+                            lastId = _data.sections.length - 1;
                             $(addDiv).before(_renderSection(_data.sections[lastId]));
                             break;
                         case 'element':
                             var section = _data.sections[sid - 1];
-                            var lastId = section.elements.length - 1;
+                            lastId = section.elements.length - 1;
                             $(addDiv).before(_renderElement(section.elements[lastId]));
                             break;
                         case 'material':
                             var element = _data.sections[sid - 1].elements[eid - 1];
-                            var lastId = element.materials.length - 1;
+                            lastId = element.materials.length - 1;
                             $(addDiv).before(_renderMaterial(element.materials[lastId]));
                             break;
                     }
@@ -310,7 +311,7 @@ function BillOfMaterials (config) {
                 },
                 error: function(e){
                     alert('Error editing ' + type + ': ' + e);
-                },
+                }
             });
         });
     }
@@ -351,7 +352,7 @@ function BillOfMaterials (config) {
     }
 
     function _populateMaterialSelect(node) {
-        if (_getType(node) == 'material') {
+        if (_getType(node) === 'material') {
             var selectedValue = $(node).find('input.bomSelectValue').val();
             var selectedUnits = '';
 
@@ -360,10 +361,10 @@ function BillOfMaterials (config) {
                 $(_materials).each(function(index, material){
                     var selected = '';
 
-                    if (selectedValue == '') {
+                    if (selectedValue === '') {
                         selectedValue = material.name;
                     }
-                    if (selectedValue == material.name) {
+                    if (selectedValue === material.name) {
                         selected = 'selected';
                         selectedUnits = material.units;
                     }
@@ -373,7 +374,7 @@ function BillOfMaterials (config) {
                 $(this).selectmenu({width: '351px'}).change(function() {
                     var selected = $(this).val();
                     $(_materials).each(function(index, material) {
-                        if (material.name == selected) {
+                        if (material.name === selected) {
                             $(node).find('input.bomSelectValue').val(material.name);
                             $(node).find('div.bomMUnits').html(material.units);
                         }
@@ -396,22 +397,22 @@ function BillOfMaterials (config) {
 
     function _renderFormInputs(node, field) {
         var helperCss = '';
-        if (field == undefined) {
-            field = new Array();
-            if (_quantityText != '') {
+        if (field === undefined) {
+            field = [];
+            if (_quantityText !== '') {
                 field.quantity = _quantityText;
                 helperCss = 'bomHelpText';
             }
-            if (_unitsText != '') {
+            if (_unitsText !== '') {
                 field.units = _unitsText;
                 helperCss = 'bomHelpText';
             }
         }
 
-        var name = (field.name != undefined) ? field.name : '';
-        var units = (field.units != undefined) ? field.units : '';
-        var quantity = (field.quantity != undefined) ? field.quantity : '';
-        html = '';
+        var name = (field.name !== undefined) ? field.name : '';
+        var units = (field.units !== undefined) ? field.units : '';
+        var quantity = (field.quantity !== undefined) ? field.quantity : '';
+        var html = '';
 
         switch(_getType(node)) {
             case "element":
@@ -469,8 +470,8 @@ function BillOfMaterials (config) {
                     _summary.update();
                 },
                 error: function(e){
-                    alert('Error deleting ' + type + ': ' + data);
-                },
+                    alert('Error deleting ' + type + ': ' + e);
+                }
             });
         }
     }
@@ -531,8 +532,8 @@ function BillOfMaterials (config) {
     }
 
     function _renderHeader() {
-        html = '<div class="bomHEdit"><button>';
-        if (_editing == 'false') {
+        var html = '<div class="bomHEdit"><button>';
+        if (_editing === 'false') {
             html += _editStartText;
         } else {
             html += _editFinishText;
@@ -549,7 +550,7 @@ function BillOfMaterials (config) {
     }
 
     function _renderFooter() {
-        html = '<div class="bomFSummary">';
+        var html = '<div class="bomFSummary">';
         html += _footerSummaryText;
         html += '</div><div class="bomFCarbon">';
         html += _data.totalCarbon;
@@ -592,7 +593,7 @@ function BillOfMaterials (config) {
 
     function _readValue(value) {
         var returnVal = '';
-        if (value != undefined && value != '') {
+        if (value !== undefined && value !== '') {
             returnVal = value;
         }
         return returnVal;

@@ -1,10 +1,16 @@
-<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:spring="http://www.springframework.org/tags" xmlns:form="http://www.springframework.org/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+        xmlns:spring="http://www.springframework.org/tags"
+        xmlns:form="http://www.springframework.org/tags/form"
+        xmlns:jsp="http://java.sun.com/JSP/Page"
+        version="2.0">
   <jsp:output omit-xml-declaration="yes" />
 
   <jsp:directive.attribute name="id" type="java.lang.String" required="true" rtexprvalue="true" description="The identifier for this tag (do not change!)" />
   <jsp:directive.attribute name="field" type="java.lang.String" required="true" rtexprvalue="true" description="The field exposed from the form backing object" />
   <jsp:directive.attribute name="label" type="java.lang.String" required="false" rtexprvalue="true" description="The label used for this field, will default to a message bundle if not supplied" />
   <jsp:directive.attribute name="disableFormBinding" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Set to true to disable Spring form binding" />
+  <jsp:directive.attribute name="required" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicates if this field is required (default false)" />
   <jsp:directive.attribute name="render" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicate if the contents of this tag and all enclosed tags should be rendered (default 'true')" />
   <jsp:directive.attribute name="z" type="java.lang.String" required="false" description="Used for checking if element has been modified (to recalculate simply provide empty string value)" />
 
@@ -16,17 +22,23 @@
       <spring:escapeBody javaScriptEscape="true">${field}</spring:escapeBody>
     </c:set>
 
-    <p class="field checkbox" id="_${sec_id}_id">
-      <c:choose>
-        <c:when test="${disableFormBinding}">
-          <input id="_${sec_field}_id" name="${sec_field}" type="checkbox"/>
-        </c:when>
-        <c:otherwise>
-          <form:checkbox id="_${sec_field}_id" path="${sec_field}"/>
-        </c:otherwise>
-      </c:choose>
+    <c:if test="${required}">
+        <c:set var="requiredCss" value="required" />
+    </c:if>
+
+    <p class="field checkbox" id="_${fn:escapeXml(id)}_id">
+      <span class="checkboxWrapper">
+        <c:choose>
+            <c:when test="${disableFormBinding}">
+                <input id="_${sec_field}_id" name="${sec_field}" type="checkbox" class="${requiredCss}" />
+            </c:when>
+            <c:otherwise>
+                <form:checkbox id="_${sec_field}_id" path="${sec_field}" cssClass="${requiredCss}" />
+            </c:otherwise>
+        </c:choose>
+      </span>
       <label for="_${sec_field}_id">
-        <c:out value="${fn:escapeXml(label)}" />
+        <c:out value="${label}" escapeXml="false" />
       </label>
     </p>
   </c:if>

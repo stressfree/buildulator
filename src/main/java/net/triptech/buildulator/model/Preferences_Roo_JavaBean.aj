@@ -39,6 +39,30 @@ privileged aspect Preferences_Roo_JavaBean {
         this.homepageContent = homepageContent;
     }
     
+    public boolean Preferences.isTocEnabled() {
+        return this.tocEnabled;
+    }
+    
+    public void Preferences.setTocEnabled(boolean tocEnabled) {
+        this.tocEnabled = tocEnabled;
+    }
+    
+    public String Preferences.getTocTitle() {
+        return this.tocTitle;
+    }
+    
+    public void Preferences.setTocTitle(String tocTitle) {
+        this.tocTitle = tocTitle;
+    }
+    
+    public String Preferences.getTocContent() {
+        return this.tocContent;
+    }
+    
+    public void Preferences.setTocContent(String tocContent) {
+        this.tocContent = tocContent;
+    }
+    
     public String Preferences.getGoogleTrackingId() {
         return this.googleTrackingId;
     }
@@ -53,14 +77,6 @@ privileged aspect Preferences_Roo_JavaBean {
     
     public void Preferences.setTargetProjectId(long targetProjectId) {
         this.targetProjectId = targetProjectId;
-    }
-    
-    public boolean Preferences.isDebugMode() {
-        return this.debugMode;
-    }
-    
-    public void Preferences.setDebugMode(boolean debugMode) {
-        this.debugMode = debugMode;
     }
     
 }

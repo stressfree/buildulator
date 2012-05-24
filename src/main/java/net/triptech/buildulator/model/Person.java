@@ -80,6 +80,9 @@ public class Person implements UserDetails {
     @Column(name = "email_address", unique = true)
     private String emailAddress;
 
+    /** The terms and conditions have been accepted by the user. */
+    private boolean tocAccepted;
+
     /** The projects. */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
     private List<Project> projects = new ArrayList<Project>();
