@@ -11,7 +11,7 @@
   <jsp:output omit-xml-declaration="yes"/>
   <jsp:useBean id="now" class="java.util.Date" scope="page" />
 
-    <c:if test="${preferences.copyrightNotice not empty}">
+    <c:if test="${not empty preferences.copyrightNotice}">
         <div id="copyrightNotice">
             <p>&#169; <fmt:formatDate value="${now}" pattern="yyyy" /> <c:out value=" ${preferences.copyrightNotice} " /></p>
         </div>
