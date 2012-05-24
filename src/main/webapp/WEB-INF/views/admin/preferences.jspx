@@ -26,7 +26,7 @@
             <h3><a href="#"><spring:message code="label_net_triptech_buildulator_model_preferences_details" /></a></h3>
             <div>
                 <field:input field="name" id="c_net_triptech_buildulator_model_Preferences_name" required="true" min="10" max="100" extraClasses="longfield" />
-                <field:input field="organisationName" id="c_net_triptech_buildulator_model_Preferences_organisationName" max="200" extraClasses="longfield" />
+                <field:input field="copyrightNotice" id="c_net_triptech_buildulator_model_Preferences_copyrightNotice" max="200" extraClasses="longfield" />
                 <field:input field="url" id="c_net_triptech_buildulator_model_Preferences_url" required="true" validationType="url" min="10" max="200" extraClasses="longfield" />
                 <field:input field="googleTrackingId" id="c_net_triptech_buildulator_model_Preferences_googleTrackingId" z="user-managed" />
                 <field:select field="targetProjectId" id="c_net_triptech_buildulator_model_Preferences_targetProjectId" path="projects" itemLabel="name" itemValue="id" items="${comparables}" z="user-managed" />

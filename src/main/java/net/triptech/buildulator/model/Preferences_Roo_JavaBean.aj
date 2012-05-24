@@ -15,12 +15,12 @@ privileged aspect Preferences_Roo_JavaBean {
         this.name = name;
     }
     
-    public String Preferences.getOrganisationName() {
-        return this.organisationName;
+    public String Preferences.getCopyrightNotice() {
+        return this.copyrightNotice;
     }
     
-    public void Preferences.setOrganisationName(String organisationName) {
-        this.organisationName = organisationName;
+    public void Preferences.setCopyrightNotice(String copyrightNotice) {
+        this.copyrightNotice = copyrightNotice;
     }
     
     public String Preferences.getUrl() {

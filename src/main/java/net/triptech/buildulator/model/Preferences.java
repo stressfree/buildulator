@@ -23,9 +23,9 @@ public class Preferences {
     @Size(min = 1, max = 100)
     private String name;
 
-    /** The organisation name. */
+    /** The copyright notice. */
     @Size(max = 100)
-    private String organisationName;
+    private String copyrightNotice;
 
     /** The application url. */
     @NotNull
