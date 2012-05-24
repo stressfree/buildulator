@@ -144,19 +144,30 @@ sub {
   margin: 10px 5px 20px 0;
   ul {
     margin: 0;
-    list-style: none; }
+    list-style: none; 
+  }
   li {
     display: inline;
     padding: 0 0.6em;
     border-left: 1px solid #ccc;
     &:first-child {
-      border-left: none; }
+      border-left: none; 
+    }
     a {
       color: #666;
       text-decoration: none;
       &:hover {
         text-decoration: underline;
-        color: #ff3333; } } } }
+        color: #ff3333; 
+      }
+    }
+  }
+  #copyrightNotice {
+      float: left;
+      margin: 0 0 0 15px;
+      color: #999;
+  }
+}
 
 #container {
   width: 980px;
@@ -166,7 +177,8 @@ sub {
   -moz-border-radius: 8px;
   -webkit-border-radius: 8px;
   -khtml-border-radius: 8px;
-  border-radius: 8px; }
+  border-radius: 8px;
+}
 
 #body {
   margin: 0px 2px 35px 2px;
@@ -174,30 +186,38 @@ sub {
   line-height: 1.5em;
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Lato', Helvetica, Arial, "Lucida Grande", sans-serif;
-    font-weight: bold; }
+    font-weight: bold;
+  }
   h1, h2, h3, h4, h5, h6 {
-    margin-bottom: 0.6em; }
+    margin-bottom: 0.6em;
+  }
   h1 {
     font-size: 2em;
     margin: 0 0 0 15px;
     padding: 30px 0 15px 0;
     color: #666;
-    font-weight: normal; }
+    font-weight: normal;
+  }
   td {
-    border: 1px solid #ccc; }
+    border: 1px solid #ccc; 
+  }
   p {
-    margin-bottom: 0.6em; }
+    margin-bottom: 0.6em;
+  }
   div {
     &.panel {
       margin: 2px;
       border: 1px solid #d4d4d3;
-      background: #fff; }
+      background: #fff;
+    }
     &.panelContent {
-      margin: 15px 15px 35px 15px; }
+      margin: 15px 15px 35px 15px;
+    }
     &.sidePanel {
       float: right;
       width: 249px;
-      margin: 0 10px 0 10px; }
+      margin: 0 10px 0 10px; 
+    }
     &.userWarning {
       background: #535353;
       border: 1px solid #000;
@@ -205,18 +225,25 @@ sub {
       padding: 0.6em 0;
       margin: 5px 280px 5px 2px;
       p {
-        margin: 0 1em; }
+        margin: 0 1em; 
+      }
       a {
         color: #EFEFEF;
         &:hover {
-          color: #fed448; } } }
+          color: #fed448; 
+        }
+     }
+    }
     &.exceptionMessage {
       background: #535353;
       border: 1px solid #000;
       color: #fff;
       padding: 0.6em;
       font-size: 0.8em;
-      overflow: scroll; } } }
+      overflow: scroll; 
+    }
+  }
+}
 
 p {
   &.field {

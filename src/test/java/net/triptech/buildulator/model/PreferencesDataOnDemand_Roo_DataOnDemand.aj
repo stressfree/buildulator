@@ -28,6 +28,7 @@ privileged aspect PreferencesDataOnDemand_Roo_DataOnDemand {
         setHomepageContent(obj, index);
         setHomepageTitle(obj, index);
         setName(obj, index);
+        setOrganisationName(obj, index);
         setTargetProjectId(obj, index);
         setTocContent(obj, index);
         setTocEnabled(obj, index);
@@ -60,6 +61,14 @@ privileged aspect PreferencesDataOnDemand_Roo_DataOnDemand {
             name = name.substring(0, 100);
         }
         obj.setName(name);
+    }
+    
+    public void PreferencesDataOnDemand.setOrganisationName(Preferences obj, int index) {
+        String organisationName = "organisationName_" + index;
+        if (organisationName.length() > 100) {
+            organisationName = organisationName.substring(0, 100);
+        }
+        obj.setOrganisationName(organisationName);
     }
     
     public void PreferencesDataOnDemand.setTargetProjectId(Preferences obj, int index) {

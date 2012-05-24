@@ -50,7 +50,7 @@ public class AdminController extends BaseController {
             FlashScope.appendMessage(getMessage("buildulator_object_validation",
                     Preferences.class), request);
 
-            return "preferences/update";
+            return "admin/update";
         }
 
         uiModel.asMap().clear();

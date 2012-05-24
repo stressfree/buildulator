@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <div id="footer" xmlns:menu="urn:jsptagdir:/WEB-INF/tags/menu"
         xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
         xmlns:fn="http://java.sun.com/jsp/jstl/functions"
         xmlns:spring="http://www.springframework.org/tags"
         xmlns:sec="http://www.springframework.org/security/tags"
@@ -8,6 +9,13 @@
         version="2.0">
   <jsp:directive.page contentType="text/html;charset=UTF-8"/>
   <jsp:output omit-xml-declaration="yes"/>
+  <jsp:useBean id="now" class="java.util.Date" scope="page" />
+
+    <c:if test="${preferences.organisationName ne ''}">
+        <div id="copyrightNotice">
+            <p>&#169; <fmt:formatDate value="${now}" pattern="yyyy" /> <c:out value=" ${preferences.organisationName} " /></p>
+        </div>
+    </c:if>
 
     <menu:menu id="footermenu" z="user-managed">
         <menu:item id="f_home" url="/" z="user-managed" />

@@ -15,6 +15,14 @@ privileged aspect Preferences_Roo_JavaBean {
         this.name = name;
     }
     
+    public String Preferences.getOrganisationName() {
+        return this.organisationName;
+    }
+    
+    public void Preferences.setOrganisationName(String organisationName) {
+        this.organisationName = organisationName;
+    }
+    
     public String Preferences.getUrl() {
         return this.url;
     }
