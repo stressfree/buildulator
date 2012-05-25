@@ -6,7 +6,7 @@
   <jsp:directive.page contentType="text/html;charset=UTF-8" />
   <jsp:output omit-xml-declaration="yes" />
 
-  <h1><c:out value="${preferences.tocTitle}" /></h1>
+  <h1><c:out value="${preferences.aboutTitle}" /></h1>
 
   <div class="sidePanel">
     <div class="newProject">
@@ -15,7 +15,7 @@
   </div>
   <div class="panel">
     <div class="panelContent">
-        <c:out value="${preferences.tocContent}" escapeXml="false" />
+        <c:out value="${preferences.aboutContent}" escapeXml="false" />
     </div>
   </div>
 </div>

@@ -8,9 +8,15 @@
     <put-attribute name="pageUrl" value="_" />
   </definition>
 
+  <definition extends="default" name="about">
+    <put-attribute name="body" value="/WEB-INF/views/about.jspx" />
+    <put-attribute name="title" value="pagetitle_about" />
+    <put-attribute name="pageUrl" value="_about" />
+  </definition>
+
   <definition extends="default" name="terms">
     <put-attribute name="body" value="/WEB-INF/views/terms.jspx" />
-    <put-attribute name="title" value="" />
+    <put-attribute name="title" value="pagetitle_terms" />
     <put-attribute name="pageUrl" value="_terms" />
   </definition>
 

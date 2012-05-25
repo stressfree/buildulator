@@ -651,17 +651,26 @@ p.field div.wysiwyg {
     -webkit-box-shadow: none;
     box-shadow: none;
     margin-top: 5px;
-    border: 1px solid #ccc; } }
+    border: 1px solid #ccc; 
+  }
+}
 
-#_c_net_triptech_buildulator_model_Preferences_homepageTitle_id label, #_c_net_triptech_buildulator_model_Preferences_tocTitle_id label {
+#_c_net_triptech_buildulator_model_Preferences_homepageTitle_id label,
+#_c_net_triptech_buildulator_model_Preferences_aboutTitle_id label, 
+#_c_net_triptech_buildulator_model_Preferences_tocTitle_id label {
   width: auto;
-  margin-left: 30px; }
+  margin-left: 30px;
+}
 
+#_c_net_triptech_buildulator_model_Preferences_aboutEnabled_id,
 #_c_net_triptech_buildulator_model_Preferences_tocEnabled_id {
   input {
-    margin-left: 70px; }
+    margin-left: 70px;
+  }
   label {
-    margin-left: 95px; } }
+    margin-left: 95px; 
+  }
+}
 
 #_c_net_triptech_buildulator_model_Project_occupants_id input {
   width: 4em; }

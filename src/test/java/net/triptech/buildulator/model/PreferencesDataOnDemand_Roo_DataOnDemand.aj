@@ -24,6 +24,9 @@ privileged aspect PreferencesDataOnDemand_Roo_DataOnDemand {
     
     public Preferences PreferencesDataOnDemand.getNewTransientPreferences(int index) {
         Preferences obj = new Preferences();
+        setAboutContent(obj, index);
+        setAboutEnabled(obj, index);
+        setAboutTitle(obj, index);
         setCopyrightNotice(obj, index);
         setGoogleTrackingId(obj, index);
         setHomepageContent(obj, index);
@@ -35,6 +38,24 @@ privileged aspect PreferencesDataOnDemand_Roo_DataOnDemand {
         setTocTitle(obj, index);
         setUrl(obj, index);
         return obj;
+    }
+    
+    public void PreferencesDataOnDemand.setAboutContent(Preferences obj, int index) {
+        String aboutContent = "aboutContent_" + index;
+        obj.setAboutContent(aboutContent);
+    }
+    
+    public void PreferencesDataOnDemand.setAboutEnabled(Preferences obj, int index) {
+        Boolean aboutEnabled = true;
+        obj.setAboutEnabled(aboutEnabled);
+    }
+    
+    public void PreferencesDataOnDemand.setAboutTitle(Preferences obj, int index) {
+        String aboutTitle = "aboutTitle_" + index;
+        if (aboutTitle.length() > 200) {
+            aboutTitle = aboutTitle.substring(0, 200);
+        }
+        obj.setAboutTitle(aboutTitle);
     }
     
     public void PreferencesDataOnDemand.setCopyrightNotice(Preferences obj, int index) {

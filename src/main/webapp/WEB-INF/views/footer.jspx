@@ -9,28 +9,22 @@
         version="2.0">
   <jsp:directive.page contentType="text/html;charset=UTF-8"/>
   <jsp:output omit-xml-declaration="yes"/>
-  <jsp:useBean id="now" class="java.util.Date" scope="page" />
 
     <c:if test="${not empty preferences.copyrightNotice}">
         <div id="copyrightNotice">
-            <p>&#169; <fmt:formatDate value="${now}" pattern="yyyy" /> <c:out value=" ${preferences.copyrightNotice} " /></p>
+            <p>&#169; <c:out value=" ${preferences.copyrightNotice} " /></p>
         </div>
     </c:if>
 
     <menu:menu id="footermenu" z="user-managed">
         <menu:item id="f_home" url="/" z="user-managed" />
         <menu:item id="f_projects" url="/projects" z="user-managed" />
-
-        <c:if test="${preferences.tocEnabled}">
-            <menu:item id="f_toc" url="/terms" label="${fn:escapeXml(preferences.tocTitle)}" z="user-managed" />
+        <c:if test="${preferences.aboutEnabled}">
+            <menu:item id="f_about" url="/about" z="user-managed" />
         </c:if>
-
-        <sec:authorize ifAnyGranted="ROLE_EDITOR,ROLE_ADMIN">
-            <menu:item id="f_library" url="/library" z="user-managed" />
-        </sec:authorize>
-        <sec:authorize ifAllGranted="ROLE_ADMIN">
-            <menu:item id="f_administration" url="/admin" z="user-managed" />
-        </sec:authorize>
+        <c:if test="${preferences.tocEnabled}">
+            <menu:item id="f_toc" url="/terms" z="user-managed" />
+        </c:if>
         <c:if test="${pageContext['request'].userPrincipal != null}">
             <menu:item id="f_userdetails" url="/user" z="user-managed" />
             <menu:item id="f_logout" url="/resources/j_spring_security_logout" z="user-managed" />

@@ -41,6 +41,18 @@ public class Preferences {
     @Lob
     private String homepageContent;
 
+    /** The flag to indicate whether the about page is enabled. */
+    private boolean aboutEnabled;
+
+    /** The about page title. */
+    @NotNull
+    @Size(min = 2, max = 200)
+    private String aboutTitle;
+
+    /** The about page content. */
+    @Lob
+    private String aboutContent;
+
     /** The flag to indicate whether terms and conditions are enabled. */
     private boolean tocEnabled;
 

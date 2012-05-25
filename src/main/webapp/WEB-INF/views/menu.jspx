@@ -9,6 +9,9 @@
 
   <menu:menu id="mainmenu" z="user-managed">
     <menu:item id="h_home" url="/" z="user-managed" />
+    <c:if test="${preferences.aboutEnabled}">
+        <menu:item id="h_about" url="/about" z="user-managed" />
+    </c:if>
     <menu:item id="h_projects" url="/projects" z="user-managed" />
     <sec:authorize ifAnyGranted="ROLE_EDITOR,ROLE_ADMIN">
       <menu:item id="h_library" url="/library" z="user-managed" />

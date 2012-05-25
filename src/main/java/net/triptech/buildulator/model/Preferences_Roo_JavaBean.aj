@@ -47,6 +47,30 @@ privileged aspect Preferences_Roo_JavaBean {
         this.homepageContent = homepageContent;
     }
     
+    public boolean Preferences.isAboutEnabled() {
+        return this.aboutEnabled;
+    }
+    
+    public void Preferences.setAboutEnabled(boolean aboutEnabled) {
+        this.aboutEnabled = aboutEnabled;
+    }
+    
+    public String Preferences.getAboutTitle() {
+        return this.aboutTitle;
+    }
+    
+    public void Preferences.setAboutTitle(String aboutTitle) {
+        this.aboutTitle = aboutTitle;
+    }
+    
+    public String Preferences.getAboutContent() {
+        return this.aboutContent;
+    }
+    
+    public void Preferences.setAboutContent(String aboutContent) {
+        this.aboutContent = aboutContent;
+    }
+    
     public boolean Preferences.isTocEnabled() {
         return this.tocEnabled;
     }

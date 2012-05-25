@@ -3,6 +3,7 @@ package net.triptech.buildulator.model;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -465,6 +466,26 @@ public class Project {
         q.setParameter("sessionId", sessionId);
 
         return q.getSingleResult();
+    }
+
+    /**
+     * Delete expired anonymous projects.
+     */
+    public static void deleteExpiredAnonymousProjects() {
+
+        Calendar today = Calendar.getInstance();
+        Date yesterday = new Date(today.getTimeInMillis() - 86400000);
+
+        TypedQuery<Project> q = entityManager().createQuery("SELECT p FROM Project p"
+                + " WHERE p.person IS NULL AND p.created < :yesterday",
+                Project.class);
+        q.setParameter("yesterday", yesterday);
+
+        List<Project> expiredProjects = q.getResultList();
+
+        for (Project project : expiredProjects) {
+            project.remove();
+        }
     }
 
     /**
