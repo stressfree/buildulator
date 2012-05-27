@@ -4,7 +4,7 @@
     <groupId>net.triptech.buildulator</groupId>
     <artifactId>buildulator</artifactId>
     <packaging>war</packaging>
-    <version>0.1.0.BUILD-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>buildulator</name>
     <properties>
         <roo.version>1.2.1.RELEASE</roo.version>
