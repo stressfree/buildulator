@@ -89,4 +89,12 @@ privileged aspect Project_Roo_JavaBean {
         this.created = created;
     }
     
+    public String Project.getHashId() {
+        return this.hashId;
+    }
+    
+    public void Project.setHashId(String hashId) {
+        this.hashId = hashId;
+    }
+    
 }

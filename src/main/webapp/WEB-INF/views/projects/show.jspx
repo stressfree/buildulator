@@ -27,6 +27,7 @@
 
     <div class="sidePanel">
         <div class="projectOptions">
+            <button id="btnShareProject"><spring:message code="button_share" /></button>
             <button id="btnEditProject"><spring:message code="button_edit" /></button>
             <button id="btnCloneProject"><spring:message code="button_clone" /></button>
             <button id="btnDeleteProject"><spring:message code="button_delete" /></button>
@@ -100,6 +101,12 @@
         </div>
     </div>
 
+    <spring:url value="/projects/share/${project.hashId}" var="projectShareUrl" />
+    <div id="shareProject">
+       <p><spring:message code="projects_share" /></p>
+       <p><a href="${preferences.url}${projectShareUrl}"><c:out value="${preferences.url}${projectShareUrl}" /></a></p>
+    </div>
+
     <spring:url value="/projects/${project.id}" var="projectDeleteUrl" />
     <form id="formDeleteProject" action="${projectDeleteUrl}" method="post">
        <p><spring:message code="projects_delete_confirm" /></p>
@@ -152,7 +159,7 @@
 
         var sustainabilitySummary = new SustainabilitySummary({
             div: 'div#sustainabilitySummary',
-            projectId: <c:out value="${project.id}" />,
+            publicId: '<c:out value="${project.hashId}" />',
             targetId: <c:out value="${preferences.targetProjectId}" />,
             projectUrl: config.projectsUrl,
             headingText: '<spring:message code="projects_sustainability_summary" />'
@@ -160,6 +167,7 @@
 
         new BillOfMaterials({
             projectId: <c:out value="${project.id}" />,
+            publicId: '<c:out value="${project.hashId}" />',
             projectUrl: config.projectsUrl,
             summary: sustainabilitySummary,
             div: 'div.operatingEnergy div.bomTable',
@@ -173,6 +181,7 @@
 
         new BillOfMaterials({
             projectId: <c:out value="${project.id}" />,
+            publicId: '<c:out value="${project.hashId}" />',
             projectUrl: config.projectsUrl,
             summary: sustainabilitySummary,
             div: 'div.materialsBreakdown div.bomTable',

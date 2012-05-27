@@ -32,6 +32,7 @@ privileged aspect PreferencesDataOnDemand_Roo_DataOnDemand {
         setHomepageContent(obj, index);
         setHomepageTitle(obj, index);
         setName(obj, index);
+        setRefreshProjectList(obj, index);
         setTargetProjectId(obj, index);
         setTocContent(obj, index);
         setTocEnabled(obj, index);
@@ -90,6 +91,11 @@ privileged aspect PreferencesDataOnDemand_Roo_DataOnDemand {
             name = name.substring(0, 100);
         }
         obj.setName(name);
+    }
+    
+    public void PreferencesDataOnDemand.setRefreshProjectList(Preferences obj, int index) {
+        String refreshProjectList = "refreshProjectList_" + index;
+        obj.setRefreshProjectList(refreshProjectList);
     }
     
     public void PreferencesDataOnDemand.setTargetProjectId(Preferences obj, int index) {

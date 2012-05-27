@@ -37,6 +37,7 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
         setCreated(obj, index);
         setData(obj, index);
         setDescription(obj, index);
+        setHashId(obj, index);
         setLocation(obj, index);
         setName(obj, index);
         setOccupants(obj, index);
@@ -64,6 +65,11 @@ privileged aspect ProjectDataOnDemand_Roo_DataOnDemand {
     public void ProjectDataOnDemand.setDescription(Project obj, int index) {
         String description = "description_" + index;
         obj.setDescription(description);
+    }
+    
+    public void ProjectDataOnDemand.setHashId(Project obj, int index) {
+        String hashId = "hashId_" + index;
+        obj.setHashId(hashId);
     }
     
     public void ProjectDataOnDemand.setLocation(Project obj, int index) {

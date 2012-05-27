@@ -1,13 +1,18 @@
 package net.triptech.buildulator.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.persistence.Lob;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import net.triptech.buildulator.model.Preferences;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 
@@ -71,6 +76,65 @@ public class Preferences {
     /** The target project id. */
     private long targetProjectId;
 
+    /** The refresh project list. */
+    private String refreshProjectList;
+
+    @Transient
+    private Map<Long, Long> refreshProjectMap;
+
+
+    public final Map<Long, Long> getRefreshProjectMap() {
+        if (this.refreshProjectMap == null) {
+            this.refreshProjectMap = new HashMap<Long, Long>();
+
+            if (StringUtils.isNotBlank(this.refreshProjectList)) {
+                StringTokenizer tk = new StringTokenizer(this.refreshProjectList, ",");
+
+                while (tk.hasMoreTokens()) {
+                    String token = tk.nextToken();
+                    try {
+                        Long parsedId = Long.parseLong(token);
+                        this.refreshProjectMap.put(parsedId, parsedId);
+                    } catch (NumberFormatException nfe) {
+                        // Error parsing to a Long
+                    }
+                }
+            }
+        }
+        return this.refreshProjectMap;
+    }
+
+    /**
+     * Add projects to the refresh list.
+     *
+     * @param projects the projects
+     * @return true, if successful
+     */
+    public final boolean addProjectsToRefresh(final List<Long> projects) {
+
+        boolean projectAdded = false;
+
+        for (Long projectId : projects) {
+            if (projectId != null && projectId > 0
+                    && !this.getRefreshProjectMap().containsKey(projectId)) {
+                this.getRefreshProjectMap().put(projectId, projectId);
+                projectAdded = true;
+            }
+        }
+
+        if (projectAdded) {
+            // Update the string representation
+            StringBuilder sb = new StringBuilder();
+            for (Long key : this.getRefreshProjectMap().keySet()) {
+                if (sb.length() > 0) {
+                    sb.append(",");
+                }
+                sb.append(key);
+            }
+            this.setRefreshProjectList(sb.toString());
+        }
+        return projectAdded;
+    }
 
     /**
      * Load the preferences.

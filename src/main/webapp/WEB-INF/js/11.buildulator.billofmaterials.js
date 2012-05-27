@@ -4,9 +4,10 @@ function BillOfMaterials (config) {
     var _materials = [];
     var _div = (config.div !== undefined) ? config.div : 'div.bomTable';
     var _summary = (config.summary !== undefined) ? config.summary : new SustainabilitySummary();
-    var _editing = (config.editing !== undefined) ? config.editing : 'true';
+    var _editing = (config.editing !== undefined) ? config.editing : 'false';
     var _type = (config.type !== undefined) ? config.type : 'construction';
-    var _projectId = (config.projectId !== undefined) ? config.projectId : 1;
+    var _projectId = (config.projectId !== undefined) ? config.projectId : 0;
+    var _publicId = (config.publicId !== undefined) ? config.publicId : 0;
     var _projectUrl = (config.projectUrl !== undefined) ? config.projectUrl : './projects/';
     var _addText = (config.addText !== undefined) ? config.addText : 'Add';
     var _editText = (config.editText !== undefined) ? config.editText : 'OK';
@@ -25,7 +26,7 @@ function BillOfMaterials (config) {
     var _quantityText = (config.quantityText !== undefined) ? config.quantityText : 'Quantity';
     var _unitsText = (config.unitsText !== undefined) ? config.unitsText : 'Units';
 
-    var bomUrl = _projectUrl + _projectId + '/bom.json?type=' + _type.toLowerCase();
+    var bomUrl = _projectUrl + 'share/' + _publicId + '/bom.json?type=' + _type.toLowerCase();
     var materialsUrl = _projectUrl + '/materials.json?type=' + _type.toLowerCase();
 
     $.getJSON(materialsUrl, function(data){
@@ -412,6 +413,11 @@ function BillOfMaterials (config) {
         var name = (field.name !== undefined) ? field.name : '';
         var units = (field.units !== undefined) ? field.units : '';
         var quantity = (field.quantity !== undefined) ? field.quantity : '';
+        
+        if (field.mname !== undefined) {
+            name = field.mname;
+        }
+        
         var html = '';
 
         switch(_getType(node)) {
@@ -519,7 +525,7 @@ function BillOfMaterials (config) {
     function _renderMaterial(material) {
         var html = '<li class="bomMaterial"><div class="bomEditable"><div class="deleteFromBOM"><a>';
         html += _deleteText + '</a></div><div class="bomMName">';
-        html += _readValue(material.name);
+        html += _readValue(material.mname);
         html += '</div><div class="bomMQuantity">';
         html += _readValue(material.quantity);
         html += '</div><div class="bomMUnits">';
@@ -532,13 +538,18 @@ function BillOfMaterials (config) {
     }
 
     function _renderHeader() {
-        var html = '<div class="bomHEdit"><button>';
-        if (_editing === 'false') {
-            html += _editStartText;
-        } else {
-            html += _editFinishText;
+        var html = '<div class="bomHEdit">';
+        
+        if (_projectId > 0) {
+            html += '<button>';
+            if (_editing === 'false') {
+                html += _editStartText;
+            } else {
+                html += _editFinishText;
+            }               
+            html += '</button>';
         }
-        html += '</button></div><div class="bomHName">';
+        html += '</div><div class="bomHName">';
         html += _headerNameText;
         html += '</div><div class="bomHQuantity">';
         html += _headerQuantityText;

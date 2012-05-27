@@ -1,5 +1,8 @@
 package net.triptech.buildulator.model;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ import net.sf.json.JSONSerializer;
 import net.triptech.buildulator.DataParser;
 import net.triptech.buildulator.model.bom.BillOfMaterials;
 import net.triptech.buildulator.model.bom.Element;
+import net.triptech.buildulator.model.bom.Material;
 import net.triptech.buildulator.model.bom.Section;
 import net.triptech.buildulator.model.bom.SustainabilitySummary;
 
@@ -41,6 +45,15 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 @RooJavaBean
 @RooJpaActiveRecord
 public class Project {
+
+    /** The operating energy key. */
+    public static String OPERATING_ENERGY = "operating_energy";
+
+    /** The construction key. */
+    public static String CONSTRUCTION = "construction";
+
+    /** The summary key. */
+    public static String SUMMARY = "summary";
 
     /** The project name. */
     @NotNull
@@ -80,13 +93,36 @@ public class Project {
     @Column(name = "created", nullable = false)
     private Date created;
 
+    /** The hash id. */
+    @Index(name="hashIdentifier")
+    private String hashId;
+
 
     /**
      * The on-create actions.
      */
     @PrePersist
     protected void onCreate() {
-        created = new Date();
+        created = new Date(Calendar.getInstance().getTimeInMillis());
+
+        // Generate the hashId for this project
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.valueOf(this.created.getTime()));
+        sb.append("_");
+        if (this.person == null) {
+            sb.append(this.session);
+        } else {
+            sb.append(this.person.getId());
+        }
+
+        try {
+            MessageDigest m = MessageDigest.getInstance("MD5");
+            m.update(sb.toString().getBytes(), 0, sb.length());
+            this.hashId = new BigInteger(1, m.digest()).toString(16);
+        } catch (NoSuchAlgorithmException nse) {
+            System.out.println("The MD5 algorythm is not available: " + nse.getMessage());
+        }
+
         if (StringUtils.isNotBlank(this.getData())) {
             this.recalculateTotals();
         }
@@ -199,6 +235,26 @@ public class Project {
         project.setSession(this.getSession());
 
         return project;
+    }
+
+    /**
+     * Recalculate the supplied list of projects.
+     *
+     * @param projects the projects
+     */
+    public static final void recalculate(final List<Project> projects) {
+        Map<String, MaterialDetail> materials = new HashMap<String, MaterialDetail>();
+
+        if (projects != null) {
+            for (Project project : projects) {
+
+                project.setDataField(OPERATING_ENERGY, recalculateDataField(
+                        project.getDataField(OPERATING_ENERGY), materials));
+
+                project.setDataField(CONSTRUCTION, recalculateDataField(
+                        project.getDataField(CONSTRUCTION), materials));
+            }
+        }
     }
 
     /**
@@ -383,6 +439,28 @@ public class Project {
     }
 
     /**
+     * Find a project based on the supplied hash id.
+     *
+     * @param hashIdentifier the hash identifier
+     * @return the project
+     */
+    public static Project findProject(final String hashIdentifier) {
+
+        Project project = null;
+
+        if (StringUtils.isNotBlank(hashIdentifier)) {
+            TypedQuery<Project> q = entityManager().createQuery(
+                    "SELECT p FROM Project AS p WHERE p.hashId = :hashId", Project.class);
+            q.setParameter("hashId", hashIdentifier);
+
+            List<Project> projects = q.getResultList();
+
+            project = projects.size() == 0 ? null : projects.get(0);
+        }
+        return project;
+    }
+
+    /**
      * Find all of the projects for a user in alphabetical order.
      *
      * @param user the user
@@ -454,6 +532,23 @@ public class Project {
     }
 
     /**
+     * Find all of the projects that mention the material detail name.
+     *
+     * @param materialName the material name
+     * @return the list
+     */
+    public static List<Project> findProjectsWithMaterial(final String materialName) {
+
+        String name = "%{\\\\\\\"mname\\\\\\\":\\\\\\\"" + materialName + "\\\\\\\",%";
+
+        TypedQuery<Project> q = entityManager().createQuery("SELECT p FROM Project AS p"
+               + " WHERE p.data LIKE :materialName", Project.class);
+        q.setParameter("materialName", name);
+
+        return q.getResultList();
+    }
+
+    /**
      * Count the projects for a session id.
      *
      * @param sessionId the session id
@@ -508,6 +603,43 @@ public class Project {
         return allowed;
     }
 
+
+    /**
+     * Recalculate the supplied data field JSON string.
+     *
+     * @param jsonString the json string
+     * @param materials the materials
+     * @return the string
+     */
+    private static String recalculateDataField(final String jsonString,
+            final Map<String, MaterialDetail> materials) {
+
+        BillOfMaterials bom = BillOfMaterials.parseJson(jsonString);
+
+        for (Section section : bom.getSections()) {
+            for (Element element : section.getElements()) {
+                for (Material material : element.getMaterials()) {
+                    if (!materials.containsKey(material.getName())) {
+                        MaterialDetail md = MaterialDetail.findByName(material.getName());
+                        if (md != null) {
+                            materials.put(md.getName(), md);
+                        }
+                    }
+                    if (materials.containsKey(material.getName())) {
+                        MaterialDetail md = materials.get(material.getName());
+
+                        double[] results = md.performCalculations(material.getQuantity());
+                        material.setTotalEnergy(results[0]);
+                        material.setTotalCarbon(results[1]);
+                    }
+                }
+            }
+        }
+        bom.recalculateTotals();
+
+        return bom.toJson();
+    }
+
     /**
      * Parses the data and returns a map.
      *
@@ -550,18 +682,18 @@ public class Project {
         SustainabilitySummary summary = new SustainabilitySummary();
 
         // Get the operating energy BOM
-        if (parsedData.containsKey("operating_energy")) {
-            oe = BillOfMaterials.parseJson(parsedData.get("operating_energy"));
+        if (parsedData.containsKey(OPERATING_ENERGY)) {
+            oe = BillOfMaterials.parseJson(parsedData.get(OPERATING_ENERGY));
         }
 
         // Get the construction BOM
-        if (parsedData.containsKey("construction")) {
-            bom = BillOfMaterials.parseJson(parsedData.get("construction"));
+        if (parsedData.containsKey(CONSTRUCTION)) {
+            bom = BillOfMaterials.parseJson(parsedData.get(CONSTRUCTION));
         }
 
         // Get the summary object
-        if (parsedData.containsKey("summary")) {
-            summary = SustainabilitySummary.parseJson(parsedData.get("summary"));
+        if (parsedData.containsKey(SUMMARY)) {
+            summary = SustainabilitySummary.parseJson(parsedData.get(SUMMARY));
         }
 
         // Recalculate the summaries
@@ -585,7 +717,7 @@ public class Project {
         summary.getPerOccupantEnergyChange().add(summary.getEnergyPerOccupant());
         summary.getPerOccupantCarbonChange().add(summary.getCarbonPerOccupant());
 
-        parsedData.put("summary", summary.toJson());
+        parsedData.put(SUMMARY, summary.toJson());
 
         JSONObject jsonObject = JSONObject.fromObject(parsedData);
 

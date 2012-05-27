@@ -94,7 +94,7 @@ public class BillOfMaterials extends SustainabilityBase {
 
                     Map<String, Object> mJson = new LinkedHashMap<String, Object>();
 
-                    mJson.put("name", material.getName());
+                    mJson.put("mname", material.getName());
                     mJson.put("units", material.getUnits());
                     mJson.put("quantity", material.getFormattedQuantity());
                     mJson.put("totalEnergy", material.getFormattedTotalEnergy());
@@ -191,7 +191,7 @@ public class BillOfMaterials extends SustainabilityBase {
                     JSONObject materialJson = materialsJson.getJSONObject(m);
 
                     Material material = new Material();
-                    material.setName(getString(materialJson, "name"));
+                    material.setName(getString(materialJson, "mname"));
                     material.setUnits(getString(materialJson, "units"));
                     material.setQuantity(getDouble(materialJson, "quantity"));
                     material.setTotalEnergy(getDouble(materialJson, "totalEnergy"));

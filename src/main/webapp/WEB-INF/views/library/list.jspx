@@ -6,11 +6,12 @@
     <div class="panelContent">
       <p><spring:message code="materials_library_introduction" htmlEscape="false" /></p>
 
-          <div class="libraryOptions">
-              <button id="btnAddMaterial"><spring:message code="materials_library_add" /></button>
-              <button id="btnBulkAddMaterials"><spring:message code="materials_library_bulkadd" /></button>
-              <button id="btnDeleteMaterial"><spring:message code="materials_library_delete" /></button>
-          </div>
+      <div class="libraryOptions">
+          <button id="btnAddMaterial"><spring:message code="materials_library_add" /></button>
+          <button id="btnBulkAddMaterials"><spring:message code="materials_library_bulkadd" /></button>
+          <button id="btnDeleteMaterial"><spring:message code="materials_library_delete" /></button>
+      </div>
+
       <table cellpadding="0" cellspacing="0" border="0" class="dataTable" id="materialsList">
         <thead>
           <tr>

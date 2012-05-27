@@ -3,6 +3,7 @@
 
 package net.triptech.buildulator.model;
 
+import java.util.Map;
 import net.triptech.buildulator.model.Preferences;
 
 privileged aspect Preferences_Roo_JavaBean {
@@ -109,6 +110,18 @@ privileged aspect Preferences_Roo_JavaBean {
     
     public void Preferences.setTargetProjectId(long targetProjectId) {
         this.targetProjectId = targetProjectId;
+    }
+    
+    public String Preferences.getRefreshProjectList() {
+        return this.refreshProjectList;
+    }
+    
+    public void Preferences.setRefreshProjectList(String refreshProjectList) {
+        this.refreshProjectList = refreshProjectList;
+    }
+    
+    public void Preferences.setRefreshProjectMap(Map<Long, Long> refreshProjectMap) {
+        this.refreshProjectMap = refreshProjectMap;
     }
     
 }

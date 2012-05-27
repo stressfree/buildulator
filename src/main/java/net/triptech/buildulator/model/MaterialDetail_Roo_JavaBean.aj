@@ -12,8 +12,12 @@ privileged aspect MaterialDetail_Roo_JavaBean {
         return this.name;
     }
     
-    public void MaterialDetail.setName(String name) {
-        this.name = name;
+    public String MaterialDetail.getPreviousName() {
+        return this.previousName;
+    }
+    
+    public void MaterialDetail.setPreviousName(String previousName) {
+        this.previousName = previousName;
     }
     
     public MaterialType MaterialDetail.getMaterialType() {

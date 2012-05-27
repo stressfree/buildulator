@@ -4,7 +4,7 @@ function SustainabilitySummary (config) {
     var _target = new Array();
     var _comparisonData = new Object();
     var _div = (config.div != undefined) ? config.div : 'div#sustainabilitySummary';
-    var _projectId = (config.projectId != undefined) ? config.projectId : 1;
+    var _publicId = (config.publicId != undefined) ? config.publicId : 0;
     var _targetId = (config.targetId != undefined) ? config.targetId : 0;
     var _projectUrl = (config.projectUrl != undefined) ? config.projectUrl : './projects/';
     var _headingText = (config.headingText != undefined) ? config.headingText : 'Sustainability Summary';
@@ -22,8 +22,8 @@ function SustainabilitySummary (config) {
     var _compareButtonText = (config.compareButtonText != undefined) ? config.compareButtonText : 'Compare to other projects';
     var _comparisonProjectsText = (config.comparisonProjectsText != undefined) ? config.comparisonProjectsText : 'Select the projects to compare to:';
 
-    var summaryUrl = _projectUrl + _projectId + '/summary.json';
-    var comparisonUrl = _projectUrl + _projectId + '/comparisons.json';
+    var summaryUrl = _projectUrl + 'share/' + _publicId + '/summary.json';
+    var comparisonUrl = _projectUrl + 'share/' + _publicId + '/compare.json';
     var targetUrl = _projectUrl + _targetId + '/summary.json';
 
     var contentDiv = $('<div/>', { 'class': 'sSummaryContent' }).appendTo(_div);

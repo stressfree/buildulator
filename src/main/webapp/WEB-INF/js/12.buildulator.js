@@ -61,10 +61,20 @@ $(document).ready(function() {
         $('#formCloneProject').dialog('close');
     });
 
+    $('#shareProject').dialog({
+        autoOpen : false,
+        modal : true,
+        resizable: false
+    });
+    
     $('#formDeleteProject').dialog({
         autoOpen : false,
         modal : true,
         resizable: false
+    });
+
+    $('#btnShareProject').click(function() {
+        $('#shareProject').dialog('open');
     });
 
     $('#btnDeleteProject').click(function() {

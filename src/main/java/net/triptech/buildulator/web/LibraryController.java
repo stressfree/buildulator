@@ -24,6 +24,7 @@ import net.triptech.buildulator.FlashScope;
 import net.triptech.buildulator.model.MaterialDetail;
 import net.triptech.buildulator.model.DataGrid;
 import net.triptech.buildulator.model.MaterialType;
+import net.triptech.buildulator.model.Preferences;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -151,6 +152,21 @@ public class LibraryController extends BaseController {
                 returnMessage = material.set(colId, value, this.getContext());
                 material.merge();
                 material.flush();
+                List<Long> affectedProjects = material.postUpdate();
+
+                if (affectedProjects.size() > 0) {
+                    Preferences preferences = this.getPreferences(request);
+
+                    if (preferences.addProjectsToRefresh(affectedProjects)) {
+                        try {
+                            preferences.merge();
+                            preferences.flush();
+                        } catch (Exception e) {
+                            logger.error("Error updating affected projects: "
+                                    + e.getMessage());
+                        }
+                    }
+                }
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 returnMessage = this.getMessage("materials_library_update_error");

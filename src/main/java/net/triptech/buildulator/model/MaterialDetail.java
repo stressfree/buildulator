@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Transient;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -44,6 +45,10 @@ public class MaterialDetail {
     @Column(unique = true)
     private String name;
 
+    /** The previous name. */
+    @Transient
+    private String previousName;
+
     /** The type of material. */
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -65,6 +70,49 @@ public class MaterialDetail {
     /** The wastage percent. */
     private double wastagePercent;
 
+
+    /**
+     * Sets the name for the material detail.
+     *
+     * @param nameVal the new name
+     */
+    public final void setName(final String nameVal) {
+        this.previousName = this.name;
+        this.name = nameVal;
+    }
+
+    /**
+     * The post-update actions for a material detail.
+     */
+    public List<Long> postUpdate() {
+
+        List<Long> affected = new ArrayList<Long>();
+
+        if (StringUtils.isNotBlank(this.previousName) &&
+                !StringUtils.equals(this.name, this.previousName)) {
+
+            List<Project> affectedProjects = Project.findProjectsWithMaterial(
+                    this.previousName);
+
+            for (Project project : affectedProjects) {
+                String existing = "{\\\"mname\\\":\\\"" + this.previousName + "\\\",";
+                String update = "{\\\"mname\\\":\\\"" + this.name + "\\\",";
+
+                String newData = StringUtils.replace(project.getData(), existing, update);
+                project.setData(newData);
+
+                project.merge();
+                project.flush();
+            }
+        }
+
+        List<Project> affectedProjects = Project.findProjectsWithMaterial(this.getName());
+
+        for (Project project : affectedProjects) {
+            affected.add(project.getId());
+        }
+        return affected;
+    }
 
     /**
      * Perform calculations.

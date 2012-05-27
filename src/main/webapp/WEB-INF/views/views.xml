@@ -98,4 +98,10 @@
     <put-attribute name="pageUrl" value="_projects" />
   </definition>
 
+  <definition extends="default" name="projects/share">
+    <put-attribute name="body" value="/WEB-INF/views/projects/share.jspx" />
+    <put-attribute name="title" value="pagetitle_projects_share" />
+    <put-attribute name="pageUrl" value="_projects" />
+  </definition>
+
 </tiles-definitions>

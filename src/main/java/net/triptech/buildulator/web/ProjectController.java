@@ -55,14 +55,6 @@ public class ProjectController extends BaseController {
     /** The logger. */
     private static Logger logger = Logger.getLogger(ProjectController.class);
 
-    /** The operating energy JSON key. */
-    private static String OEN = "operating_energy";
-
-    /** The construction JSON key. */
-    private static String CNST = "construction";
-
-    /** The summary JSON key. */
-    private static String SUM = "summary";
 
     /**
      * Index.
@@ -143,10 +135,10 @@ public class ProjectController extends BaseController {
         if (checkProjectPermission(project, request)) {
             boolean noOperatingEnergyData = false;
             boolean noBOMData = false;
-            if (testIfEmptyJson(project.getDataField(OEN))) {
+            if (testIfEmptyJson(project.getDataField(Project.OPERATING_ENERGY))) {
                 noOperatingEnergyData = true;
             }
-            if (testIfEmptyJson(project.getDataField(CNST))) {
+            if (testIfEmptyJson(project.getDataField(Project.CONSTRUCTION))) {
                 noBOMData = true;
             }
 
@@ -155,6 +147,28 @@ public class ProjectController extends BaseController {
             uiModel.addAttribute("noBOMData", noBOMData);
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            page = "resourceNotFound";
+        }
+        return page;
+    }
+
+    /**
+     * Returns the shared project. If none is found a 404 error is returned.
+     *
+     * @param hashId the hash id
+     * @param uiModel the ui model
+     * @return the string
+     */
+    @RequestMapping(value = "/share/{hashId}", method = RequestMethod.GET)
+    public String share(@PathVariable("hashId") String hashId, Model uiModel) {
+
+        String page = "projects/share";
+
+        Project project = Project.findProject(hashId);
+
+        if (project != null) {
+            uiModel.addAttribute("project", project);
+        } else {
             page = "resourceNotFound";
         }
         return page;
@@ -213,7 +227,8 @@ public class ProjectController extends BaseController {
                 Project template = Project.findProject(templateId);
                 if (template != null && template.isTemplate()) {
                     // Set the operating energy data for the new project
-                    project.setDataField(OEN, template.getDataField(OEN));
+                    project.setDataField(Project.OPERATING_ENERGY,
+                            template.getDataField(Project.OPERATING_ENERGY));
                 }
             } catch (Exception e) {
                 logger.error("Error loading template (" + templateId + "): "
@@ -377,7 +392,7 @@ public class ProjectController extends BaseController {
 
         Project project = Project.findProject(id);
 
-        String type = CNST;
+        String type = Project.CONSTRUCTION;
         if (StringUtils.isNotBlank(typeVal)) {
             type = typeVal.toLowerCase();
         }
@@ -423,7 +438,7 @@ public class ProjectController extends BaseController {
 
         Project project = Project.findProject(id);
 
-        String type = CNST;
+        String type = Project.CONSTRUCTION;
         if (StringUtils.isNotBlank(typeVal)) {
             type = typeVal.toLowerCase();
         }
@@ -468,7 +483,7 @@ public class ProjectController extends BaseController {
 
         Project project = Project.findProject(id);
 
-        String type = CNST;
+        String type = Project.CONSTRUCTION;
         if (StringUtils.isNotBlank(typeVal)) {
             type = typeVal.toLowerCase();
         }
@@ -528,8 +543,7 @@ public class ProjectController extends BaseController {
                 projects = Project.findAllProjects(user);
             }
         }
-        return Project.toJson(projects,
-                getMessage("projects_list_anonymous"));
+        return Project.toJson(projects, getMessage("projects_list_anonymous"));
     }
 
     /**
@@ -544,7 +558,7 @@ public class ProjectController extends BaseController {
 
         MaterialType mt = MaterialType.CONSTRUCTION;
 
-        if (StringUtils.equalsIgnoreCase(type, OEN)) {
+        if (StringUtils.equalsIgnoreCase(type, Project.OPERATING_ENERGY)) {
             mt = MaterialType.ENERGY_SOURCE;
         }
         return MaterialDetail.toJson(MaterialDetail.findMaterialDetails(mt));
@@ -555,24 +569,51 @@ public class ProjectController extends BaseController {
      * Returns the project's bill of materials if the user has the rights to view it.
      * Otherwise a 404 error is returned.
      *
-     * @param id the id
-     * @param uiModel the ui model
+     * @param hashId the hash id
+     * @param type the type
      * @param request the request
      * @param response the response
      * @return the string
      */
-    @RequestMapping(value = "/{id}/bom.json", method = RequestMethod.GET)
-    public @ResponseBody String jsonBOM(@PathVariable("id") Long id,
+    @RequestMapping(value = "/share/{hashId}/bom.json", method = RequestMethod.GET)
+    public @ResponseBody String jsonSharedBOM(@PathVariable("hashId") String hashId,
             @RequestParam(value = "type", required = true) String type,
             HttpServletRequest request, final HttpServletResponse response) {
 
         String result = "";
 
-        Project project = Project.findProject(id);
+        Project project = Project.findProject(hashId);
 
-        if (checkProjectPermission(project, request)) {
+        if (project != null) {
             BillOfMaterials bom = BillOfMaterials.parseJson(project.getDataField(type));
             result = bom.toJson();
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        return result;
+    }
+
+
+    /**
+     * Returns the project's summary. If no project is found a 404 error is returned.
+     *
+     * @param hashId the hash id
+     * @param request the request
+     * @param response the response
+     * @return the string
+     */
+    @RequestMapping(value = "/share/{hashId}/summary.json", method = RequestMethod.GET)
+    public @ResponseBody String jsonSharedSummary(@PathVariable("hashId") String hashId,
+            HttpServletRequest request, final HttpServletResponse response) {
+
+        String result = "";
+
+        Project project = Project.findProject(hashId);
+
+        if (project != null) {
+            SustainabilitySummary ss = SustainabilitySummary.parseJson(
+                    project.getDataField(Project.SUMMARY));
+            result = ss.toJson();
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -599,7 +640,7 @@ public class ProjectController extends BaseController {
 
         if (project.isComparable() || checkProjectPermission(project, request)) {
             SustainabilitySummary ss = SustainabilitySummary.parseJson(
-                    project.getDataField(SUM));
+                    project.getDataField(Project.SUMMARY));
             result = ss.toJson();
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -617,15 +658,15 @@ public class ProjectController extends BaseController {
      * @param response the response
      * @return the string
      */
-    @RequestMapping(value = "/{id}/comparisons.json", method = RequestMethod.GET)
-    public @ResponseBody String jsonComparisons(@PathVariable("id") Long id,
+    @RequestMapping(value = "/share/{hashId}/compare.json", method = RequestMethod.GET)
+    public @ResponseBody String jsonCompare(@PathVariable("hashId") String hashId,
             HttpServletRequest request, final HttpServletResponse response) {
 
         String result = "";
 
-        Project project = Project.findProject(id);
+        Project project = Project.findProject(hashId);
 
-        if (checkProjectPermission(project, request)) {
+        if (project != null) {
 
             Person user = getUser(request);
 
@@ -668,7 +709,8 @@ public class ProjectController extends BaseController {
             String message = getMessage("projects_bom_import_nodata");
 
             if (StringUtils.isNotBlank(data)) {
-                project.setDataField(CNST, parseBillOfMaterials(data).toJson());
+                project.setDataField(Project.CONSTRUCTION,
+                        parseBillOfMaterials(data).toJson());
 
                 project.merge();
                 project.flush();

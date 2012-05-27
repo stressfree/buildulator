@@ -10,7 +10,8 @@
 @import "wysiwyg";
 
 html {
-  background: #535353; }
+  background: #535353; 
+}
 
 body {
   background: #535353;
@@ -18,10 +19,12 @@ body {
   font-weight: 400;
   font-size: 1em;
   line-height: 1.3em;
-  color: #333; }
+  color: #333; 
+}
 
 sub {
-  font-size: 0.6em; }
+  font-size: 0.6em;
+}
 
 #header {
   height: 93px;
@@ -217,6 +220,9 @@ sub {
       float: right;
       width: 249px;
       margin: 0 10px 0 10px; 
+    }
+    &.sharedSidePanel {
+      margin: 15px 10px 0 10px;    
     }
     &.userWarning {
       background: #535353;
