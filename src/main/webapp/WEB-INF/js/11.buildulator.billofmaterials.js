@@ -3,7 +3,7 @@ function BillOfMaterials (config) {
     var _data = [];
     var _materials = [];
     var _div = (config.div !== undefined) ? config.div : 'div.bomTable';
-    var _summary = (config.summary !== undefined) ? config.summary : new SustainabilitySummary();
+    var _summary = (config.summary !== undefined) ? config.summary : null;
     var _editing = (config.editing !== undefined) ? config.editing : 'false';
     var _type = (config.type !== undefined) ? config.type : 'construction';
     var _projectId = (config.projectId !== undefined) ? config.projectId : 0;
@@ -25,42 +25,7 @@ function BillOfMaterials (config) {
     var _editFinishText = (config.editFinishText !== undefined) ? config.editFinishText : 'Finish editing';
     var _quantityText = (config.quantityText !== undefined) ? config.quantityText : 'Quantity';
     var _unitsText = (config.unitsText !== undefined) ? config.unitsText : 'Units';
-
-    var bomUrl = _projectUrl + 'share/' + _publicId + '/bom.json?type=' + _type.toLowerCase();
-    var materialsUrl = _projectUrl + '/materials.json?type=' + _type.toLowerCase();
-
-    $.getJSON(materialsUrl, function(data){
-        _materials = data;
-    });
-
-    $.getJSON(bomUrl, function(data){
-        _data = data;
-
-        var sections = [];
-        $(_data.sections).each(function(index, section){
-            sections[index] = _renderSection(section);
-        });
-
-        $('<div/>', {
-            'class': 'bomHeader', html: _renderHeader()
-        }).appendTo(_div);
-
-        var sectionsCss = 'bomSections';
-        if (_editing === 'false') {
-            sectionsCss += ' bomNotEditing';
-        }
-
-        $('<ul/>', {
-            'class': sectionsCss, html: sections.join('') +
-                _renderAddControl('section')
-        }).appendTo(_div);
-
-        $('<div/>', {
-            'class': 'bomFooter', html: _renderFooter()
-        }).appendTo(_div);
-
-        _addDefaultHandlers();
-    });
+    
 
     function _addDefaultHandlers() {
         $(_div + ' div.bomHEdit button').button().click(function () {
@@ -205,14 +170,16 @@ function BillOfMaterials (config) {
                     }
                     _updateFooterTotals();
                     _addRowHandlers($(addDiv).prev());
-                    _summary.update();
+                    if (_summary !== null) {
+                        _summary.update();
+                    }
 
                     // Reset the inputs
                     $(addDiv).find('input.bomText').val('').first().focus();
                 },
                 error: function(e){
                     alert('Error adding ' + type + ': ' + e);
-                },
+                }
             });
         });
     }
@@ -280,8 +247,8 @@ function BillOfMaterials (config) {
                     break;
             }
 
-            var params = 'type=' + _type + '&name=' + name + '&quantity=' + quantity
-                    + '&units=' + units + '&sid=' + sid + '&eid=' + eid + '&mid=' + mid;
+            var params = 'type=' + _type + '&name=' + name + '&quantity=' + quantity +
+                    '&units=' + units + '&sid=' + sid + '&eid=' + eid + '&mid=' + mid;
             var editUrl = _projectUrl + _projectId + '/edititem';
             $.ajax({
                 type: 'POST',
@@ -306,8 +273,9 @@ function BillOfMaterials (config) {
                     }
                     _updateFooterTotals();
                     _addRowHandlers(parentLi.prev());
-                    _summary.update();
-
+                    if (_summary !== null) {
+                        _summary.update();
+                    }
                     parentLi.remove();
                 },
                 error: function(e){
@@ -328,15 +296,18 @@ function BillOfMaterials (config) {
 
     function _displayEditForm(node) {
         var sid = $(node).closest('li.bomSection').index();
-        var field = new Array();
+        var field = [];
+        var eid;
+        var mid;
+        
         switch(_getType(node)) {
             case 'material':
-                var eid = $(node).closest('li.bomElement').index();
-                var mid = $(node).closest('li.bomMaterial').index();
+                eid = $(node).closest('li.bomElement').index();
+                mid = $(node).closest('li.bomMaterial').index();
                 field = _data.sections[sid].elements[eid].materials[mid];
                 break;
             case 'element':
-                var eid = $(node).closest('li.bomElement').index();
+                eid = $(node).closest('li.bomElement').index();
                 field = _data.sections[sid].elements[eid];
                 break;
             default:
@@ -419,24 +390,33 @@ function BillOfMaterials (config) {
         }
         
         var html = '';
+        var sid;
+        var eid;
 
         switch(_getType(node)) {
             case "element":
-                var sid = $(node).closest('li.bomSection').index();
-                html += '<div class="bomElementNameInput"><input type="text" class="bomText required" id="bomS' + sid + 'ElementName" value="' + name + '" /></div>';
-                html += '<div class="bomElementQuantityInput"><input type="text" class="bomText required number ' + helperCss + '" id="bomS' + sid + 'ElementQuantity" value="' + quantity + '" /></div>';
-                html += '<div class="bomElementUnitsInput"><input type="text" class="bomText ' + helperCss + '" id="bomS' + sid + 'ElementUnits" value="' + units + '" /></div>';
+                sid = $(node).closest('li.bomSection').index();
+                html += '<div class="bomElementNameInput"><input type="text" class="bomText required" id="bomS' +
+                        sid + 'ElementName" value="' + name + '" /></div>';
+                html += '<div class="bomElementQuantityInput"><input type="text" class="bomText required number ' +
+                        helperCss + '" id="bomS' + sid + 'ElementQuantity" value="' + quantity + '" /></div>';
+                html += '<div class="bomElementUnitsInput"><input type="text" class="bomText ' + helperCss +
+                        '" id="bomS' + sid + 'ElementUnits" value="' + units + '" /></div>';
                 break;
             case "material":
-                var sid = $(node).closest('li.bomSection').index();
-                var eid = $(node).closest('li.bomElement').index();
-                html = '<div class="bomMaterialNameInput"><input type="text" class="bomSelectValue" id="bomS' + sid + 'E' + eid + 'MaterialName" value="' + name + '" />';
-                html += '<select type="text" class="bomSelect" id="bomS' + sid + 'E' + eid + 'MaterialSelect" value="' + name + '" /></div>';
-                html += '<div class="bomMaterialQuantityInput"><input type="text" class="bomText required number ' + helperCss + '" id="bomS' + sid + 'E' + eid + 'MaterialQuantity" value="' + quantity + '" />';
+                sid = $(node).closest('li.bomSection').index();
+                eid = $(node).closest('li.bomElement').index();
+                html = '<div class="bomMaterialNameInput"><input type="text" class="bomSelectValue" id="bomS' +
+                        sid + 'E' + eid + 'MaterialName" value="' + name + '" />';
+                html += '<select type="text" class="bomSelect" id="bomS' + sid + 'E' + eid +
+                        'MaterialSelect" value="' + name + '" /></div>';
+                html += '<div class="bomMaterialQuantityInput"><input type="text" class="bomText required number ' +
+                        helperCss + '" id="bomS' + sid + 'E' + eid + 'MaterialQuantity" value="' + quantity + '" />';
                 html += '</div><div class="bomMUnits"></div>';
                 break;
             default:
-                html += '<div class="bomSectionNameInput"><input type="text" class="bomText required" id="bomSectionName" value="' + name + '" /></div>';
+                html += '<div class="bomSectionNameInput"><input type="text" class="bomText required" id="bomSectionName" value="' +
+                        name + '" /></div>';
         }
         return html;
     }
@@ -473,7 +453,9 @@ function BillOfMaterials (config) {
                     _data = $.parseJSON(data);
                     $(node).closest('li').remove();
                     _updateFooterTotals();
-                    _summary.update();
+                    if (_summary !== null) {
+                        _summary.update();
+                    }
                 },
                 error: function(e){
                     alert('Error deleting ' + type + ': ' + e);
@@ -546,7 +528,7 @@ function BillOfMaterials (config) {
                 html += _editStartText;
             } else {
                 html += _editFinishText;
-            }               
+            }
             html += '</button>';
         }
         html += '</div><div class="bomHName">';
@@ -609,4 +591,41 @@ function BillOfMaterials (config) {
         }
         return returnVal;
     }
+    
+    
+    var bomUrl = _projectUrl + 'share/' + _publicId + '/bom.json?type=' + _type.toLowerCase();
+    var materialsUrl = _projectUrl + '/materials.json?type=' + _type.toLowerCase();
+
+    $.getJSON(materialsUrl, function(data){
+        _materials = data;
+    });
+
+    $.getJSON(bomUrl, function(data){
+        _data = data;
+
+        var sections = [];
+        $(_data.sections).each(function(index, section){
+            sections[index] = _renderSection(section);
+        });
+
+        $('<div/>', {
+            'class': 'bomHeader', html: _renderHeader()
+        }).appendTo(_div);
+
+        var sectionsCss = 'bomSections';
+        if (_editing === 'false') {
+            sectionsCss += ' bomNotEditing';
+        }
+
+        $('<ul/>', {
+            'class': sectionsCss, html: sections.join('') +
+                _renderAddControl('section')
+        }).appendTo(_div);
+
+        $('<div/>', {
+            'class': 'bomFooter', html: _renderFooter()
+        }).appendTo(_div);
+
+        _addDefaultHandlers();
+    });
 }
