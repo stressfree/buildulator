@@ -638,11 +638,16 @@ public class ProjectController extends BaseController {
 
         Project project = Project.findProject(id);
 
-        if (project.isComparable() || checkProjectPermission(project, request)) {
-            SustainabilitySummary ss = SustainabilitySummary.parseJson(
-                    project.getDataField(Project.SUMMARY));
-            result = ss.toJson();
-        } else {
+        if (project != null) {
+            if (project.isComparable() || checkProjectPermission(project, request)) {
+
+                SustainabilitySummary ss = SustainabilitySummary.parseJson(
+                        project.getDataField(Project.SUMMARY));
+                result = ss.toJson();
+            }
+        }
+
+        if (StringUtils.isBlank(result)) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
         return result;

@@ -791,25 +791,36 @@ div {
             background-position: -1186px -186px; } } } }
     div {
       &.bomSName, &.bomEName, &.bomMName {
-        margin: 0 0 0 6px; }
+        margin: 0 0 0 6px;
+      }
       &.bomSName {
         width: 495px;
-        font-weight: bold; }
+        font-weight: bold;
+      }
       &.bomEName {
-        width: 376px; }
+        width: 376px;
+      }
       &.bomMName {
-        width: 357px; }
+        width: 357px;
+      }
       &.bomAUnits, &.bomMUnits, &.bomAQuantity, &.bomMQuantity, &.bomSCarbon, &.bomACarbon, &.bomMCarbon {
         height: 1.4em;
-        overflow: hidden; }
+        overflow: hidden;
+      }
       &.bomEUnits, &.bomMUnits {
-        width: 50px; }
+        width: 50px;
+      }
+      &.bomEQuantity, &.bomEUnits {
+        color: #9f9f9f;
+      }
       &.bomEQuantity, &.bomMQuantity {
         width: 60px;
-        text-align: right; }
+        text-align: right;
+      }
       &.bomSCarbon, &.bomACarbon, &.bomMCarbon {
         width: 125px;
-        text-align: right; }
+        text-align: right;
+      }
       &.bomHeader {
         clear: left;
         border: 1px solid #494437;
@@ -837,18 +848,25 @@ div {
             text-align: left;
             margin: 0 0 0 3px;
             position: relative;
-            top: -3px; }
+            top: -3px;
+          }
           &.bomHName {
             width: 204px;
-            margin: 0 0 0 5px; }
+            margin: 0 0 0 5px;
+          }
           &.bomHQuantity {
-            width: 160px; }
+            width: 160px;
+          }
           &.bomHCarbon {
-            width: 135px; }
+            width: 135px;
+          }
           &.bomHClear {
             clear: left;
             height: 1px;
-            float: none; } } }
+            float: none; 
+          }
+        }
+      }
       &.bomFooter {
         background: #f2f2f2;
         clear: left;
