@@ -219,7 +219,11 @@ sub {
     &.sidePanel {
       float: right;
       width: 249px;
-      margin: 0 10px 0 10px; 
+      margin: 0 10px 0 10px;
+      
+      div.projectOptions button span {
+        padding: 0.4em 0.8em;
+      }
     }
     &.sharedSidePanel {
       margin: 15px 10px 0 10px;    
@@ -238,7 +242,7 @@ sub {
         &:hover {
           color: #fed448; 
         }
-     }
+      }
     }
     &.exceptionMessage {
       background: #535353;
@@ -726,31 +730,40 @@ div {
     -khtml-border-top-left-radius: 8px;
     border-top-left-radius: 8px;
     input.bomText {
-      border: 1px solid #ccc; }
+      border: 1px solid #ccc;
+    }
     ul {
       margin: 0;
       padding: 0;
-      clear: left; }
+      clear: left;
+    }
     li {
       margin: 0;
       padding: 0;
       clear: left;
       list-style: none!important;
       &.bomSection {
-        padding: 0.8em 0 0 0; }
+        padding: 0.8em 0 0 0;
+      }
       &.bomElement {
-        font-style: italic; } }
+        font-style: italic;
+      }
+    }
     ul.bomMaterials {
-      font-style: normal; }
+      font-style: normal;
+    }
     li {
       &.bomMaterial {
-        margin-left: 20px; }
+        margin-left: 20px;
+      }
       input {
-        font-style: normal; }
+        font-style: normal;
+      }
       div {
         float: left;
         line-height: 1.4em;
-        padding: 0.2em 4px 0.2em 0; }
+        padding: 0.2em 4px 0.2em 0;
+      }
       &.addToBOM a.addToBOM {
         padding-left: 19px;
         background: url('../images/buttons.gif') 0px 0px no-repeat;
@@ -759,7 +772,10 @@ div {
         &:hover {
           background-position: 0px -186px;
           text-decoration: underline;
-          cursor: pointer; } } }
+          cursor: pointer;
+        }
+      }
+    }
     ul.bomSections {
       div.bomSectionDivider {
         clear: left;

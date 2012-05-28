@@ -409,6 +409,8 @@ public class ProjectController extends BaseController {
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+        response.setHeader("Cache-Control", "no-cache");
+
         return returnMessage;
     }
 
@@ -456,6 +458,8 @@ public class ProjectController extends BaseController {
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+        response.setHeader("Cache-Control", "no-cache");
+
         return returnMessage;
     }
 
@@ -501,6 +505,8 @@ public class ProjectController extends BaseController {
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+        response.setHeader("Cache-Control", "no-cache");
+
         return returnMessage;
     }
 
@@ -519,7 +525,7 @@ public class ProjectController extends BaseController {
     /**
      * List the projects.
      *
-     * @param allProjects the all projects
+     * @param allProjectsVal the all projects val
      * @param request the request
      * @return the string
      */
@@ -590,6 +596,8 @@ public class ProjectController extends BaseController {
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
+        response.setHeader("Cache-Control", "no-cache");
+
         return result;
     }
 
@@ -617,6 +625,8 @@ public class ProjectController extends BaseController {
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
+        response.setHeader("Cache-Control", "no-cache");
+
         return result;
     }
 
@@ -650,6 +660,8 @@ public class ProjectController extends BaseController {
         if (StringUtils.isBlank(result)) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
+        response.setHeader("Cache-Control", "no-cache");
+
         return result;
     }
 
@@ -687,6 +699,8 @@ public class ProjectController extends BaseController {
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
+        response.setHeader("Cache-Control", "no-cache");
+
         return result;
     }
 

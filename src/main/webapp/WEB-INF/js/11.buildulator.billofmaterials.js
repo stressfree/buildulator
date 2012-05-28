@@ -148,6 +148,7 @@ function BillOfMaterials (config) {
                 type: 'POST',
                 url: addUrl,
                 async: false,
+                cache: false,
                 data: params,
                 success: function(data){
                     _data = $.parseJSON(data);
@@ -254,6 +255,7 @@ function BillOfMaterials (config) {
                 type: 'POST',
                 url: editUrl,
                 async: false,
+                cache: false,
                 data: params,
                 success: function(data){
                     _data = $.parseJSON(data);
@@ -448,6 +450,7 @@ function BillOfMaterials (config) {
                 type: 'POST',
                 url: deleteUrl,
                 async: false,
+                cache: false,
                 data: params,
                 success: function(data) {
                     _data = $.parseJSON(data);
