@@ -6,10 +6,13 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.persistence.Lob;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import net.triptech.buildulator.DataParser;
 import net.triptech.buildulator.model.Preferences;
 
 import org.apache.commons.lang.StringUtils;
@@ -82,6 +85,18 @@ public class Preferences {
     @Transient
     private Map<Long, Long> refreshProjectMap;
 
+
+    /**
+     * On create or update.
+     */
+    @PrePersist
+    @PreUpdate
+    protected void onCreateOrUpdate() {
+        // Clean the HTML wysiwyg content
+        this.setHomepageContent(DataParser.cleanHtml(this.getHomepageContent()));
+        this.setAboutContent(DataParser.cleanHtml(this.getAboutContent()));
+        this.setTocContent(DataParser.cleanHtml(this.getTocContent()));
+    }
 
     public final Map<Long, Long> getRefreshProjectMap() {
         if (this.refreshProjectMap == null) {

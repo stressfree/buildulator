@@ -17,6 +17,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
 import net.triptech.buildulator.SmartTokenizer;
 
@@ -43,6 +44,28 @@ public class DataParser {
             }
         }
         return text;
+    }
+
+    /**
+     * Clean the inpput HTML.
+     *
+     * @param htmlString the html string
+     * @return the string
+     */
+    public static String cleanHtml(final String htmlString) {
+        String htmlOutput = "";
+
+        if (StringUtils.isNotBlank(htmlString)) {
+            try {
+                htmlOutput = Jsoup.clean(htmlString, Whitelist.relaxed()
+                        .addAttributes("table", "style", "class")
+                        .addAttributes("th", "style", "class")
+                        .addAttributes("td", "style", "class"));
+            } catch (Exception e) {
+                htmlOutput = "";
+            }
+        }
+        return htmlOutput;
     }
 
     /**

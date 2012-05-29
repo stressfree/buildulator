@@ -53,6 +53,7 @@ public class AdminController extends BaseController {
             return "admin/update";
         }
 
+
         uiModel.asMap().clear();
         if (preferences.getId() != null) {
             // Updating existing preferences

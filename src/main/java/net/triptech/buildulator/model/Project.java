@@ -126,6 +126,9 @@ public class Project {
         if (StringUtils.isNotBlank(this.getData())) {
             this.recalculateTotals();
         }
+
+        // Clean the HTML wysiwyg content
+        this.setDescription(DataParser.cleanHtml(this.getDescription()));
     }
 
     /**
@@ -136,8 +139,9 @@ public class Project {
         if (StringUtils.isNotBlank(this.getData())) {
             this.recalculateTotals();
         }
+        // Clean the HTML wysiwyg content
+        this.setDescription(DataParser.cleanHtml(this.getDescription()));
     }
-
 
     /**
      * Format the double to a string.
