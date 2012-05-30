@@ -169,6 +169,16 @@ sub {
       float: left;
       margin: 0 0 0 15px;
       color: #999;
+      
+      a {
+          color: #999;
+          text-decoration: none;
+          
+          &:hover {
+              text-decoration: underline;
+              color: #ff3333; 
+          }
+      }
   }
 }
 

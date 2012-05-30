@@ -12,7 +12,17 @@
 
     <c:if test="${not empty preferences.copyrightNotice}">
         <div id="copyrightNotice">
-            <p>&#169; <c:out value=" ${preferences.copyrightNotice} " /></p>
+            <p>&#169;
+                <c:choose>
+                    <c:when test="${preferences.aboutEnabled}">
+                        <spring:url value="/about" var="aboutUrl" />
+                        <a href="${aboutUrl}"><c:out value=" ${preferences.copyrightNotice} " /></a>
+                    </c:when>
+                    <c:otherwise>
+                        <c:out value=" ${preferences.copyrightNotice} " />
+                    </c:otherwise>
+                </c:choose>
+            </p>
         </div>
     </c:if>
 
