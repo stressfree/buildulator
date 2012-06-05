@@ -54,15 +54,6 @@ public abstract class BaseController {
     }
 
     /**
-     * The result count increments.
-     *
-     * @return the integer[]
-     */
-    protected Integer[] resultCounts() {
-        return new Integer[] { 50, 100, 200 };
-    }
-
-    /**
      * Gets the translated message.
      *
      * @param code the code
