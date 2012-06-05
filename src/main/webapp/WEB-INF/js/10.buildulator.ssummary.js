@@ -258,8 +258,8 @@ function SustainabilitySummary (config) {
                 embodiedData[0] = [ 1, embodied];
                 break;
             case 'total':
-                operational = parseFloat(_data.carbonOperational) / 1000;
-                embodied = parseFloat(_data.carbonConstruction) / 1000;
+                operational = parseFloat(_data.carbonOperational);
+                embodied = parseFloat(_data.carbonConstruction);
 
                 if (operational + embodied < min) {
                     min = operational + embodied;
@@ -297,8 +297,8 @@ function SustainabilitySummary (config) {
                         embodiedData[index] = [ ticker, embodied];
                         break;
                     case 'total':
-                        operational = parseFloat(data.carbonOperational) / 1000;
-                        embodied = parseFloat(data.carbonConstruction) / 1000;
+                        operational = parseFloat(data.carbonOperational);
+                        embodied = parseFloat(data.carbonConstruction);
 
                         if (operational + embodied < min) {
                             min = operational + embodied;

@@ -99,7 +99,7 @@ public class SustainabilitySummaryIntegrationTest {
         assertEquals(1000, (int) ss.getEnergyTotal());
         assertEquals(5000, (int) ss.getCarbonTotal());
         assertEquals(500, (int) ss.getEnergyPerOccupant());
-        assertEquals(2, (int) ss.getCarbonPerOccupant());
+        assertEquals(2500, (int) ss.getCarbonPerOccupant());
 
     }
 }

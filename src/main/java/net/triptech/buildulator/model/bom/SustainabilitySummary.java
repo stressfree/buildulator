@@ -161,7 +161,7 @@ public class SustainabilitySummary {
     public final double getCarbonPerOccupant() {
         double value = 0;
         if (this.getOccupants() > 0) {
-            value = (this.getCarbonTotal() / this.getOccupants()) / (double) 1000;
+            value = (this.getCarbonTotal() / this.getOccupants());
         }
         return value;
     }
@@ -174,7 +174,7 @@ public class SustainabilitySummary {
     public final double getCarbonPerOccupantOperational() {
         double value = 0;
         if (this.getOccupants() > 0) {
-            value = (this.getCarbonOperational() / this.getOccupants()) / (double) 1000;
+            value = (this.getCarbonOperational() / this.getOccupants());
         }
         return value;
     }
@@ -187,7 +187,7 @@ public class SustainabilitySummary {
     public final double getCarbonPerOccupantConstruction() {
         double value = 0;
         if (this.getOccupants() > 0) {
-            value = (this.getCarbonConstruction() / this.getOccupants()) / (double) 1000;
+            value = (this.getCarbonConstruction() / this.getOccupants());
         }
         return value;
     }
