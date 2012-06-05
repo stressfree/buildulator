@@ -19,8 +19,8 @@ function BillOfMaterials (config) {
     var _deleteConfirmText = (config.deleteConfirmText !== undefined) ? config.deleteConfirmText : 'Are you sure you want to delete this';
     var _headerNameText = (config.headerNameText !== undefined) ? config.headerNameText : '';
     var _headerQuantityText = (config.headerQuantityText !== undefined) ? config.headerQuantityText : 'Quantity';
-    var _headerCarbonText = (config.headerCarbonText !== undefined) ? config.headerCarbonText : 'Carbon (g CO<sub>2</sub>)';
-    var _footerSummaryText = (config.footerSummaryText !== undefined) ? config.footerSummaryText : 'Total embodied carbon (g)';
+    var _headerCarbonText = (config.headerCarbonText !== undefined) ? config.headerCarbonText : 'Carbon (kg CO<sub>2</sub>)';
+    var _footerSummaryText = (config.footerSummaryText !== undefined) ? config.footerSummaryText : 'Total embodied carbon (kg)';
     var _editStartText = (config.editStartText !== undefined) ? config.editStartText : 'Edit table';
     var _editFinishText = (config.editFinishText !== undefined) ? config.editFinishText : 'Finish editing';
     var _quantityText = (config.quantityText !== undefined) ? config.quantityText : 'Quantity';

@@ -203,7 +203,7 @@ public class SustainabilitySummary {
 
         ssJson.put("name", this.getName());
 
-        ssJson.put("occupants", formatValue(this.getOccupants()));
+        ssJson.put("occupants", Format.to1DP(this.getOccupants()));
 
         ssJson.put("percentComplete", this.getPercentComplete());
         ssJson.put("elOperationalDetailed", this.getElOperationalDetailed());
@@ -211,23 +211,23 @@ public class SustainabilitySummary {
         ssJson.put("elConstructionDetailed", this.getElConstructionDetailed());
         ssJson.put("elConstructionTotal", this.getElConstructionTotal());
 
-        ssJson.put("energyOperational", formatValue(this.getEnergyOperational()));
-        ssJson.put("energyConstruction", formatValue(this.getEnergyConstruction()));
-        ssJson.put("energyTotal", formatValue(this.getEnergyTotal()));
-        ssJson.put("energyPerOccupant", formatValue(this.getEnergyPerOccupant()));
+        ssJson.put("energyOperational", Format.to2DP(this.getEnergyOperational()));
+        ssJson.put("energyConstruction", Format.to2DP(this.getEnergyConstruction()));
+        ssJson.put("energyTotal", Format.to2DP(this.getEnergyTotal()));
+        ssJson.put("energyPerOccupant", Format.to2DP(this.getEnergyPerOccupant()));
         ssJson.put("energyPerOccupantOperational",
-                formatValue(this.getEnergyPerOccupantOperational()));
+                Format.to2DP(this.getEnergyPerOccupantOperational()));
         ssJson.put("energyPerOccupantConstruction",
-                formatValue(this.getEnergyPerOccupantConstruction()));
+                Format.to2DP(this.getEnergyPerOccupantConstruction()));
 
-        ssJson.put("carbonOperational", formatValue(this.getCarbonOperational()));
-        ssJson.put("carbonConstruction", formatValue(this.getCarbonConstruction()));
-        ssJson.put("carbonTotal", formatValue(this.getCarbonTotal()));
-        ssJson.put("carbonPerOccupant", formatValue(this.getCarbonPerOccupant()));
+        ssJson.put("carbonOperational", Format.to2DP(this.getCarbonOperational()));
+        ssJson.put("carbonConstruction", Format.to2DP(this.getCarbonConstruction()));
+        ssJson.put("carbonTotal", Format.to2DP(this.getCarbonTotal()));
+        ssJson.put("carbonPerOccupant", Format.to2DP(this.getCarbonPerOccupant()));
         ssJson.put("carbonPerOccupantOperational",
-                formatValue(this.getCarbonPerOccupantOperational()));
+                Format.to2DP(this.getCarbonPerOccupantOperational()));
         ssJson.put("carbonPerOccupantConstruction",
-                formatValue(this.getCarbonPerOccupantConstruction()));
+                Format.to2DP(this.getCarbonPerOccupantConstruction()));
 
         ssJson.put("totalEnergyChange", getChangeArray(this.getTotalEnergyChange()));
         ssJson.put("totalCarbonChange", getChangeArray(this.getTotalCarbonChange()));
@@ -362,22 +362,6 @@ public class SustainabilitySummary {
             }
         }
         return value;
-    }
-
-    /**
-     * Gets the formatted quantity.
-     *
-     * @param value the value
-     * @return the formatted quantity
-     */
-    private final String formatValue(final double value) {
-        String stringValue = "";
-
-        if (value != 0) {
-            DecimalFormat df = new DecimalFormat("#.0");
-            stringValue = df.format(value);
-        }
-        return stringValue;
     }
 
     /**

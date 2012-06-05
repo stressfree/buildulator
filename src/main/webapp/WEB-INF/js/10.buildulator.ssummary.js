@@ -16,7 +16,7 @@ function SustainabilitySummary (config) {
     var _billOfMaterialsText = (config.billOfMaterialsText !== undefined) ? config.billOfMaterialsText : 'Embodied';
     var _totalCarbonText = (config.totalCarbonText !== undefined) ? config.totalCarbonText : 'Total';
     var _perPersonCarbonText = (config.perPersonCarbonText !== undefined) ? config.perPersonCarbonText : 'Per Person';
-    var _carbonUnitsText = (config.carbonUnitsText !== undefined) ? config.carbonUnitsText : 'g';
+    var _carbonUnitsText = (config.carbonUnitsText !== undefined) ? config.carbonUnitsText : 'kg';
     var _carbonPerPersonUnitsText = (config.carbonPerPersonUnitsText !== undefined) ? config.carbonPerPersonUnitsText : 'kg';
     var _perPersonCarbonGraphText = (config.perPersonCarbonGraphText !== undefined) ? config.perPersonCarbonGraphText : 'Per Person Carbon History';
     var _compareButtonText = (config.compareButtonText !== undefined) ? config.compareButtonText : 'Compare to other projects';
@@ -336,7 +336,17 @@ function SustainabilitySummary (config) {
                 },
                 series: {
                     stack: 0,
-                    bars: { show: true, barWidth: 0.7, align: 'center' }
+                    bars: {
+                        show: true,
+                        barWidth: 0.7,
+                        align: 'center',
+                        fill: true,
+                        fillColor: { colors: [{
+                            opacity: 0.7
+                        },{
+                            opacity: 0.7
+                        }]}
+                    }
                 }
         };
 
@@ -346,9 +356,17 @@ function SustainabilitySummary (config) {
         $(div).width(width + 'px');
         $(div).height(height + 'px');
 
-        $.plot(div, [{ label: _operationalFootprintText, data: operationalData },
-                     { label: _billOfMaterialsText, data: embodiedData }],
-                     chartOptions);
+        $.plot(div, [{
+                        label: _operationalFootprintText,
+                        data: operationalData,
+                        color: '#C7BD40'
+                     },{
+                        label: _billOfMaterialsText,
+                        data: embodiedData,
+                        color: '#7885CC'
+                     }],
+                     chartOptions
+                     );
     }
 
     function _keys(obj) {
@@ -373,7 +391,7 @@ function SustainabilitySummary (config) {
     }
 
     function _formatNumber(value) {
-        return (Math.round(value * 10) / 10).toFixed(1);
+        return (Math.round(value * 10) / 10).toFixed(2);
     }
 
     function _findMinValue(data, min) {

@@ -21,7 +21,7 @@ public abstract class SustainabilityBase extends QuantityBase {
      * @return the formatted total energy
      */
     public final String getFormattedTotalEnergy() {
-        return formatValue(this.totalEnergy);
+        return Format.to2DP(this.totalEnergy);
     }
 
     /**
@@ -30,7 +30,7 @@ public abstract class SustainabilityBase extends QuantityBase {
      * @return the formatted total carbon
      */
     public final String getFormattedTotalCarbon() {
-        return formatValue(this.totalCarbon);
+        return Format.to2DP(this.totalCarbon);
     }
 
 }
