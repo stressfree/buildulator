@@ -180,7 +180,7 @@ public class MaterialDetail {
             final ApplicationContext context) {
 
         List<Map<String, Object>> materialsJson = new ArrayList<Map<String, Object>>();
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.#####");
 
         for (MaterialDetail material : materials) {
             Map<String, Object> mJson = new LinkedHashMap<String, Object>();

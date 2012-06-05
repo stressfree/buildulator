@@ -17,7 +17,7 @@ public class Format {
         String stringValue = "";
 
         if (value != 0) {
-            DecimalFormat df = new DecimalFormat("#.0");
+            DecimalFormat df = new DecimalFormat("0.0");
             stringValue = df.format(value);
         }
         return stringValue;
@@ -33,7 +33,7 @@ public class Format {
         String stringValue = "";
 
         if (value != 0) {
-            DecimalFormat df = new DecimalFormat("#.00");
+            DecimalFormat df = new DecimalFormat("0.00");
             stringValue = df.format(value);
         }
         return stringValue;
