@@ -391,7 +391,7 @@ function SustainabilitySummary (config) {
     }
 
     function _formatNumber(value) {
-        return (Math.round(value * 10) / 10).toFixed(2);
+        return (Math.round(value * 10) / 10).toFixed(1);
     }
 
     function _findMinValue(data, min) {
