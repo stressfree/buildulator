@@ -338,11 +338,14 @@ p {
   height: 300px; }
 
 #projectsList_wrapper td.column-2 {
-  text-align: center; }
+  text-align: center;
+}
 
 #materialsList_wrapper td {
   &.column-4, &.column-5, &.column-6, &.column-7 {
-    text-align: center; } }
+    text-align: right; 
+  }
+}
 
 #projectsList_wrapper tr.row_selected {
   cursor: pointer; }
